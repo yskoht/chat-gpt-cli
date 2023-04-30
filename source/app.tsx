@@ -1,14 +1,40 @@
 import React from 'react';
-import {Text} from 'ink';
+import {Text, Box} from 'ink';
 
-type Props = {
-	name: string | undefined;
-};
+import NewChat from './NewChat.js';
+import ChatRecord from './ChatRecord.js';
 
-export default function App({name = 'Stranger'}: Props) {
+import useController from './useController.js';
+
+export default function App() {
+	useController();
+
 	return (
-		<Text>
-			Hello, <Text color="green">{name}</Text>
-		</Text>
+		<Box flexDirection="row" justifyContent="space-between">
+			<Box flexDirection="column" width="20%">
+				<Box flexDirection="column" borderStyle="single">
+					<NewChat />
+				</Box>
+				<Box flexDirection="column" borderStyle="single">
+					<ChatRecord label="Hello1" />
+					<ChatRecord label="Hello2" />
+					<ChatRecord label="Hello3" />
+					<ChatRecord label="Hello4" />
+				</Box>
+			</Box>
+			<Box
+				flexDirection="column"
+				justifyContent="flex-start"
+				borderStyle="single"
+				width="80%"
+			>
+				<Text>Hello</Text>
+				<Text>Hello</Text>
+				<Text>Hello</Text>
+				<Text>Hello</Text>
+				<Text>Hello</Text>
+				<Text>Hello</Text>
+			</Box>
+		</Box>
 	);
 }
