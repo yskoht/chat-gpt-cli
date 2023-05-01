@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, Box} from 'ink';
+import {Box} from 'ink';
 
 import NewChat from './NewChat.js';
 import ChatRecord from './ChatRecord.js';
+import Chat from './Chat.js';
 
 import useController from './useController.js';
 
@@ -11,6 +12,15 @@ export default function App() {
 
 	return (
 		<Box flexDirection="row" justifyContent="space-between">
+			<Box
+				flexDirection="column"
+				justifyContent="flex-start"
+				borderStyle="single"
+				width="80%"
+			>
+				<Chat />
+			</Box>
+
 			<Box flexDirection="column" width="20%">
 				<Box flexDirection="column" borderStyle="single">
 					<NewChat />
@@ -21,19 +31,6 @@ export default function App() {
 					<ChatRecord label="Hello3" />
 					<ChatRecord label="Hello4" />
 				</Box>
-			</Box>
-			<Box
-				flexDirection="column"
-				justifyContent="flex-start"
-				borderStyle="single"
-				width="80%"
-			>
-				<Text>Hello</Text>
-				<Text>Hello</Text>
-				<Text>Hello</Text>
-				<Text>Hello</Text>
-				<Text>Hello</Text>
-				<Text>Hello</Text>
 			</Box>
 		</Box>
 	);
