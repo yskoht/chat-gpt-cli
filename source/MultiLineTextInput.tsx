@@ -1,6 +1,13 @@
 import React, {useState, useMemo} from 'react';
 import {Text, useInput, Key, Box} from 'ink';
 
+const DEBUG = false;
+function debug(...args: any[]) {
+	if (DEBUG) {
+		console.log(...args);
+	}
+}
+
 type Props = {
 	value: string;
 	onChange: (value: string) => void;
@@ -98,8 +105,8 @@ function backspace(cursor: number, value: string) {
 		return {nextCursor: cursor, nextValue: value};
 	}
 
-	const nextValue = value.slice(0, cursor - 1) + value.slice(cursor);
 	const nextCursor = cursor - 1;
+	const nextValue = value.slice(0, cursor - 1) + value.slice(cursor);
 	return {
 		nextCursor,
 		nextValue,
@@ -112,8 +119,8 @@ function del(cursor: number, value: string) {
 		return {nextCursor: cursor, nextValue: value};
 	}
 
-	const nextValue = value.slice(0, cursor + 1) + value.slice(cursor + 2);
 	const nextCursor = cursor;
+	const nextValue = value.slice(0, cursor) + value.slice(cursor + 1);
 	return {
 		nextCursor,
 		nextValue,
@@ -164,10 +171,10 @@ function TextInput({
 
 		{
 			const {nextValue, nextCursor} = (() => {
-				if (key.backspace) {
+				if (key.backspace || (key.ctrl && input === 'h')) {
 					return backspace(cursor, value);
 				}
-				if (key.delete) {
+				if (key.delete || (key.ctrl && input === 'd')) {
 					return del(cursor, value);
 				}
 				return add(cursor, value, input);
