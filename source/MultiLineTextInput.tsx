@@ -70,6 +70,19 @@ function moveRight(cursor: number, value: string): number {
 	const nextCursor = toCursor(nx, y, value);
 	return nextCursor;
 }
+function moveHead(cursor: number, value: string): number {
+	const {y} = toPosition(cursor, value);
+	const nx = 0;
+	const nextCursor = toCursor(nx, y, value);
+	return nextCursor;
+}
+function moveTail(cursor: number, value: string): number {
+	const {y} = toPosition(cursor, value);
+	const lines = toLines(value);
+	const nx = lines[y]!.length;
+	const nextCursor = toCursor(nx, y, value);
+	return nextCursor;
+}
 
 function add(cursor: number, value: string, input: string) {
 	const nextValue = value.slice(0, cursor) + input + value.slice(cursor);
@@ -123,17 +136,23 @@ function TextInput({
 
 		{
 			const nextCursor = (() => {
-				if (key.upArrow) {
+				if (key.upArrow || (key.ctrl && input === 'p')) {
 					return moveUp(cursor, value);
 				}
-				if (key.downArrow) {
+				if (key.downArrow || (key.ctrl && input === 'n')) {
 					return moveDown(cursor, value);
 				}
-				if (key.leftArrow) {
+				if (key.leftArrow || (key.ctrl && input === 'b')) {
 					return moveLeft(cursor, value);
 				}
-				if (key.rightArrow) {
+				if (key.rightArrow || (key.ctrl && input === 'f')) {
 					return moveRight(cursor, value);
+				}
+				if (key.ctrl && input === 'a') {
+					return moveHead(cursor, value);
+				}
+				if (key.ctrl && input === 'e') {
+					return moveTail(cursor, value);
 				}
 				return null;
 			})();
