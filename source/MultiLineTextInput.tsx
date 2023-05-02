@@ -20,6 +20,9 @@ function hittingEnter(_input: string, key: Key) {
 }
 
 const LINE_SEP = '\r';
+function replaceLineSep(value: string): string {
+	return value.replace(/\n/g, LINE_SEP);
+}
 
 function toLines(value: string): string[] {
 	return value.split(LINE_SEP);
@@ -99,8 +102,7 @@ function add(cursor: Cursor, value: string, input: string): Next {
 	};
 }
 function backspace(cursor: Cursor, value: string): Next {
-	const {x} = toPosition(cursor, value);
-	if (x === 0) {
+	if (cursor === 0) {
 		return {nextCursor: cursor, nextValue: value};
 	}
 
@@ -112,12 +114,6 @@ function backspace(cursor: Cursor, value: string): Next {
 	};
 }
 function del(cursor: Cursor, value: string): Next {
-	const {x, y} = toPosition(cursor, value);
-	const lines = toLines(value);
-	if (x === lines[y]!.length) {
-		return {nextCursor: cursor, nextValue: value};
-	}
-
 	const nextCursor = cursor;
 	const nextValue = value.slice(0, cursor) + value.slice(cursor + 1);
 	return {
@@ -159,7 +155,9 @@ function MultiLineTextInput({
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
 
-	useInput((input, key) => {
+	useInput((_input, key) => {
+		const input = replaceLineSep(_input);
+
 		if (shouldSubmit(input, key)) {
 			onSubmit(value);
 			return;
@@ -192,6 +190,8 @@ function MultiLineTextInput({
 			}
 			return add(cursor, value, input);
 		})();
+
+		debug({input, key, cursor, value, nextValue, nextCursor});
 
 		onChange(nextValue);
 		setCursor(nextCursor);
