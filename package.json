@@ -18,6 +18,7 @@
 	"dependencies": {
 		"ink": "^4.1.0",
 		"meow": "^11.0.0",
+		"openai": "^3.2.1",
 		"react": "^18.2.0"
 	},
 	"devDependencies": {
