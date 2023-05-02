@@ -173,6 +173,10 @@ function MultiLineTextInput({
 	cursorColor = 'gray',
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
+	const cursorBgColor = useMemo(
+		() => (showCursor ? cursorColor : undefined),
+		[showCursor, cursorColor],
+	);
 
 	useInput((_input, key) => {
 		const input = replaceLineSep(_input);
@@ -223,16 +227,13 @@ function MultiLineTextInput({
 		() => toPosition(cursor, value),
 		[cursor, value],
 	);
-	const cursorBgColor = useMemo(
-		() => (showCursor ? cursorColor : undefined),
-		[showCursor, cursorColor],
-	);
 
 	const texts = useMemo(
 		() =>
 			value.split(LINE_SEP).map((text, y) => {
+				const key = `${y}-${text}`;
 				return (
-					<Box key={y}>
+					<Box key={key}>
 						{y === cy ? (
 							<>
 								<Text>{text.slice(0, cx)}</Text>
