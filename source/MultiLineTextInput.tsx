@@ -114,6 +114,19 @@ function del(cursor: Cursor, value: string): Next {
 		nextValue,
 	};
 }
+function kill(cursor: Cursor, value: string): Next {
+	const afterCursor = value.slice(cursor);
+	const nextLineSepPos = afterCursor.indexOf(LINE_SEP);
+
+	let nextValue = value.slice(0, cursor);
+	if (nextLineSepPos !== -1) {
+		nextValue += afterCursor.slice(nextLineSepPos);
+	}
+	return {
+		nextCursor: cursor,
+		nextValue,
+	};
+}
 
 function shouldMoveUp(input: string, key: Key): boolean {
 	return key.upArrow || (key.ctrl && input === 'p');
@@ -138,6 +151,9 @@ function shouldBackspace(input: string, key: Key): boolean {
 }
 function shouldDelete(input: string, key: Key): boolean {
 	return key.delete || (key.ctrl && input === 'd');
+}
+function shouldKill(input: string, key: Key): boolean {
+	return key.ctrl && input === 'k';
 }
 
 type Props = {
@@ -190,6 +206,9 @@ function MultiLineTextInput({
 			}
 			if (shouldDelete(input, key)) {
 				return del(cursor, value);
+			}
+			if (shouldKill(input, key)) {
+				return kill(cursor, value);
 			}
 			return add(cursor, value, input);
 		})();
