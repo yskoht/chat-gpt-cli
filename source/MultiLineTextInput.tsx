@@ -8,13 +8,6 @@ function debug(...args: any[]) {
 	}
 }
 
-type Props = {
-	value: string;
-	onChange: (value: string) => void;
-	onSubmit: (value: string) => void;
-	shouldSubmit?: (input: string, key: Key) => boolean;
-};
-
 function hittingEnter(_input: string, key: Key) {
 	return key.return;
 }
@@ -147,11 +140,21 @@ function shouldDelete(input: string, key: Key): boolean {
 	return key.delete || (key.ctrl && input === 'd');
 }
 
+type Props = {
+	value: string;
+	onChange: (value: string) => void;
+	onSubmit: (value: string) => void;
+	shouldSubmit?: (input: string, key: Key) => boolean;
+	showCursor?: boolean;
+	cursorColor?: string;
+};
 function MultiLineTextInput({
 	value,
 	onChange,
 	onSubmit,
 	shouldSubmit = hittingEnter,
+	showCursor = true,
+	cursorColor = 'gray',
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
 
@@ -201,6 +204,11 @@ function MultiLineTextInput({
 		() => toPosition(cursor, value),
 		[cursor, value],
 	);
+	const cursorBgColor = useMemo(
+		() => (showCursor ? cursorColor : undefined),
+		[showCursor, cursorColor],
+	);
+
 	const texts = useMemo(
 		() =>
 			value.split(LINE_SEP).map((text, y) => {
@@ -209,9 +217,11 @@ function MultiLineTextInput({
 						{y === cy ? (
 							<>
 								<Text>{text.slice(0, cx)}</Text>
-								<Text backgroundColor="green">{text[cx]}</Text>
+								<Text backgroundColor={cursorBgColor}>{text[cx]}</Text>
 								<Text>{text.slice(cx + 1)}</Text>
-								{text.length === cx && <Text backgroundColor="green"> </Text>}
+								{text.length === cx && (
+									<Text backgroundColor={cursorBgColor}> </Text>
+								)}
 							</>
 						) : (
 							<Text>{text.length ? text : ' '}</Text>
