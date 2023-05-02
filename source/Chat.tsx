@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import MultiLineTextInput from './MultiLineTextInput.js';
+import MultiLineTextInput from './components/MultilineTextInput/index.js';
 
 function Chat() {
 	const [text, setText] = useState('');
