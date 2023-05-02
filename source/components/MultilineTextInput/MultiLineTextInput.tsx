@@ -73,7 +73,7 @@ function MultiLineTextInput({
 			if (keymap.shouldKill(input, key)) {
 				return edit.kill(cursor, value);
 			}
-			return edit.add(cursor, value, input);
+			return edit.insert(cursor, value, input);
 		})();
 
 		debug({input, key, cursor, value, nextValue, nextCursor});

@@ -55,7 +55,7 @@ export function moveTail(cursor: Cursor, value: string): Next {
 	return {nextCursor, nextValue: value};
 }
 
-export function add(cursor: Cursor, value: string, input: string): Next {
+export function insert(cursor: Cursor, value: string, input: string): Next {
 	const nextValue = value.slice(0, cursor) + input + value.slice(cursor);
 	const nextCursor = cursor + input.length;
 	return {
