@@ -1,7 +1,8 @@
 import React from 'react';
 import {Text} from 'ink';
 
-import {Position} from './types.js';
+import {CursorShape, Position} from './types.js';
+import {CURSOR_SHAPE} from './constants.js';
 
 const SPACE = ' ';
 
@@ -19,6 +20,7 @@ type Props = {
 	isCurrentLine: boolean;
 	isTailOfLine: boolean;
 	cursorColor: string | undefined;
+	cursorShape: CursorShape;
 };
 function Line({
 	text,
@@ -26,6 +28,7 @@ function Line({
 	isCurrentLine,
 	isTailOfLine,
 	cursorColor,
+	cursorShape,
 }: Props) {
 	if (!isCurrentLine) {
 		return <Text>{isEmpty(text) ? SPACE : text}</Text>;
@@ -35,10 +38,16 @@ function Line({
 		<>
 			<Text>{text.slice(0, x)}</Text>
 			{!isNullable(text[x]) && (
-				<CursorMark cursorColor={cursorColor} char={text[x]} />
+				<CursorMark
+					cursorColor={cursorColor}
+					cursorShape={cursorShape}
+					char={text[x]}
+				/>
 			)}
 			<Text>{text.slice(x + 1)}</Text>
-			{isTailOfLine && <CursorMark cursorColor={cursorColor} />}
+			{isTailOfLine && (
+				<CursorMark cursorColor={cursorColor} cursorShape={cursorShape} />
+			)}
 		</>
 	);
 }
@@ -47,8 +56,16 @@ export default Line;
 
 type CursorMarkProps = {
 	cursorColor: string | undefined;
+	cursorShape: CursorShape;
 	char?: string;
 };
-function CursorMark({cursorColor, char = SPACE}: CursorMarkProps) {
-	return <Text backgroundColor={cursorColor}>{char}</Text>;
+function CursorMark({cursorColor, cursorShape, char = SPACE}: CursorMarkProps) {
+	switch (cursorShape) {
+		case CURSOR_SHAPE.block:
+			return <Text backgroundColor={cursorColor}>{char}</Text>;
+		case CURSOR_SHAPE.underline:
+			return <Text underline>{char}</Text>;
+		default:
+			return <Text backgroundColor={cursorColor}>{char}</Text>;
+	}
 }

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {useInput, Key} from 'ink';
 
-import {Cursor} from './types.js';
+import {Cursor, CursorShape} from './types.js';
 import {replaceLineSep} from './utilities.js';
 import Lines from './Lines.js';
+import {CURSOR_SHAPE, DEFAULT_CURSOR_COLOR} from './constants.js';
 
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
@@ -22,6 +23,7 @@ type Props = {
 	shouldSubmit?: (input: string, key: Key) => boolean;
 	showCursor?: boolean;
 	cursorColor?: string;
+	cursorShape?: CursorShape;
 	isActive?: boolean;
 };
 function MultiLineTextInput({
@@ -30,7 +32,8 @@ function MultiLineTextInput({
 	onSubmit,
 	shouldSubmit = keymap.hittingEnter,
 	showCursor = true,
-	cursorColor = 'gray',
+	cursorColor = DEFAULT_CURSOR_COLOR,
+	cursorShape = CURSOR_SHAPE.block,
 	isActive = true,
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
@@ -89,6 +92,7 @@ function MultiLineTextInput({
 			value={value}
 			showCursor={showCursor}
 			cursorColor={cursorColor}
+			cursorShape={cursorShape}
 		/>
 	);
 }

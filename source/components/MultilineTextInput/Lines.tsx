@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {Box} from 'ink';
 
-import {Cursor, Position} from './types.js';
+import {Cursor, CursorShape, Position} from './types.js';
 import {toLines, toPosition} from './utilities.js';
 import Line from './Line.js';
 
@@ -10,6 +10,7 @@ type Props = {
 	value: string;
 	showCursor: boolean;
 	cursorColor: string;
+	cursorShape: CursorShape;
 };
 
 function keyExtractor(text: string, index: number): string {
@@ -24,7 +25,13 @@ function isTailOfLine(currentPosition: Position, text: string): boolean {
 	return currentPosition.x === text.length;
 }
 
-function Lines({cursor, value, showCursor, cursorColor: _cursorColor}: Props) {
+function Lines({
+	cursor,
+	value,
+	showCursor,
+	cursorColor: _cursorColor,
+	cursorShape,
+}: Props) {
 	const cursorColor = useMemo(
 		() => (showCursor ? _cursorColor : undefined),
 		[showCursor, _cursorColor],
@@ -49,6 +56,7 @@ function Lines({cursor, value, showCursor, cursorColor: _cursorColor}: Props) {
 							isCurrentLine={_isCurrentLine}
 							isTailOfLine={_isTailOfLine}
 							cursorColor={cursorColor}
+							cursorShape={cursorShape}
 						/>
 					</Box>
 				);
