@@ -4,6 +4,7 @@ import {Box} from 'ink';
 import {Cursor, CursorShape, Position} from './types.js';
 import {toLines, toPosition} from './utilities.js';
 import Line from './Line.js';
+import {replaceLineSep} from './utilities.js';
 
 type Props = {
 	cursor: Cursor;
@@ -42,9 +43,10 @@ function Lines({
 		[cursor, value],
 	);
 
+	const _lines = useMemo(() => toLines(replaceLineSep(value)), [value]);
 	const lines = useMemo(
 		() =>
-			toLines(value).map((text, y) => {
+			_lines.map((text, y) => {
 				const key = keyExtractor(text, y);
 				const _isCurrentLine = isCurrentLine(currentPosition, y);
 				const _isTailOfLine = isTailOfLine(currentPosition, text);
@@ -61,10 +63,10 @@ function Lines({
 					</Box>
 				);
 			}),
-		[value, currentPosition, cursorColor],
+		[_lines, currentPosition, cursorColor],
 	);
 
-	return <>{lines}</>;
+	return <Box flexDirection="column">{lines}</Box>;
 }
 
 export default Lines;
