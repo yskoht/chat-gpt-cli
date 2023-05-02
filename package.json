@@ -8,8 +8,8 @@
 		"node": ">=16"
 	},
 	"scripts": {
-		"build": "tsc",
-		"dev": "tsc --watch",
+		"build": "tsc && tsc-alias",
+		"dev": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
 		"test": "prettier --check . && xo && ava"
 	},
 	"files": [
