@@ -14,9 +14,11 @@ export default function App() {
 		<Box flexDirection="row" justifyContent="space-between">
 			<Box
 				flexDirection="column"
-				justifyContent="flex-start"
+				justifyContent="flex-end"
 				borderStyle="single"
 				width="80%"
+				paddingLeft={1}
+				paddingRight={1}
 			>
 				<Chat />
 			</Box>
