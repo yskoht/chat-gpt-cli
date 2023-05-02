@@ -29,7 +29,7 @@ type Position = {
 function toPosition(cursor: Cursor, value: string): Position {
 	const lines = toLines(value.slice(0, cursor));
 	const y = Math.max(lines.length - 1, 0);
-	const x = lines[y]?.length ?? 0;
+	const x = lines[y]!.length;
 	return {x, y};
 }
 function toCursor(x: number, y: number, value: string): Cursor {
