@@ -1,9 +1,9 @@
-import React, {useState, useMemo} from 'react';
-import {Text, useInput, Key, Box} from 'ink';
+import React, {useState} from 'react';
+import {useInput, Key} from 'ink';
 
-import {LINE_SEP} from './constants.js';
 import {Cursor} from './types.js';
-import {toPosition, replaceLineSep} from './utilities.js';
+import {replaceLineSep} from './utilities.js';
+import Lines from './Lines.js';
 
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
@@ -32,10 +32,6 @@ function MultiLineTextInput({
 	cursorColor = 'gray',
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
-	const cursorBgColor = useMemo(
-		() => (showCursor ? cursorColor : undefined),
-		[showCursor, cursorColor],
-	);
 
 	useInput((_input, key) => {
 		const input = replaceLineSep(_input);
@@ -82,36 +78,14 @@ function MultiLineTextInput({
 		setCursor(nextCursor);
 	});
 
-	const {x: cx, y: cy} = useMemo(
-		() => toPosition(cursor, value),
-		[cursor, value],
+	return (
+		<Lines
+			cursor={cursor}
+			value={value}
+			showCursor={showCursor}
+			cursorColor={cursorColor}
+		/>
 	);
-
-	const texts = useMemo(
-		() =>
-			value.split(LINE_SEP).map((text, y) => {
-				const key = `${y}-${text}`;
-				return (
-					<Box key={key}>
-						{y === cy ? (
-							<>
-								<Text>{text.slice(0, cx)}</Text>
-								<Text backgroundColor={cursorBgColor}>{text[cx]}</Text>
-								<Text>{text.slice(cx + 1)}</Text>
-								{text.length === cx && (
-									<Text backgroundColor={cursorBgColor}> </Text>
-								)}
-							</>
-						) : (
-							<Text>{text.length ? text : ' '}</Text>
-						)}
-					</Box>
-				);
-			}),
-		[cx, cy, value],
-	);
-
-	return <>{texts}</>;
 }
 
 export default MultiLineTextInput;
