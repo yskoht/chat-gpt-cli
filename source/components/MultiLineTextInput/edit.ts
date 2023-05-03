@@ -11,6 +11,7 @@ export function moveUp(cursor: Cursor, value: string): Next {
 	const {x, y} = toPosition(cursor, value);
 	const lines = toLines(value);
 	const ny = Math.max(y - 1, 0);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = Math.min(x, lines[ny]!.length);
 	const nextCursor = toCursor(nx, ny, value);
 	return {nextCursor, nextValue: value};
@@ -20,6 +21,7 @@ export function moveDown(cursor: Cursor, value: string): Next {
 	const {x, y} = toPosition(cursor, value);
 	const lines = toLines(value);
 	const ny = Math.min(y + 1, lines.length - 1);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = Math.min(x, lines[ny]!.length);
 	const nextCursor = toCursor(nx, ny, value);
 	return {nextCursor, nextValue: value};
@@ -35,6 +37,7 @@ export function moveLeft(cursor: Cursor, value: string): Next {
 export function moveRight(cursor: Cursor, value: string): Next {
 	const {x, y} = toPosition(cursor, value);
 	const lines = toLines(value);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = Math.min(x + 1, lines[y]!.length);
 	const nextCursor = toCursor(nx, y, value);
 	return {nextCursor, nextValue: value};
@@ -50,6 +53,7 @@ export function moveHead(cursor: Cursor, value: string): Next {
 export function moveTail(cursor: Cursor, value: string): Next {
 	const {y} = toPosition(cursor, value);
 	const lines = toLines(value);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = lines[y]!.length;
 	const nextCursor = toCursor(nx, y, value);
 	return {nextCursor, nextValue: value};

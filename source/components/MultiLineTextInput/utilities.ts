@@ -8,6 +8,7 @@ export function toLines(value: string): string[] {
 export function toPosition(cursor: Cursor, value: string): Position {
 	const lines = toLines(value.slice(0, cursor));
 	const y = Math.max(lines.length - 1, 0);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const x = lines[y]!.length;
 	return {x, y};
 }
