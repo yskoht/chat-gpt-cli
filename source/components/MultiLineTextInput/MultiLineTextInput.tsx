@@ -5,7 +5,7 @@ import Lines from './Lines.js';
 import {CURSOR_SHAPE, DEFAULT_CURSOR_COLOR} from './constants.js';
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
-import {Cursor, CursorShape} from './types.js';
+import {Cursor, CursorShape, OnHistory} from './types.js';
 import {replaceLineSep} from './utilities.js';
 
 const DEBUG = false;
@@ -25,6 +25,8 @@ type Props = {
 	cursorColor?: string;
 	cursorShape?: CursorShape;
 	isActive?: boolean;
+	onHistoryPrev?: OnHistory;
+	onHistoryNext?: OnHistory;
 };
 function MultiLineTextInput({
 	value,
@@ -35,6 +37,8 @@ function MultiLineTextInput({
 	cursorColor = DEFAULT_CURSOR_COLOR,
 	cursorShape = CURSOR_SHAPE.block,
 	isActive = true,
+	onHistoryPrev,
+	onHistoryNext,
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
 
@@ -49,10 +53,10 @@ function MultiLineTextInput({
 
 			const {nextValue, nextCursor} = (() => {
 				if (keymap.shouldMoveUp(input, key)) {
-					return edit.moveUp(cursor, value);
+					return edit.moveUp(cursor, value, onHistoryPrev);
 				}
 				if (keymap.shouldMoveDown(input, key)) {
-					return edit.moveDown(cursor, value);
+					return edit.moveDown(cursor, value, onHistoryNext);
 				}
 				if (keymap.shouldMoveLeft(input, key)) {
 					return edit.moveLeft(cursor, value);

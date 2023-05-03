@@ -1,26 +1,43 @@
 import {LINE_SEP} from './constants.js';
-import {Cursor} from './types.js';
+import {Cursor, Next, OnHistory} from './types.js';
 import {toPosition, toCursor, toLines} from './utilities.js';
 
-type Next = {
-	nextCursor: Cursor;
-	nextValue: string;
-};
-
-export function moveUp(cursor: Cursor, value: string): Next {
+export function moveUp(
+	cursor: Cursor,
+	value: string,
+	onHistoryPrev?: OnHistory,
+): Next {
 	const {x, y} = toPosition(cursor, value);
+	if (y === 0) {
+		if (onHistoryPrev) {
+			return onHistoryPrev(cursor, value);
+		}
+		return {nextCursor: cursor, nextValue: value};
+	}
+
 	const lines = toLines(value);
-	const ny = Math.max(y - 1, 0);
+	const ny = y - 1;
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = Math.min(x, lines[ny]!.length);
 	const nextCursor = toCursor(nx, ny, value);
 	return {nextCursor, nextValue: value};
 }
 
-export function moveDown(cursor: Cursor, value: string): Next {
+export function moveDown(
+	cursor: Cursor,
+	value: string,
+	onHistoryNext?: OnHistory,
+): Next {
 	const {x, y} = toPosition(cursor, value);
 	const lines = toLines(value);
-	const ny = Math.min(y + 1, lines.length - 1);
+	if (y === lines.length - 1) {
+		if (onHistoryNext) {
+			return onHistoryNext(cursor, value);
+		}
+		return {nextCursor: cursor, nextValue: value};
+	}
+
+	const ny = y + 1;
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const nx = Math.min(x, lines[ny]!.length);
 	const nextCursor = toCursor(nx, ny, value);

@@ -8,3 +8,10 @@ export type Position = {
 };
 
 export type CursorShape = keyof typeof CURSOR_SHAPE;
+
+export type Next = {
+	nextCursor: Cursor;
+	nextValue: string;
+};
+
+export type OnHistory = (cursor: Cursor, value: string) => Next;
