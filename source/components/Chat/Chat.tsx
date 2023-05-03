@@ -8,15 +8,18 @@ import Message from './Message.js';
 import useMessage from './hooks/useMessage.js';
 import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
-import useChat, {Message as MessageType} from './hooks/useChat.js';
+import useChat from './hooks/useChat.js';
+import {Message as MessageType} from './hooks/types.js';
+import {
+	ROLE,
+	USER_MESSAGE_MARK_COLOR,
+	ASSISTANT_MESSAGE_MARK_COLOR,
+	DEFAULT_MESSAGE_MARK_COLOR,
+} from './hooks/constants.js';
 
 function finishMessageInProgress(messageInProgress: string) {
 	return messageInProgress.trimEnd() + LINE_SEP;
 }
-
-const USER_MESSAGE_MARK_COLOR = 'blue';
-const ASSISTANT_MESSAGE_MARK_COLOR = 'green';
-const DEFAULT_MESSAGE_MARK_COLOR = 'gray';
 
 function markColor(message: MessageType) {
 	switch (message.role) {
@@ -37,11 +40,11 @@ function Chat() {
 	const {loading, startLoading, stopLoading} = useLoading();
 
 	const assistantMessage = useCallback(
-		(m: string) => ({role: 'assistant' as const, content: m}),
+		(m: string) => ({role: ROLE.assistant, content: m}),
 		[],
 	);
 	const userMessage = useCallback(
-		(m: string) => ({role: 'user' as const, content: m}),
+		(m: string) => ({role: ROLE.user, content: m}),
 		[],
 	);
 

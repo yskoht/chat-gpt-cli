@@ -1,32 +1,13 @@
 import {useCallback, useMemo} from 'react';
 
 import openai from '@/libraries/openai.js';
-
-export type Message = {
-	role: 'system' | 'user' | 'assistant';
-	content: string;
-};
+import {Message, Response} from './types.js';
+import {ROLE} from './constants.js';
 
 const SYSTEM_PROMPT = {
-	role: 'system',
+	role: ROLE.system,
 	content: 'You are a helpful assistant.',
 } as const satisfies Message;
-
-type Response = {
-	id?: string;
-	object?: string;
-	created?: number;
-	model?: string;
-	choices: [
-		{
-			delta?: {
-				content?: string;
-			};
-			index?: number;
-			finish_reason?: string | null;
-		},
-	];
-};
 
 const MODEL = 'gpt-4';
 async function createChatCompletion(messages: Message[]) {
