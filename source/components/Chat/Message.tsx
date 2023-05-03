@@ -4,7 +4,7 @@ import {Box} from 'ink';
 
 import Mark from './Mark.js';
 
-const nop = () => {};
+const nop = () => undefined;
 
 type Props = {
 	value: string;
