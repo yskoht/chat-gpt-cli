@@ -6,7 +6,7 @@ function useController() {
 
 	useEffect(() => {
 		enableFocus();
-	}, []);
+	}, [enableFocus]);
 
 	useInput((_, key) => {
 		if (key.escape) {
