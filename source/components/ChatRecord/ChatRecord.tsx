@@ -1,5 +1,5 @@
-import React from 'react';
 import {Box, Text, useFocus} from 'ink';
+import React from 'react';
 
 type Props = {
 	label: string;

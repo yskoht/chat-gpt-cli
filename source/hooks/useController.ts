@@ -1,5 +1,5 @@
-import {useEffect} from 'react';
 import {useInput, useFocusManager} from 'ink';
+import {useEffect} from 'react';
 
 function useController() {
 	const {enableFocus, focusNext, focusPrevious} = useFocusManager();

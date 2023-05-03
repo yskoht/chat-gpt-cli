@@ -1,17 +1,17 @@
-import React, {useMemo, useState, useCallback} from 'react';
 import {Newline, Box, Text} from 'ink';
 import Spinner from 'ink-spinner';
+import React, {useMemo, useState, useCallback} from 'react';
 
-import {LINE_SEP} from '../MultiLineTextInput/constants.js';
+import {LINE_SEP} from '@/components/MultiLineTextInput/constants.js';
 
+import {markColor} from './Mark.js';
 import Message from './Message.js';
-import useText from './hooks/useText.js';
+import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './hooks/constants.js';
+import {Message as MessageType} from './hooks/types.js';
+import useChat from './hooks/useChat.js';
 import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
-import useChat from './hooks/useChat.js';
-import {Message as MessageType} from './hooks/types.js';
-import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './hooks/constants.js';
-import {markColor} from './Mark.js';
+import useText from './hooks/useText.js';
 
 function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd() + LINE_SEP;
@@ -38,13 +38,13 @@ function Chat() {
 
 	const streamFinishedCallback = useCallback(() => {
 		const t = finishTextInProgress(textInProgress);
-		setMessages(x => [...x, assistantMessage(t)]);
+		setMessages((x) => [...x, assistantMessage(t)]);
 		clearTextInProgress();
 	}, [textInProgress, assistantMessage, setMessages, clearTextInProgress]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 
 	const onChange = useCallback(
-		(content: string) => setTextInProgress(x => x + content),
+		(content: string) => setTextInProgress((x) => x + content),
 		[setTextInProgress],
 	);
 	const onFinish = useCallback(() => {

@@ -1,9 +1,9 @@
-import React from 'react';
 import {Box} from 'ink';
+import React from 'react';
 
-import NewChat from '@/components/NewChat/index.js';
-import ChatRecord from '@/components/ChatRecord/index.js';
 import Chat from '@/components/Chat/index.js';
+import ChatRecord from '@/components/ChatRecord/index.js';
+import NewChat from '@/components/NewChat/index.js';
 import useController from '@/hooks/useController.js';
 
 export default function App() {

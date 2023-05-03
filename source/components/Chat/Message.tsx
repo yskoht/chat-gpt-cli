@@ -1,6 +1,7 @@
-import React from 'react';
-import MultiLineTextInput from '@/components/MultiLineTextInput/index.js';
 import {Box} from 'ink';
+import React from 'react';
+
+import MultiLineTextInput from '@/components/MultiLineTextInput/index.js';
 
 import Mark from './Mark.js';
 

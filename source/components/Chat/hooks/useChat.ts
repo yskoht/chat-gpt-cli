@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react';
 
 import openai from '@/libraries/openai.js';
-import {Message, Response} from './types.js';
+
 import {ROLE} from './constants.js';
+import {Message, Response} from './types.js';
 
 const SYSTEM_PROMPT = {
 	role: ROLE.system,

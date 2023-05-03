@@ -1,8 +1,8 @@
-import React from 'react';
 import {Text} from 'ink';
+import React from 'react';
 
-import {CursorShape, Position} from './types.js';
 import {CURSOR_SHAPE} from './constants.js';
+import {CursorShape, Position} from './types.js';
 
 const SPACE = ' ';
 

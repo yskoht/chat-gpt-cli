@@ -1,9 +1,9 @@
-import React, {useMemo} from 'react';
 import {Box} from 'ink';
+import React, {useMemo} from 'react';
 
+import Line from './Line.js';
 import {Cursor, CursorShape, Position} from './types.js';
 import {toLines, toPosition} from './utilities.js';
-import Line from './Line.js';
 import {replaceLineSep} from './utilities.js';
 
 type Props = {

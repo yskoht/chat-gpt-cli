@@ -1,6 +1,6 @@
+import {LINE_SEP} from './constants.js';
 import {Cursor} from './types.js';
 import {toPosition, toCursor, toLines} from './utilities.js';
-import {LINE_SEP} from './constants.js';
 
 type Next = {
 	nextCursor: Cursor;

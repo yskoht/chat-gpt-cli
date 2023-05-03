@@ -1,12 +1,12 @@
-import React from 'react';
 import {Text} from 'ink';
+import React from 'react';
 
-import {Message} from './hooks/types.js';
 import {
 	USER_MESSAGE_MARK_COLOR,
 	ASSISTANT_MESSAGE_MARK_COLOR,
 	DEFAULT_MESSAGE_MARK_COLOR,
 } from './hooks/constants.js';
+import {Message} from './hooks/types.js';
 
 type Props = {
 	mark: string;
