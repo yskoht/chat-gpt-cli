@@ -17,6 +17,10 @@ function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd() + LINE_SEP;
 }
 
+function keyExtractor(text: string, index: number): string {
+	return `${index}-${text}`;
+}
+
 function Chat() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
@@ -69,8 +73,9 @@ function Chat() {
 		() =>
 			messages.map((message, i) => {
 				const _markColor = markColor(message);
+				const key = keyExtractor(message.content, i);
 				return (
-					<Box key={`${i}-${message.content}`}>
+					<Box key={key}>
 						<Message value={message.content} mark="■" markColor={_markColor} />
 						<Newline />
 					</Box>
