@@ -33,8 +33,8 @@ function Chat() {
 	);
 
 	const streamFinishedCallback = useCallback(() => {
-		const m = finishTextInProgress(textInProgress);
-		setMessages(x => [...x, assistantMessage(m)]);
+		const t = finishTextInProgress(textInProgress);
+		setMessages(x => [...x, assistantMessage(t)]);
 		clearTextInProgress();
 	}, [textInProgress, assistantMessage, setMessages, clearTextInProgress]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
