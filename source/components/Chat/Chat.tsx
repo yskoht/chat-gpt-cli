@@ -51,8 +51,7 @@ function Chat() {
 
 	const onSubmit = useCallback(async () => {
 		startLoading();
-		const _userMessage = userMessage(userPromptText);
-		const _messages = [...messages, _userMessage];
+		const _messages = [...messages, userMessage(userPromptText)];
 		setMessages(_messages);
 		clearUserPromptText();
 		await submitChat(_messages);
