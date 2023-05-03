@@ -99,13 +99,7 @@ function Chat() {
 	);
 
 	const _messageInProgress = useMemo(
-		() =>
-			messageInProgress ? (
-				<>
-					<Message value={messageInProgress} mark="■" />
-					<Newline />
-				</>
-			) : null,
+		() => messageInProgress && <Message value={messageInProgress} mark="■" />,
 		[messageInProgress],
 	);
 
