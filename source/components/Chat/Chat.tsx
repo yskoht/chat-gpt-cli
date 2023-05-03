@@ -1,10 +1,12 @@
 import React, {useMemo, useState, useCallback} from 'react';
-import {Newline, Box} from 'ink';
+import {Newline, Box, Text} from 'ink';
+import Spinner from 'ink-spinner';
 
 import {LINE_SEP} from '../MultiLineTextInput/constants.js';
 
 import Message from './Message.js';
 import useMessage from './hooks/useMessage.js';
+import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
 import useChat, {Message as MessageType} from './hooks/useChat.js';
 
@@ -32,6 +34,7 @@ function Chat() {
 	const [messageInProgress, setMessageInProgress, clearMessageInProgress] =
 		useMessage();
 	const [userPrompt, setUserPrompt, clearUserPrompt] = useMessage();
+	const {loading, startLoading, stopLoading} = useLoading();
 
 	const assistantMessage = useCallback(
 		(m: string) => ({role: 'assistant' as const, content: m}),
@@ -58,15 +61,28 @@ function Chat() {
 		(content: string) => setMessageInProgress(x => x + content),
 		[setMessageInProgress],
 	);
-	const {chat} = useChat({onChange, onFinish: streamFinished});
+	const onFinish = useCallback(() => {
+		streamFinished();
+		stopLoading();
+	}, [streamFinished, stopLoading]);
+	const {chat} = useChat({onChange, onFinish});
 
 	const onSubmit = useCallback(async () => {
+		startLoading();
 		const _userMessage = userMessage(userPrompt);
 		const _messages = [...messages, _userMessage];
 		setMessages(_messages);
 		clearUserPrompt();
 		await chat(_messages);
-	}, [chat, userPrompt, userMessage, messages, setMessages, clearUserPrompt]);
+	}, [
+		chat,
+		userPrompt,
+		userMessage,
+		messages,
+		setMessages,
+		clearUserPrompt,
+		startLoading,
+	]);
 
 	const _messages = useMemo(
 		() =>
@@ -94,17 +110,22 @@ function Chat() {
 	);
 
 	const _userPrompt = useMemo(
-		() => (
-			<Message
-				value={userPrompt}
-				mark=">"
-				onChange={setUserPrompt}
-				onSubmit={onSubmit}
-				showCursor
-				isActive
-			/>
-		),
-		[userPrompt, setUserPrompt, onSubmit],
+		() =>
+			loading ? (
+				<Text>
+					<Spinner />
+				</Text>
+			) : (
+				<Message
+					value={userPrompt}
+					mark=">"
+					onChange={setUserPrompt}
+					onSubmit={onSubmit}
+					showCursor
+					isActive
+				/>
+			),
+		[userPrompt, setUserPrompt, onSubmit, loading],
 	);
 
 	return (
