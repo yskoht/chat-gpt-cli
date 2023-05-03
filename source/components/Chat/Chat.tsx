@@ -2,13 +2,15 @@ import {Newline, Box, Text} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
-import {LINE_SEP} from '@/components/MultiLineTextInput/constants.js';
+import {LINE_SEP, Cursor} from '@/components/MultiLineTextInput/index.js';
+import {isNullable} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
 import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './hooks/constants.js';
 import {Message as MessageType} from './hooks/types.js';
 import useChat from './hooks/useChat.js';
+import useInputHistory from './hooks/useInputHistory.js';
 import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
 import useText from './hooks/useText.js';
@@ -26,6 +28,7 @@ function Chat() {
 	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 	const {loading, startLoading, stopLoading} = useLoading();
+	const {updateHistory, getPrevHistory, getNextHistory} = useInputHistory();
 
 	const assistantMessage = useCallback(
 		(text: string) => ({role: ROLE.assistant, content: text}),
@@ -55,6 +58,7 @@ function Chat() {
 
 	const onSubmit = useCallback(async () => {
 		startLoading();
+		updateHistory(userPromptText);
 		const _messages = [...messages, userMessage(userPromptText)];
 		setMessages(_messages);
 		clearUserPromptText();
@@ -67,6 +71,7 @@ function Chat() {
 		setMessages,
 		clearUserPromptText,
 		startLoading,
+		updateHistory,
 	]);
 
 	const _messages = useMemo(
@@ -94,6 +99,40 @@ function Chat() {
 		[textInProgress],
 	);
 
+	const onHistoryPrev = useCallback(
+		(cursor: Cursor, value: string) => {
+			const nextValue = getPrevHistory(value);
+			if (isNullable(nextValue)) {
+				return {
+					nextCursor: cursor,
+					nextValue: value,
+				};
+			}
+			return {
+				nextCursor: 0,
+				nextValue,
+			};
+		},
+		[getPrevHistory],
+	);
+
+	const onHistoryNext = useCallback(
+		(cursor: Cursor, value: string) => {
+			const nextValue = getNextHistory();
+			if (isNullable(nextValue)) {
+				return {
+					nextCursor: cursor,
+					nextValue: value,
+				};
+			}
+			return {
+				nextCursor: 0,
+				nextValue,
+			};
+		},
+		[getNextHistory],
+	);
+
 	const _userPrompt = useMemo(
 		() =>
 			loading ? (
@@ -108,9 +147,18 @@ function Chat() {
 					onSubmit={onSubmit}
 					showCursor
 					isActive
+					onHistoryPrev={onHistoryPrev}
+					onHistoryNext={onHistoryNext}
 				/>
 			),
-		[userPromptText, setUserPromptText, onSubmit, loading],
+		[
+			userPromptText,
+			setUserPromptText,
+			onSubmit,
+			loading,
+			onHistoryPrev,
+			onHistoryNext,
+		],
 	);
 
 	return (

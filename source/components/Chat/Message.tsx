@@ -1,7 +1,9 @@
 import {Box} from 'ink';
 import React from 'react';
 
-import MultiLineTextInput from '@/components/MultiLineTextInput/index.js';
+import MultiLineTextInput, {
+	OnHistory,
+} from '@/components/MultiLineTextInput/index.js';
 
 import Mark from './Mark.js';
 
@@ -15,6 +17,8 @@ type Props = {
 	onSubmit?: (value: string) => void;
 	showCursor?: boolean;
 	isActive?: boolean;
+	onHistoryPrev?: OnHistory;
+	onHistoryNext?: OnHistory;
 };
 function Message({
 	value,
@@ -24,6 +28,8 @@ function Message({
 	onSubmit = nop,
 	showCursor = false,
 	isActive = false,
+	onHistoryPrev,
+	onHistoryNext,
 }: Props) {
 	return (
 		<Box flexDirection="row">
@@ -35,6 +41,8 @@ function Message({
 					onSubmit={onSubmit}
 					showCursor={showCursor}
 					isActive={isActive}
+					onHistoryPrev={onHistoryPrev}
+					onHistoryNext={onHistoryNext}
 				/>
 			</Box>
 		</Box>
