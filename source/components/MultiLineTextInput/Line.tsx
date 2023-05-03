@@ -1,6 +1,8 @@
 import {Text} from 'ink';
 import React from 'react';
 
+import {isNullable} from '@/utilities/index.js';
+
 import {CURSOR_SHAPE} from './constants.js';
 import {CursorShape, Position} from './types.js';
 
@@ -8,10 +10,6 @@ const SPACE = ' ';
 
 function isEmpty(text: string) {
 	return text.length === 0;
-}
-
-function isNullable(x: unknown) {
-	return x == null;
 }
 
 type Props = {
