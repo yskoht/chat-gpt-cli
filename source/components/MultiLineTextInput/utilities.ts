@@ -24,3 +24,7 @@ export function toCursor(x: number, y: number, value: string): Cursor {
 export function replaceLineSep(value: string): string {
 	return value.replace(/\n/g, LINE_SEP);
 }
+
+export function replaceTab(value: string): string {
+	return value.replace(/\t/g, '  ');
+}

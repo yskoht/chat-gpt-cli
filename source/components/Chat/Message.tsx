@@ -19,6 +19,7 @@ type Props = {
 	isActive?: boolean;
 	onHistoryPrev?: OnHistory;
 	onHistoryNext?: OnHistory;
+	enableSyntaxHighlight?: boolean;
 };
 function Message({
 	value,
@@ -30,6 +31,7 @@ function Message({
 	isActive = false,
 	onHistoryPrev,
 	onHistoryNext,
+	enableSyntaxHighlight = true,
 }: Props) {
 	return (
 		<Box flexDirection="row">
@@ -43,6 +45,7 @@ function Message({
 					isActive={isActive}
 					onHistoryPrev={onHistoryPrev}
 					onHistoryNext={onHistoryNext}
+					enableSyntaxHighlight={enableSyntaxHighlight}
 				/>
 			</Box>
 		</Box>

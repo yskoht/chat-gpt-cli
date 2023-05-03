@@ -149,6 +149,7 @@ function Chat() {
 					isActive
 					onHistoryPrev={onHistoryPrev}
 					onHistoryNext={onHistoryNext}
+					enableSyntaxHighlight={false}
 				/>
 			),
 		[

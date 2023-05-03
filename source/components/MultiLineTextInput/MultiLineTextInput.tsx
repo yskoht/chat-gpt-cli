@@ -27,6 +27,7 @@ type Props = {
 	isActive?: boolean;
 	onHistoryPrev?: OnHistory;
 	onHistoryNext?: OnHistory;
+	enableSyntaxHighlight?: boolean;
 };
 function MultiLineTextInput({
 	value,
@@ -39,6 +40,7 @@ function MultiLineTextInput({
 	isActive = true,
 	onHistoryPrev,
 	onHistoryNext,
+	enableSyntaxHighlight = true,
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
 
@@ -97,6 +99,7 @@ function MultiLineTextInput({
 			showCursor={showCursor}
 			cursorColor={cursorColor}
 			cursorShape={cursorShape}
+			enableSyntaxHighlight={enableSyntaxHighlight}
 		/>
 	);
 }
