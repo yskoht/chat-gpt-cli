@@ -63,7 +63,7 @@ function Lines({
 					</Box>
 				);
 			}),
-		[_lines, currentPosition, cursorColor],
+		[_lines, currentPosition, cursorColor, cursorShape],
 	);
 
 	return <Box flexDirection="column">{lines}</Box>;

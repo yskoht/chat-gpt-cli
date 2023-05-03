@@ -10,6 +10,7 @@ import * as edit from './edit.js';
 import * as keymap from './keymap.js';
 
 const DEBUG = false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debug(...args: any[]) {
 	if (DEBUG) {
 		console.log(...args);
