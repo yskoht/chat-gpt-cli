@@ -53,7 +53,7 @@ type Props = {
 	onFinish: () => void;
 };
 function useChat({onChange, onFinish}: Props) {
-	const chat = useCallback(
+	const submitChat = useCallback(
 		async (messages: Message[]) => {
 			try {
 				const res = await createChatCompletion(messages);
@@ -81,7 +81,7 @@ function useChat({onChange, onFinish}: Props) {
 		[onChange, onFinish],
 	);
 
-	return useMemo(() => ({chat}), [chat]);
+	return useMemo(() => ({submitChat}), [submitChat]);
 }
 
 export default useChat;

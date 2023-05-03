@@ -47,7 +47,7 @@ function Chat() {
 		streamFinished();
 		stopLoading();
 	}, [streamFinished, stopLoading]);
-	const {chat} = useChat({onChange, onFinish});
+	const {submitChat} = useChat({onChange, onFinish});
 
 	const onSubmit = useCallback(async () => {
 		startLoading();
@@ -55,9 +55,9 @@ function Chat() {
 		const _messages = [...messages, _userMessage];
 		setMessages(_messages);
 		clearUserPromptText();
-		await chat(_messages);
+		await submitChat(_messages);
 	}, [
-		chat,
+		submitChat,
 		userPromptText,
 		userMessage,
 		messages,
