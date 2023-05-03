@@ -10,26 +10,11 @@ import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
 import useChat from './hooks/useChat.js';
 import {Message as MessageType} from './hooks/types.js';
-import {
-	ROLE,
-	USER_MESSAGE_MARK_COLOR,
-	ASSISTANT_MESSAGE_MARK_COLOR,
-	DEFAULT_MESSAGE_MARK_COLOR,
-} from './hooks/constants.js';
+import {ROLE} from './hooks/constants.js';
+import {markColor} from './Mark.js';
 
 function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd() + LINE_SEP;
-}
-
-function markColor(message: MessageType) {
-	switch (message.role) {
-		case 'user':
-			return USER_MESSAGE_MARK_COLOR;
-		case 'assistant':
-			return ASSISTANT_MESSAGE_MARK_COLOR;
-		default:
-			return DEFAULT_MESSAGE_MARK_COLOR;
-	}
 }
 
 function Chat() {
