@@ -10,7 +10,7 @@ import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
 import useChat from './hooks/useChat.js';
 import {Message as MessageType} from './hooks/types.js';
-import {ROLE} from './hooks/constants.js';
+import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './hooks/constants.js';
 import {markColor} from './Mark.js';
 
 function finishTextInProgress(textInProgress: string) {
@@ -76,7 +76,11 @@ function Chat() {
 				const key = keyExtractor(message.content, i);
 				return (
 					<Box key={key}>
-						<Message value={message.content} mark="■" markColor={_markColor} />
+						<Message
+							value={message.content}
+							mark={MESSAGE_MARK}
+							markColor={_markColor}
+						/>
 						<Newline />
 					</Box>
 				);
@@ -85,7 +89,8 @@ function Chat() {
 	);
 
 	const _textInProgress = useMemo(
-		() => textInProgress && <Message value={textInProgress} mark="■" />,
+		() =>
+			textInProgress && <Message value={textInProgress} mark={MESSAGE_MARK} />,
 		[textInProgress],
 	);
 
@@ -98,7 +103,7 @@ function Chat() {
 			) : (
 				<Message
 					value={userPromptText}
-					mark=">"
+					mark={USER_PROMPT_MARK}
 					onChange={setUserPromptText}
 					onSubmit={onSubmit}
 					showCursor
