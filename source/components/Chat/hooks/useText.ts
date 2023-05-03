@@ -2,7 +2,7 @@ import {useState, useCallback, useMemo} from 'react';
 
 const INIT = '';
 
-function useMessage() {
+function useText() {
 	const [message, setMessage] = useState<string>(INIT);
 	const clearMessage = useCallback(() => setMessage(INIT), []);
 	return useMemo(
@@ -11,4 +11,4 @@ function useMessage() {
 	);
 }
 
-export default useMessage;
+export default useText;

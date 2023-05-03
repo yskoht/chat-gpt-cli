@@ -5,7 +5,7 @@ import Spinner from 'ink-spinner';
 import {LINE_SEP} from '../MultiLineTextInput/constants.js';
 
 import Message from './Message.js';
-import useMessage from './hooks/useMessage.js';
+import useText from './hooks/useText.js';
 import useLoading from './hooks/useLoading.js';
 import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
 import useChat from './hooks/useChat.js';
@@ -17,8 +17,8 @@ import {
 	DEFAULT_MESSAGE_MARK_COLOR,
 } from './hooks/constants.js';
 
-function finishMessageInProgress(messageInProgress: string) {
-	return messageInProgress.trimEnd() + LINE_SEP;
+function finishTextInProgress(textInProgress: string) {
+	return textInProgress.trimEnd() + LINE_SEP;
 }
 
 function markColor(message: MessageType) {
@@ -34,35 +34,29 @@ function markColor(message: MessageType) {
 
 function Chat() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
-	const [messageInProgress, setMessageInProgress, clearMessageInProgress] =
-		useMessage();
-	const [userPrompt, setUserPrompt, clearUserPrompt] = useMessage();
+	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
+	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 	const {loading, startLoading, stopLoading} = useLoading();
 
 	const assistantMessage = useCallback(
-		(m: string) => ({role: ROLE.assistant, content: m}),
+		(text: string) => ({role: ROLE.assistant, content: text}),
 		[],
 	);
 	const userMessage = useCallback(
-		(m: string) => ({role: ROLE.user, content: m}),
+		(text: string) => ({role: ROLE.user, content: text}),
 		[],
 	);
 
 	const streamFinishedCallback = useCallback(() => {
-		const m = finishMessageInProgress(messageInProgress);
+		const m = finishTextInProgress(textInProgress);
 		setMessages(x => [...x, assistantMessage(m)]);
-		clearMessageInProgress();
-	}, [
-		messageInProgress,
-		assistantMessage,
-		setMessages,
-		clearMessageInProgress,
-	]);
+		clearTextInProgress();
+	}, [textInProgress, assistantMessage, setMessages, clearTextInProgress]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 
 	const onChange = useCallback(
-		(content: string) => setMessageInProgress(x => x + content),
-		[setMessageInProgress],
+		(content: string) => setTextInProgress(x => x + content),
+		[setTextInProgress],
 	);
 	const onFinish = useCallback(() => {
 		streamFinished();
@@ -72,18 +66,18 @@ function Chat() {
 
 	const onSubmit = useCallback(async () => {
 		startLoading();
-		const _userMessage = userMessage(userPrompt);
+		const _userMessage = userMessage(userPromptText);
 		const _messages = [...messages, _userMessage];
 		setMessages(_messages);
-		clearUserPrompt();
+		clearUserPromptText();
 		await chat(_messages);
 	}, [
 		chat,
-		userPrompt,
+		userPromptText,
 		userMessage,
 		messages,
 		setMessages,
-		clearUserPrompt,
+		clearUserPromptText,
 		startLoading,
 	]);
 
@@ -101,9 +95,9 @@ function Chat() {
 		[messages],
 	);
 
-	const _messageInProgress = useMemo(
-		() => messageInProgress && <Message value={messageInProgress} mark="■" />,
-		[messageInProgress],
+	const _textInProgress = useMemo(
+		() => textInProgress && <Message value={textInProgress} mark="■" />,
+		[textInProgress],
 	);
 
 	const _userPrompt = useMemo(
@@ -114,21 +108,21 @@ function Chat() {
 				</Text>
 			) : (
 				<Message
-					value={userPrompt}
+					value={userPromptText}
 					mark=">"
-					onChange={setUserPrompt}
+					onChange={setUserPromptText}
 					onSubmit={onSubmit}
 					showCursor
 					isActive
 				/>
 			),
-		[userPrompt, setUserPrompt, onSubmit, loading],
+		[userPromptText, setUserPromptText, onSubmit, loading],
 	);
 
 	return (
 		<Box flexDirection="column" justifyContent="flex-end">
 			{_messages}
-			{_messageInProgress}
+			{_textInProgress}
 			{_userPrompt}
 		</Box>
 	);
