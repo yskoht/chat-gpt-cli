@@ -12,7 +12,8 @@
 		"dev": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
 		"test": "prettier --check . && xo && ava",
 		"lint": "eslint . --ext .ts,.tsx",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"format": "prettier --write --config ./.prettierrc.cjs ."
 	},
 	"files": [
 		"dist"
