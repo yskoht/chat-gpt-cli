@@ -61,12 +61,6 @@ type Groups = {
 	codeLine: string | undefined;
 };
 
-function highlightOption(
-	language: string | undefined,
-): {language: string} | undefined {
-	return language ? {language} : undefined;
-}
-
 function replaceValue(
 	value: string,
 	index: number,
@@ -85,8 +79,7 @@ function colorizeCodeBlock(
 	codeBlock: string,
 	language: string | undefined,
 ) {
-	const option = highlightOption(language);
-	const highlighted = highlight(codeBlock, option);
+	const highlighted = highlight(codeBlock, {language});
 	return replaceValue(value, index, codeBlockAll, highlighted);
 }
 
