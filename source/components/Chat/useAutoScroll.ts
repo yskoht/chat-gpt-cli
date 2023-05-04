@@ -26,12 +26,6 @@ function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 		return toLines(userPromptText).length;
 	}, [userPromptText]);
 
-	console.log({
-		messagesLineCount,
-		textInProgressLineCount,
-		userPromptTextLineCount,
-	});
-
 	useEffect(() => {
 		recalculateComponentSize();
 		scrollToBottom();
