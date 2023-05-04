@@ -67,7 +67,7 @@ function highlighting(value: string): string {
 		}
 
 		if (codeLineAll && codeLine && m.index != null) {
-			const highlighted = `\x1B[1m${codeLine}\x1B[22m`;
+			const highlighted = `\x1B[1m${codeLine}\x1B[22m`; // tmp
 			return (
 				acc.slice(0, m.index) +
 				highlighted +
