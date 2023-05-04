@@ -7,7 +7,7 @@ import {ScrollAreaContext} from './ScrollAreaContext.js';
 type Props = {
 	isActive: boolean;
 };
-function ScrollController({isActive}: Props) {
+function ScrollHandler({isActive}: Props) {
 	const store = useContext(ScrollAreaContext);
 	const {scrollDown, scrollUp} = useStore(store, ({scrollDown, scrollUp}) => ({
 		scrollDown,
@@ -31,4 +31,4 @@ function ScrollController({isActive}: Props) {
 	return null;
 }
 
-export default ScrollController;
+export default ScrollHandler;
