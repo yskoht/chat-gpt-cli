@@ -1,6 +1,9 @@
 import {Text, Box, measureElement} from 'ink';
 import React, {useRef, useEffect, useState, useMemo} from 'react';
 
+import useDimension from '@/hooks/useDimension.js';
+import {isNullable} from '@/utilities/index.js';
+
 const DIVIDER = '─';
 
 function calcPadding(
@@ -15,7 +18,7 @@ function calcDividerWidth(
 	paddingLeft: number,
 	paddingRight: number,
 ): number {
-	return Math.max(width - paddingLeft - paddingRight, 0);
+	return Math.max(width - paddingLeft - paddingRight - 1, 0);
 }
 
 type Props = {
@@ -35,6 +38,7 @@ function Divider({
 	divider = DIVIDER,
 }: Props) {
 	const ref = useRef(null);
+	const window = useDimension();
 	const [width, setWidth] = useState(0);
 
 	const _paddingTop = useMemo(
@@ -60,11 +64,13 @@ function Divider({
 	}, [divider, width, _paddingLeft, _paddingRight]);
 
 	useEffect(() => {
-		if (ref.current) {
-			const {width} = measureElement(ref.current);
-			setWidth(width);
+		if (isNullable(ref.current)) {
+			return;
 		}
-	}, []);
+
+		const {width} = measureElement(ref.current);
+		setWidth(width);
+	}, [window]);
 
 	return (
 		<Box
