@@ -1,35 +1,29 @@
 import {Text} from 'ink';
 import React from 'react';
 
-import {isNullable} from '@/utilities/index.js';
+import {isNullable, SPACE} from '@/utilities/index.js';
 
 import {CURSOR_SHAPE} from './constants.js';
 import {CursorShape, Position} from './types.js';
 
-const SPACE = ' ';
-
-function isEmpty(text: string) {
-	return text.length === 0;
-}
-
 type Props = {
 	text: string;
 	currentPosition: Position;
-	isCurrentLine: boolean;
-	isTailOfLine: boolean;
+	isCursorAtCurrentLine: boolean;
+	isCursorAtTailOfLine: boolean;
 	cursorColor: string | undefined;
 	cursorShape: CursorShape;
 };
 function Line({
 	text,
 	currentPosition: {x},
-	isCurrentLine,
-	isTailOfLine,
+	isCursorAtCurrentLine,
+	isCursorAtTailOfLine,
 	cursorColor,
 	cursorShape,
 }: Props) {
-	if (!isCurrentLine) {
-		return <Text>{isEmpty(text) ? SPACE : text}</Text>;
+	if (!isCursorAtCurrentLine) {
+		return <Text>{`${text}${SPACE}`} </Text>;
 	}
 
 	return (
@@ -43,7 +37,7 @@ function Line({
 				/>
 			)}
 			<Text>{text.slice(x + 1)}</Text>
-			{isTailOfLine && (
+			{isCursorAtTailOfLine && (
 				<CursorMark cursorColor={cursorColor} cursorShape={cursorShape} />
 			)}
 		</>

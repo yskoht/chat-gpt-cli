@@ -20,11 +20,17 @@ function keyExtractor(text: string, index: number): string {
 	return `${index}-${text}`;
 }
 
-function isCurrentLine(currentPosition: Position, index: number): boolean {
+function isCursorAtCurrentLine(
+	currentPosition: Position,
+	index: number,
+): boolean {
 	return currentPosition.y === index;
 }
 
-function isTailOfLine(currentPosition: Position, text: string): boolean {
+function isCursorAtTailOfLine(
+	currentPosition: Position,
+	text: string,
+): boolean {
 	return currentPosition.x === text.length;
 }
 
@@ -107,15 +113,21 @@ function Lines({
 		() =>
 			_lines.map((text, y) => {
 				const key = keyExtractor(text, y);
-				const _isCurrentLine = isCurrentLine(currentPosition, y);
-				const _isTailOfLine = isTailOfLine(currentPosition, text);
+				const _isCursorAtCurrentLine = isCursorAtCurrentLine(
+					currentPosition,
+					y,
+				);
+				const _isCursorAtTailOfLine = isCursorAtTailOfLine(
+					currentPosition,
+					text,
+				);
 				return (
 					<Box key={key}>
 						<Line
 							text={text}
 							currentPosition={currentPosition}
-							isCurrentLine={_isCurrentLine}
-							isTailOfLine={_isTailOfLine}
+							isCursorAtCurrentLine={_isCursorAtCurrentLine}
+							isCursorAtTailOfLine={_isCursorAtTailOfLine}
 							cursorColor={cursorColor}
 							cursorShape={cursorShape}
 						/>
