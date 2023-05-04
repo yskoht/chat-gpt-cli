@@ -85,7 +85,11 @@ function ScrollBar({
 		});
 	}, [outerHeight, _isThisPositionBar]);
 
-	return <Box flexDirection="column">{scrollBar}</Box>;
+	return (
+		<Box flexDirection="column" paddingLeft={1}>
+			{scrollBar}
+		</Box>
+	);
 }
 
 type ScrollBarContainerProps = {
