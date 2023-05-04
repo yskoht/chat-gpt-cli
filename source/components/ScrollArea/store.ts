@@ -4,6 +4,10 @@ import {nop} from '@/utilities/index.js';
 
 import {recalculateComponentSize} from './types.js';
 
+function calcPositionFromInnerTopMax(innerHeight: number, outerHeight: number) {
+	return Math.max(innerHeight - outerHeight, 0);
+}
+
 type StoreCore = {
 	outerHeight: number;
 	innerHeight: number;
@@ -12,6 +16,8 @@ type StoreCore = {
 	setInnerHeight: (height: number) => void;
 	scrollDown: (n?: number) => void;
 	scrollUp: (n?: number) => void;
+	scrollToTop: () => void;
+	scrollToBottom: () => void;
 	recalculateComponentSize: recalculateComponentSize;
 	setRecalculateComponentSize: (
 		recalculateComponentSize: recalculateComponentSize,
@@ -27,7 +33,10 @@ const store = createStore<StoreCore>((set) => ({
 	setInnerHeight: (innerHeight) => set({innerHeight}),
 	scrollDown: (n = 1) =>
 		set(({innerHeight, outerHeight, positionFromInnerTop}) => {
-			const positionFromInnerTopMax = Math.max(innerHeight - outerHeight, 0);
+			const positionFromInnerTopMax = calcPositionFromInnerTopMax(
+				innerHeight,
+				outerHeight,
+			);
 			const nextPosition = Math.min(
 				positionFromInnerTop + n,
 				positionFromInnerTopMax,
@@ -42,6 +51,15 @@ const store = createStore<StoreCore>((set) => ({
 			return {
 				positionFromInnerTop: nextPosition,
 			};
+		}),
+	scrollToTop: () => set({positionFromInnerTop: 0}),
+	scrollToBottom: () =>
+		set(({innerHeight, outerHeight}) => {
+			const positionFromInnerTopMax = calcPositionFromInnerTopMax(
+				innerHeight,
+				outerHeight,
+			);
+			return {positionFromInnerTop: positionFromInnerTopMax};
 		}),
 	recalculateComponentSize: nop,
 	setRecalculateComponentSize: (recalculateComponentSize) =>

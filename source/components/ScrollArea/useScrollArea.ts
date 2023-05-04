@@ -7,9 +7,17 @@ function useScrollArea() {
 	const store = useContext(ScrollAreaContext);
 	const apis = useStore(
 		store,
-		({scrollDown, scrollUp, recalculateComponentSize}) => ({
+		({
 			scrollDown,
 			scrollUp,
+			scrollToTop,
+			scrollToBottom,
+			recalculateComponentSize,
+		}) => ({
+			scrollDown,
+			scrollUp,
+			scrollToTop,
+			scrollToBottom,
 			recalculateComponentSize,
 		}),
 	);
