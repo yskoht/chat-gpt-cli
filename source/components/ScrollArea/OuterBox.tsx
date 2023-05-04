@@ -5,17 +5,21 @@ import {useStore} from 'zustand';
 import {isNullable} from '@/utilities/index.js';
 
 import {ScrollAreaContext} from './ScrollAreaContext.js';
+import ScrollBar from './ScrollBar.js';
+import {ScrollBarVisibility} from './types.js';
 
 type Props = {
 	children: React.ReactNode;
-	height?: number | string;
+	height: number | string | undefined;
+	scrollBar: ScrollBarVisibility;
 };
 
-function OuterBox({children, height}: Props) {
-	const ref = useRef(null);
-
+function OuterBox({children, height, scrollBar}: Props) {
 	const store = useContext(ScrollAreaContext);
-	const {setOuterHeight} = useStore(store);
+	const {setOuterHeight} = useStore(store, ({setOuterHeight}) => ({
+		setOuterHeight,
+	}));
+	const ref = useRef(null);
 
 	useEffect(() => {
 		if (!isNullable(ref.current)) {
@@ -25,8 +29,16 @@ function OuterBox({children, height}: Props) {
 	}, [setOuterHeight]);
 
 	return (
-		<Box ref={ref} height={height} flexDirection="column" overflow="hidden">
-			{children}
+		<Box
+			flexDirection="row"
+			justifyContent="space-between"
+			width="100%"
+			height={height}
+		>
+			<Box ref={ref} flexDirection="column" overflow="hidden">
+				{children}
+			</Box>
+			<ScrollBar visibility={scrollBar} />
 		</Box>
 	);
 }

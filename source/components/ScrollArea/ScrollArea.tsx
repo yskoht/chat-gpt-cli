@@ -4,17 +4,25 @@ import InnerBox from './InnerBox.js';
 import OuterBox from './OuterBox.js';
 import ScrollAreaContextProvider from './ScrollAreaContext.js';
 import ScrollController from './ScrollController.js';
+import {SCROLL_BAR_VISIBILITY} from './constants.js';
+import {ScrollBarVisibility} from './types.js';
 
 type Props = {
 	children: React.ReactNode;
 	height?: number | string;
 	isActive?: boolean;
+	scrollBar?: ScrollBarVisibility;
 };
-function ScrollArea({children, height, isActive = true}: Props) {
+function ScrollArea({
+	children,
+	height,
+	isActive = true,
+	scrollBar = SCROLL_BAR_VISIBILITY.auto,
+}: Props) {
 	return (
 		<ScrollAreaContextProvider>
 			<ScrollController isActive={isActive} />
-			<OuterBox height={height}>
+			<OuterBox height={height} scrollBar={scrollBar}>
 				<InnerBox>{children}</InnerBox>
 			</OuterBox>
 		</ScrollAreaContextProvider>
