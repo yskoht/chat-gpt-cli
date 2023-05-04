@@ -4,10 +4,9 @@ import React from 'react';
 import MultiLineTextInput, {
 	OnHistory,
 } from '@/components/MultiLineTextInput/index.js';
+import {nop} from '@/utilities/index.js';
 
 import Mark from './Mark.js';
-
-const nop = () => undefined;
 
 type Props = {
 	value: string;
