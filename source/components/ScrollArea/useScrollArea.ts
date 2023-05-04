@@ -5,12 +5,16 @@ import {ScrollAreaContext} from './ScrollAreaContext.js';
 
 function useScrollArea() {
 	const store = useContext(ScrollAreaContext);
-	const {scrollDown, scrollUp} = useStore(store, ({scrollDown, scrollUp}) => ({
-		scrollDown,
-		scrollUp,
-	}));
+	const apis = useStore(
+		store,
+		({scrollDown, scrollUp, recalculateComponentSize}) => ({
+			scrollDown,
+			scrollUp,
+			recalculateComponentSize,
+		}),
+	);
 
-	return {scrollDown, scrollUp};
+	return apis;
 }
 
 export default useScrollArea;

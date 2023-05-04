@@ -1,5 +1,9 @@
 import {createStore, StoreApi} from 'zustand/vanilla';
 
+import {nop} from '@/utilities/index.js';
+
+import {recalculateComponentSize} from './types.js';
+
 type StoreCore = {
 	outerHeight: number;
 	innerHeight: number;
@@ -8,6 +12,10 @@ type StoreCore = {
 	setInnerHeight: (height: number) => void;
 	scrollDown: (n?: number) => void;
 	scrollUp: (n?: number) => void;
+	recalculateComponentSize: recalculateComponentSize;
+	setRecalculateComponentSize: (
+		recalculateComponentSize: recalculateComponentSize,
+	) => void;
 };
 export type Store = StoreApi<StoreCore>;
 
@@ -35,6 +43,9 @@ const store = createStore<StoreCore>((set) => ({
 				positionFromInnerTop: nextPosition,
 			};
 		}),
+	recalculateComponentSize: nop,
+	setRecalculateComponentSize: (recalculateComponentSize) =>
+		set({recalculateComponentSize}),
 }));
 
 export default store;

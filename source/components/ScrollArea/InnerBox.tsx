@@ -1,5 +1,11 @@
 import {Box, measureElement} from 'ink';
-import React, {useRef, useEffect, useContext, useMemo} from 'react';
+import React, {
+	useCallback,
+	useRef,
+	useEffect,
+	useContext,
+	useMemo,
+} from 'react';
 import {useStore} from 'zustand';
 
 import {isNullable} from '@/utilities/index.js';
@@ -12,20 +18,33 @@ type Props = {
 function InnerBox({children}: Props) {
 	const ref = useRef(null);
 	const store = useContext(ScrollAreaContext);
-	const {setInnerHeight, positionFromInnerTop} = useStore(
-		store,
-		({setInnerHeight, positionFromInnerTop}) => ({
-			setInnerHeight,
-			positionFromInnerTop,
-		}),
-	);
+	const {setInnerHeight, positionFromInnerTop, setRecalculateComponentSize} =
+		useStore(
+			store,
+			({
+				setInnerHeight,
+				positionFromInnerTop,
+				setRecalculateComponentSize,
+			}) => ({
+				setInnerHeight,
+				positionFromInnerTop,
+				setRecalculateComponentSize,
+			}),
+		);
+
+	const calculateComponentSize = useCallback(() => {
+		if (isNullable(ref.current)) {
+			return;
+		}
+
+		const dimensions = measureElement(ref.current);
+		setInnerHeight(dimensions.height);
+	}, [setInnerHeight]);
 
 	useEffect(() => {
-		if (!isNullable(ref.current)) {
-			const dimensions = measureElement(ref.current);
-			setInnerHeight(dimensions.height);
-		}
-	}, [setInnerHeight]);
+		calculateComponentSize();
+		setRecalculateComponentSize(calculateComponentSize);
+	}, [calculateComponentSize, setRecalculateComponentSize]);
 
 	const marginTop = useMemo(
 		() => -positionFromInnerTop,
