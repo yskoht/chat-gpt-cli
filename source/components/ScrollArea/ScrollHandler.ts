@@ -1,32 +1,36 @@
 import {useInput} from 'ink';
-import {useContext} from 'react';
-import {useStore} from 'zustand';
+import {useCallback, useMemo} from 'react';
 
-import {ScrollAreaContext} from './ScrollAreaContext.js';
+import {ScrollHandler as ScrollHandlerType} from './types.js';
+import useScrollArea from './useScrollArea.js';
 
 type Props = {
 	isActive: boolean;
+	scrollHandler: ScrollHandlerType | undefined;
 };
-function ScrollHandler({isActive}: Props) {
-	const store = useContext(ScrollAreaContext);
-	const {scrollDown, scrollUp} = useStore(store, ({scrollDown, scrollUp}) => ({
-		scrollDown,
-		scrollUp,
-	}));
+function ScrollHandler({isActive, scrollHandler}: Props) {
+	const {scrollDown, scrollUp} = useScrollArea();
 
-	useInput(
-		(_input, key) => {
+	const defaultScrollHandler: ScrollHandlerType = useCallback(
+		(_, key) => {
 			if (key.downArrow) {
 				scrollDown(1);
 				return;
 			}
+
 			if (key.upArrow) {
 				scrollUp(1);
 				return;
 			}
 		},
-		{isActive},
+		[scrollDown, scrollUp],
 	);
+
+	const handler = useMemo(
+		() => scrollHandler ?? defaultScrollHandler,
+		[scrollHandler, defaultScrollHandler],
+	);
+	useInput(handler, {isActive});
 
 	return null;
 }
