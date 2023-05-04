@@ -1,5 +1,3 @@
-export function isNullable(
-	x: string | undefined | null,
-): x is undefined | null {
+export function isNullable(x: unknown): x is undefined | null {
 	return x == null;
 }
