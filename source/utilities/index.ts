@@ -1,4 +1,4 @@
-export const LINE_SEP = '\r';
+export const LINE_SEP = '\n';
 export const SPACE = ' ';
 
 export function isNullable(x: unknown): x is undefined | null {
@@ -8,7 +8,7 @@ export function isNullable(x: unknown): x is undefined | null {
 export const nop = () => undefined;
 
 export function replaceLineSep(value: string): string {
-	return value.replace(/\n/g, LINE_SEP);
+	return value.replace(/\r\n?/g, LINE_SEP);
 }
 
 export function toLines(value: string): string[] {
