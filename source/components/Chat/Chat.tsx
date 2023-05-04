@@ -1,9 +1,9 @@
-import {Newline, Box} from 'ink';
+import {Box} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
 import {Cursor} from '@/components/MultiLineTextInput/index.js';
-import {isNullable, LINE_SEP, replaceLineSep} from '@/utilities/index.js';
+import {isNullable, replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
@@ -16,7 +16,7 @@ import useStreamFinishedCallback from './useStreamFinishedCallback.js';
 import useText from './useText.js';
 
 function finishTextInProgress(textInProgress: string) {
-	return textInProgress.trimEnd() + LINE_SEP;
+	return textInProgress.trimEnd();
 }
 
 function keyExtractor(text: string, index: number): string {
@@ -113,13 +113,12 @@ function Chat() {
 				const _markColor = markColor(message);
 				const key = keyExtractor(message.content, i);
 				return (
-					<Box key={key}>
+					<Box key={key} marginBottom={1}>
 						<Message
 							value={message.content}
 							mark={MESSAGE_MARK}
 							markColor={_markColor}
 						/>
-						<Newline />
 					</Box>
 				);
 			}),
