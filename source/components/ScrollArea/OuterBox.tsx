@@ -11,10 +11,10 @@ import {ScrollBarVisibility} from './types.js';
 type Props = {
 	children: React.ReactNode;
 	height: number | string | undefined;
-	scrollBar: ScrollBarVisibility;
+	scrollBarVisibility: ScrollBarVisibility;
 };
 
-function OuterBox({children, height, scrollBar}: Props) {
+function OuterBox({children, height, scrollBarVisibility}: Props) {
 	const store = useContext(ScrollAreaContext);
 	const {setOuterHeight} = useStore(store, ({setOuterHeight}) => ({
 		setOuterHeight,
@@ -38,7 +38,7 @@ function OuterBox({children, height, scrollBar}: Props) {
 			<Box ref={ref} flexDirection="column" overflow="hidden">
 				{children}
 			</Box>
-			<ScrollBar visibility={scrollBar} />
+			<ScrollBar visibility={scrollBarVisibility} />
 		</Box>
 	);
 }

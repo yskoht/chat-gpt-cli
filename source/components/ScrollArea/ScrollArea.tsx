@@ -14,20 +14,20 @@ type Props = {
 	children: React.ReactNode;
 	height?: number | string;
 	isActive?: boolean;
-	scrollBar?: ScrollBarVisibility;
+	scrollBarVisibility?: ScrollBarVisibility;
 	scrollHandler?: ScrollHandlerType;
 };
 function ScrollArea({
 	children,
 	height,
 	isActive = true,
-	scrollBar = SCROLL_BAR_VISIBILITY.auto,
+	scrollBarVisibility = SCROLL_BAR_VISIBILITY.auto,
 	scrollHandler,
 }: Props) {
 	return (
 		<ScrollAreaContextProvider>
 			<ScrollHandler isActive={isActive} scrollHandler={scrollHandler} />
-			<OuterBox height={height} scrollBar={scrollBar}>
+			<OuterBox height={height} scrollBarVisibility={scrollBarVisibility}>
 				<InnerBox>{children}</InnerBox>
 			</OuterBox>
 		</ScrollAreaContextProvider>
