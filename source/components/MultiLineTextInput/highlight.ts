@@ -8,11 +8,9 @@ const _CODE_BLOCK_REGEXP =
 const _UNFINISHED_CODE_BLOCK_REGEXP =
 	'(?<unfinishedCodeBlockAll>`{3}(?<unfinishedLanguage>\\w*)\\r?(?<unfinishedCodeBlock>[\\s\\S]*?)$)';
 const _CODE_LINE_REGEXP = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
+const _CODE_REGEXP = `${_CODE_BLOCK_REGEXP}|${_UNFINISHED_CODE_BLOCK_REGEXP}|${_CODE_LINE_REGEXP}`;
 
-const CODE_REGEXP = new RegExp(
-	`${_CODE_BLOCK_REGEXP}|${_UNFINISHED_CODE_BLOCK_REGEXP}|${_CODE_LINE_REGEXP}`,
-	'g',
-);
+const CODE_REGEXP = new RegExp(_CODE_REGEXP, 'g');
 const URL_REGEXP = urlRegexSafe({strict: true});
 
 type Groups = {
