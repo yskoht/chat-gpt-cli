@@ -5,8 +5,8 @@ import {
 	USER_MESSAGE_MARK_COLOR,
 	ASSISTANT_MESSAGE_MARK_COLOR,
 	DEFAULT_MESSAGE_MARK_COLOR,
-} from './hooks/constants.js';
-import {Message} from './hooks/types.js';
+} from './constants.js';
+import {Message} from './types.js';
 
 type Props = {
 	mark: string;

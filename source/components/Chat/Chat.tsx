@@ -7,13 +7,13 @@ import {isNullable} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
-import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './hooks/constants.js';
-import {Message as MessageType} from './hooks/types.js';
-import useChat from './hooks/useChat.js';
-import useInputHistory from './hooks/useInputHistory.js';
-import useLoading from './hooks/useLoading.js';
-import useStreamFinishedCallback from './hooks/useStreamFinishedCallback.js';
-import useText from './hooks/useText.js';
+import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
+import {Message as MessageType} from './types.js';
+import useChat from './useChat.js';
+import useInputHistory from './useInputHistory.js';
+import useLoading from './useLoading.js';
+import useStreamFinishedCallback from './useStreamFinishedCallback.js';
+import useText from './useText.js';
 
 function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd() + LINE_SEP;
