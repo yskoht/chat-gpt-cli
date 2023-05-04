@@ -1,7 +1,7 @@
 import {useInput, useFocusManager} from 'ink';
 import {useEffect} from 'react';
 
-function useController() {
+function useFocusManagement() {
 	const {enableFocus, focusNext, focusPrevious} = useFocusManager();
 
 	useEffect(() => {
@@ -23,4 +23,4 @@ function useController() {
 	});
 }
 
-export default useController;
+export default useFocusManagement;

@@ -6,12 +6,12 @@ import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
-import useController from '@/hooks/useController.js';
 import useDimension from '@/hooks/useDimension.js';
+import useFocusManagement from '@/hooks/useFocusManagement.js';
 
 export default function App() {
 	const {width, height} = useDimension();
-	useController();
+	useFocusManagement();
 
 	return (
 		<Box
