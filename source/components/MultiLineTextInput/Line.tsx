@@ -27,7 +27,7 @@ function Line({
 	}
 
 	return (
-		<>
+		<Text>
 			<Text>{text.slice(0, x)}</Text>
 			{!isNullable(text[x]) && (
 				<CursorMark
@@ -40,7 +40,7 @@ function Line({
 			{isCursorAtTailOfLine && (
 				<CursorMark cursorColor={cursorColor} cursorShape={cursorShape} />
 			)}
-		</>
+		</Text>
 	);
 }
 
