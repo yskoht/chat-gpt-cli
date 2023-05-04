@@ -2,7 +2,8 @@ import {Configuration, OpenAIApi} from 'openai';
 
 const OPENAI_API_KEY = process.env['OPENAI_API_KEY'];
 if (!OPENAI_API_KEY) {
-	throw new Error('Missing environment variable "OPENAI_API_KEY"');
+	console.error('Missing environment variable "OPENAI_API_KEY"');
+	process.exit(1);
 }
 
 const configuration = new Configuration({
