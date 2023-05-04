@@ -1,10 +1,6 @@
-import {LINE_SEP} from '@/utilities/index.js';
+import {toLines} from '@/utilities/index.js';
 
 import {Cursor, Position} from './types.js';
-
-export function toLines(value: string): string[] {
-	return value.split(LINE_SEP);
-}
 
 export function toPosition(cursor: Cursor, value: string): Position {
 	const lines = toLines(value.slice(0, cursor));

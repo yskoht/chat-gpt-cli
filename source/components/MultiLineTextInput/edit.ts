@@ -1,7 +1,7 @@
-import {LINE_SEP} from '@/utilities/index.js';
+import {LINE_SEP, toLines} from '@/utilities/index.js';
 
 import {Cursor, Next, OnHistory} from './types.js';
-import {toPosition, toCursor, toLines} from './utilities.js';
+import {toPosition, toCursor} from './utilities.js';
 
 export function moveUp(
 	cursor: Cursor,

@@ -10,3 +10,7 @@ export const nop = () => undefined;
 export function replaceLineSep(value: string): string {
 	return value.replace(/\n/g, LINE_SEP);
 }
+
+export function toLines(value: string): string[] {
+	return value.split(LINE_SEP);
+}
