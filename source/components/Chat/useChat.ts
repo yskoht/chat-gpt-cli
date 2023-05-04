@@ -4,6 +4,7 @@ import openai from '@/libraries/openai.js';
 
 import {ROLE} from './constants.js';
 import {Message, Response} from './types.js';
+import useProgress from './useProgress.js';
 
 const SYSTEM_PROMPT = {
 	role: ROLE.system,
@@ -54,8 +55,11 @@ type Props = {
 	onFinish: () => void;
 };
 function useChat({onChange, onFinish}: Props) {
+	const streaming = useProgress();
+
 	const submitChat = useCallback(
 		async (messages: Message[]) => {
+			streaming.start();
 			try {
 				const res = await createChatCompletion(messages);
 
@@ -66,6 +70,7 @@ function useChat({onChange, onFinish}: Props) {
 						const message = toMessage(line);
 						if (isDone(message)) {
 							onFinish();
+							streaming.stop();
 							return;
 						}
 
@@ -79,10 +84,16 @@ function useChat({onChange, onFinish}: Props) {
 				console.error(error);
 			}
 		},
-		[onChange, onFinish],
+		[onChange, onFinish, streaming],
 	);
 
-	return useMemo(() => ({submitChat}), [submitChat]);
+	return useMemo(
+		() => ({
+			inStreaming: streaming.inProgress,
+			submitChat,
+		}),
+		[streaming.inProgress, submitChat],
+	);
 }
 
 export default useChat;

@@ -1,5 +1,5 @@
 import {Text} from 'ink';
-import React from 'react';
+import React, {ReactNode} from 'react';
 
 import {
 	USER_MESSAGE_MARK_COLOR,
@@ -9,7 +9,7 @@ import {
 import {Message} from './types.js';
 
 type Props = {
-	mark: string;
+	mark: ReactNode;
 	markColor: string;
 };
 function Mark({mark, markColor}: Props) {

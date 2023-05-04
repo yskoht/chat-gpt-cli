@@ -1,4 +1,5 @@
 import {Newline, Box} from 'ink';
+import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
 import {Cursor} from '@/components/MultiLineTextInput/index.js';
@@ -11,7 +12,6 @@ import {Message as MessageType} from './types.js';
 import useAutoScroll from './useAutoScroll.js';
 import useChat from './useChat.js';
 import useInputHistory from './useInputHistory.js';
-import useLoading from './useLoading.js';
 import useStreamFinishedCallback from './useStreamFinishedCallback.js';
 import useText from './useText.js';
 
@@ -27,7 +27,6 @@ function Chat() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
-	const {loading, startLoading, stopLoading} = useLoading();
 	const {updateHistory, getPrevHistory, getNextHistory} = useInputHistory();
 	useAutoScroll({messages, textInProgress, userPromptText});
 
@@ -48,17 +47,17 @@ function Chat() {
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 
 	const onChange = useCallback(
-		(content: string) => setTextInProgress((x) => x + replaceLineSep(content)),
+		(content: string) => {
+			setTextInProgress((x) => x + replaceLineSep(content));
+		},
 		[setTextInProgress],
 	);
 	const onFinish = useCallback(() => {
 		streamFinished();
-		stopLoading();
-	}, [streamFinished, stopLoading]);
-	const {submitChat} = useChat({onChange, onFinish});
+	}, [streamFinished]);
+	const {submitChat, inStreaming} = useChat({onChange, onFinish});
 
 	const onSubmit = useCallback(async () => {
-		startLoading();
 		updateHistory(userPromptText);
 		const _messages = [...messages, userMessage(userPromptText)];
 		setMessages(_messages);
@@ -71,7 +70,6 @@ function Chat() {
 		messages,
 		setMessages,
 		clearUserPromptText,
-		startLoading,
 		updateHistory,
 	]);
 
@@ -95,8 +93,7 @@ function Chat() {
 	);
 
 	const _textInProgress = useMemo(
-		() =>
-			textInProgress && <Message value={textInProgress} mark={MESSAGE_MARK} />,
+		() => <Message value={textInProgress} mark={<Spinner />} />,
 		[textInProgress],
 	);
 
@@ -135,35 +132,27 @@ function Chat() {
 	);
 
 	const _userPrompt = useMemo(
-		() =>
-			!loading && (
-				<Message
-					value={userPromptText}
-					mark={USER_PROMPT_MARK}
-					onChange={setUserPromptText}
-					onSubmit={onSubmit}
-					showCursor
-					isActive
-					onHistoryPrev={onHistoryPrev}
-					onHistoryNext={onHistoryNext}
-					enableSyntaxHighlight={false}
-				/>
-			),
-		[
-			userPromptText,
-			setUserPromptText,
-			onSubmit,
-			loading,
-			onHistoryPrev,
-			onHistoryNext,
-		],
+		() => (
+			<Message
+				value={userPromptText}
+				mark={USER_PROMPT_MARK}
+				onChange={setUserPromptText}
+				onSubmit={onSubmit}
+				showCursor
+				isActive
+				onHistoryPrev={onHistoryPrev}
+				onHistoryNext={onHistoryNext}
+				enableSyntaxHighlight={false}
+			/>
+		),
+		[userPromptText, setUserPromptText, onSubmit, onHistoryPrev, onHistoryNext],
 	);
 
 	return (
 		<Box flexDirection="column" justifyContent="flex-end">
 			{_messages}
-			{_textInProgress}
-			{_userPrompt}
+			{inStreaming && _textInProgress}
+			{!inStreaming && _userPrompt}
 		</Box>
 	);
 }

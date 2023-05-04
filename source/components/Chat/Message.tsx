@@ -1,5 +1,5 @@
 import {Box} from 'ink';
-import React from 'react';
+import React, {ReactNode} from 'react';
 
 import MultiLineTextInput, {
 	OnHistory,
@@ -8,9 +8,11 @@ import {nop} from '@/utilities/index.js';
 
 import Mark from './Mark.js';
 
+const DEFAULT_MARK_COLOR = 'gray';
+
 type Props = {
 	value: string;
-	mark: string;
+	mark: ReactNode;
 	markColor?: string;
 	onChange?: (value: string) => void;
 	onSubmit?: (value: string) => void;
@@ -23,7 +25,7 @@ type Props = {
 function Message({
 	value,
 	mark,
-	markColor = 'gray',
+	markColor = DEFAULT_MARK_COLOR,
 	onChange = nop,
 	onSubmit = nop,
 	showCursor = false,
