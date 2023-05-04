@@ -11,6 +11,10 @@ import {ScrollBarVisibility} from './types.js';
 const SCROLL_BAR_CHAR = SPACE;
 const SCROLL_BAR_BACKGROUND_COLOR = 'gray';
 
+function shouldShowScrollBar(innerHeight: number, outerHeight: number) {
+	return innerHeight > outerHeight;
+}
+
 function isThisPositionBar(
 	scrollBarPosition: number,
 	scrollBarHeight: number,
@@ -101,8 +105,10 @@ function ScrollBarContainer({visibility}: ScrollBarContainerProps) {
 	if (visibility === SCROLL_BAR_VISIBILITY.hidden) {
 		return null;
 	}
-
-	if (visibility === SCROLL_BAR_VISIBILITY.auto && innerHeight <= outerHeight) {
+	if (
+		visibility === SCROLL_BAR_VISIBILITY.auto &&
+		!shouldShowScrollBar(innerHeight, outerHeight)
+	) {
 		return null;
 	}
 
