@@ -2,7 +2,7 @@ import {highlight} from 'cli-highlight';
 import {Box} from 'ink';
 import React, {useMemo} from 'react';
 
-import {replaceLineSep, toLines} from '@/utilities/index.js';
+import {isNullable, replaceLineSep, toLines} from '@/utilities/index.js';
 
 import Line from './Line.js';
 import {Cursor, CursorShape, Position} from './types.js';
@@ -48,63 +48,99 @@ const CODE_REGEXP = new RegExp(
 
 type Groups = {
 	codeBlockAll: string | undefined;
-	codeBlockLanguage: string | undefined;
 	codeBlock: string | undefined;
+	codeBlockLanguage: string | undefined;
 
 	unfinishedCodeBlockAll: string | undefined;
-	unfinishedCodeBlockLanguage: string | undefined;
 	unfinishedCodeBlock: string | undefined;
+	unfinishedCodeBlockLanguage: string | undefined;
 
 	codeLineAll: string | undefined;
 	codeLine: string | undefined;
 };
 
+function highlightOption(
+	language: string | undefined,
+): {language: string} | {} {
+	return language ? {language} : {};
+}
+
+function replaceValue(
+	value: string,
+	index: number,
+	beforeValue: string,
+	afterValue: string,
+) {
+	return (
+		value.slice(0, index) + afterValue + value.slice(index + beforeValue.length)
+	);
+}
+
+function highlightCodeBlock(
+	value: string,
+	index: number,
+	codeBlockAll: string,
+	codeBlock: string,
+	language: string | undefined,
+) {
+	const option = highlightOption(language);
+	const highlighted = highlight(codeBlock, option);
+	return replaceValue(value, index, codeBlockAll, highlighted);
+}
+
+function highlightCodeLine(
+	value: string,
+	index: number,
+	codeLineAll: string,
+	codeLine: string,
+) {
+	const highlighted = `\x1B[1m${codeLine}\x1B[22m`; // tmp
+	return replaceValue(value, index, codeLineAll, highlighted);
+}
+
 function highlighting(value: string): string {
 	const ms = [...value.matchAll(CODE_REGEXP)];
 
 	return ms.reduceRight((acc, m) => {
+		if (isNullable(m.index)) {
+			return acc;
+		}
+
 		const {
 			codeBlockAll,
-			codeBlockLanguage,
 			codeBlock,
+			codeBlockLanguage,
 
 			unfinishedCodeBlockAll,
-			unfinishedCodeBlockLanguage,
 			unfinishedCodeBlock,
+			unfinishedCodeBlockLanguage,
 
 			codeLineAll,
 			codeLine,
 		} = m.groups as Groups;
 
-		if (codeBlockAll && codeBlock && m.index != null) {
-			const option = codeBlockLanguage ? {language: codeBlockLanguage} : {};
-			const highlighted = highlight(codeBlock, option);
-			return (
-				acc.slice(0, m.index) +
-				highlighted +
-				acc.slice(m.index + codeBlockAll.length)
+		if (codeBlockAll && codeBlock) {
+			return highlightCodeBlock(
+				acc,
+				m.index,
+				codeBlockAll,
+				codeBlock,
+				codeBlockLanguage,
 			);
 		}
 
-		if (unfinishedCodeBlockAll && unfinishedCodeBlock && m.index != null) {
-			const option = unfinishedCodeBlockLanguage
-				? {language: unfinishedCodeBlockLanguage}
-				: {};
-			const highlighted = highlight(unfinishedCodeBlock, option);
-			return (
-				acc.slice(0, m.index) +
-				highlighted +
-				acc.slice(m.index + unfinishedCodeBlockAll.length)
+		if (unfinishedCodeBlockAll && unfinishedCodeBlock) {
+			return highlightCodeBlock(
+				acc,
+				m.index,
+				unfinishedCodeBlockAll,
+				unfinishedCodeBlock,
+				unfinishedCodeBlockLanguage,
 			);
 		}
 
-		if (codeLineAll && codeLine && m.index != null) {
-			const highlighted = `\x1B[1m${codeLine}\x1B[22m`; // tmp
-			return (
-				acc.slice(0, m.index) +
-				highlighted +
-				acc.slice(m.index + codeLineAll.length)
-			);
+		if (codeLineAll && codeLine) {
+			return highlightCodeLine(acc, m.index, codeLineAll, codeLine);
 		}
 
 		return acc;
