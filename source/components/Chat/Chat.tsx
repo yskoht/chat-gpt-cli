@@ -1,14 +1,14 @@
-import {Newline, Box, Text} from 'ink';
-import Spinner from 'ink-spinner';
+import {Newline, Box} from 'ink';
 import React, {useMemo, useState, useCallback} from 'react';
 
-import {LINE_SEP, Cursor} from '@/components/MultiLineTextInput/index.js';
-import {isNullable} from '@/utilities/index.js';
+import {Cursor} from '@/components/MultiLineTextInput/index.js';
+import {isNullable, LINE_SEP, replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
 import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
 import {Message as MessageType} from './types.js';
+import useAutoScroll from './useAutoScroll.js';
 import useChat from './useChat.js';
 import useInputHistory from './useInputHistory.js';
 import useLoading from './useLoading.js';
@@ -29,6 +29,7 @@ function Chat() {
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 	const {loading, startLoading, stopLoading} = useLoading();
 	const {updateHistory, getPrevHistory, getNextHistory} = useInputHistory();
+	useAutoScroll({messages, textInProgress, userPromptText});
 
 	const assistantMessage = useCallback(
 		(text: string) => ({role: ROLE.assistant, content: text}),
@@ -47,7 +48,7 @@ function Chat() {
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 
 	const onChange = useCallback(
-		(content: string) => setTextInProgress((x) => x + content),
+		(content: string) => setTextInProgress((x) => x + replaceLineSep(content)),
 		[setTextInProgress],
 	);
 	const onFinish = useCallback(() => {
@@ -135,11 +136,7 @@ function Chat() {
 
 	const _userPrompt = useMemo(
 		() =>
-			loading ? (
-				<Text>
-					<Spinner />
-				</Text>
-			) : (
+			!loading && (
 				<Message
 					value={userPromptText}
 					mark={USER_PROMPT_MARK}
