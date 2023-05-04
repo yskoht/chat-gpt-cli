@@ -5,6 +5,7 @@ import Chat from '@/components/Chat/index.js';
 import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
+import ScrollArea from '@/components/ScrollArea/index.js';
 import useController from '@/hooks/useController.js';
 import useDimension from '@/hooks/useDimension.js';
 
@@ -19,15 +20,10 @@ export default function App() {
 			width={width}
 			height={height}
 		>
-			<Box
-				flexDirection="column"
-				justifyContent="flex-end"
-				borderStyle="single"
-				width="80%"
-				paddingLeft={1}
-				paddingRight={1}
-			>
-				<Chat />
+			<Box borderStyle="single" width="80%" paddingLeft={1} paddingRight={1}>
+				<ScrollArea>
+					<Chat />
+				</ScrollArea>
 			</Box>
 
 			<Box flexDirection="column" width="20%" borderStyle="single">
