@@ -61,8 +61,8 @@ type Groups = {
 
 function highlightOption(
 	language: string | undefined,
-): {language: string} | {} {
-	return language ? {language} : {};
+): {language: string} | undefined {
+	return language ? {language} : undefined;
 }
 
 function replaceValue(
