@@ -12,15 +12,9 @@ type Props = {
 };
 function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 	const {scrollToBottom, recalculateComponentSize} = useScrollArea();
-	const messagesLineCount = useMemo(() => {
-		return messages.reduce((acc, message) => {
-			return acc + toLines(message.content).length;
-		}, 0);
+	const messagesLength = useMemo(() => {
+		return messages.length;
 	}, [messages]);
-
-	const textInProgressLineCount = useMemo(() => {
-		return toLines(textInProgress).length;
-	}, [textInProgress]);
 
 	const userPromptTextLineCount = useMemo(() => {
 		return toLines(userPromptText).length;
@@ -30,8 +24,8 @@ function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 		recalculateComponentSize();
 		scrollToBottom();
 	}, [
-		messagesLineCount,
-		textInProgressLineCount,
+		messagesLength,
+		textInProgress,
 		userPromptTextLineCount,
 		recalculateComponentSize,
 		scrollToBottom,
