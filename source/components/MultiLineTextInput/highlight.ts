@@ -3,14 +3,14 @@ import urlRegexSafe from 'url-regex-safe';
 
 import {isNullable} from '@/utilities/index.js';
 
-const CODE_BLOCK_REGEXP =
+const _CODE_BLOCK_REGEXP =
 	'(?<codeBlockAll>`{3}(?<codeBlockLanguage>\\w*)\\r?(?<codeBlock>[\\s\\S]*?)`{3}\\r?)';
-const UNFINISHED_CODE_BLOCK_REGEXP =
+const _UNFINISHED_CODE_BLOCK_REGEXP =
 	'(?<unfinishedCodeBlockAll>`{3}(?<unfinishedLanguage>\\w*)\\r?(?<unfinishedCodeBlock>[\\s\\S]*?)$)';
-const CODE_LINE_REGEXP = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
+const _CODE_LINE_REGEXP = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
 
 const CODE_REGEXP = new RegExp(
-	`${CODE_BLOCK_REGEXP}|${UNFINISHED_CODE_BLOCK_REGEXP}|${CODE_LINE_REGEXP}`,
+	`${_CODE_BLOCK_REGEXP}|${_UNFINISHED_CODE_BLOCK_REGEXP}|${_CODE_LINE_REGEXP}`,
 	'g',
 );
 const URL_REGEXP = urlRegexSafe({strict: true});
@@ -118,11 +118,11 @@ export function highlightUrl(value: string): string {
 	const ms = [...value.matchAll(URL_REGEXP)];
 
 	return ms.reduceRight((acc, m) => {
-		const [url] = m;
-
 		if (isNullable(m.index)) {
 			return acc;
 		}
+
+		const [url] = m;
 		return colorizeUrl(acc, m.index, url);
 	}, value);
 }

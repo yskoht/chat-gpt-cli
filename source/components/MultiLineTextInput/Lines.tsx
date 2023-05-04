@@ -35,11 +35,17 @@ function isCursorAtTailOfLine(
 	return currentPosition.x === text.length;
 }
 
-function preprocess(value: string, enableHighlighting: boolean): string {
+type PreprocessOption = {
+	enableSyntaxHighlight: boolean;
+};
+function preprocess(
+	value: string,
+	{enableSyntaxHighlight}: PreprocessOption,
+): string {
 	let _value = value;
 	_value = replaceLineSep(_value);
 	_value = replaceTab(_value);
-	if (enableHighlighting) {
+	if (enableSyntaxHighlight) {
 		_value = highlightCode(_value);
 		_value = highlightUrl(_value);
 	}
@@ -65,7 +71,7 @@ function Lines({
 	);
 
 	const _lines = useMemo(
-		() => toLines(preprocess(value, enableSyntaxHighlight)),
+		() => toLines(preprocess(value, {enableSyntaxHighlight})),
 		[value, enableSyntaxHighlight],
 	);
 	const lines = useMemo(
