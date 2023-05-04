@@ -2,10 +2,11 @@ import {highlight} from 'cli-highlight';
 import {Box} from 'ink';
 import React, {useMemo} from 'react';
 
+import {replaceLineSep} from '@/utilities/index.js';
+
 import Line from './Line.js';
 import {Cursor, CursorShape, Position} from './types.js';
-import {toLines, toPosition} from './utilities.js';
-import {replaceLineSep, replaceTab} from './utilities.js';
+import {toLines, toPosition, replaceTab} from './utilities.js';
 
 type Props = {
 	cursor: Cursor;

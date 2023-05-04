@@ -1,12 +1,13 @@
 import {useInput, Key} from 'ink';
 import React, {useState} from 'react';
 
+import {replaceLineSep} from '@/utilities/index.js';
+
 import Lines from './Lines.js';
 import {CURSOR_SHAPE, DEFAULT_CURSOR_COLOR} from './constants.js';
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
 import {Cursor, CursorShape, OnHistory} from './types.js';
-import {replaceLineSep} from './utilities.js';
 
 const DEBUG = false;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
