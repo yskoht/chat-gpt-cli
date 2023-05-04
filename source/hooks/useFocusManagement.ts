@@ -1,12 +1,7 @@
 import {useInput, useFocusManager} from 'ink';
-import {useEffect} from 'react';
 
 function useFocusManagement() {
-	const {enableFocus, focusNext, focusPrevious} = useFocusManager();
-
-	useEffect(() => {
-		enableFocus();
-	}, [enableFocus]);
+	const {focusNext, focusPrevious} = useFocusManager();
 
 	useInput((_, key) => {
 		if (key.escape) {
