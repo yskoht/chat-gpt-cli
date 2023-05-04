@@ -73,30 +73,6 @@ function Chat() {
 		updateHistory,
 	]);
 
-	const _messages = useMemo(
-		() =>
-			messages.map((message, i) => {
-				const _markColor = markColor(message);
-				const key = keyExtractor(message.content, i);
-				return (
-					<Box key={key}>
-						<Message
-							value={message.content}
-							mark={MESSAGE_MARK}
-							markColor={_markColor}
-						/>
-						<Newline />
-					</Box>
-				);
-			}),
-		[messages],
-	);
-
-	const _textInProgress = useMemo(
-		() => <Message value={textInProgress} mark={<Spinner />} />,
-		[textInProgress],
-	);
-
 	const onHistoryPrev = useCallback(
 		(cursor: Cursor, value: string) => {
 			const nextValue = getPrevHistory(value);
@@ -129,6 +105,30 @@ function Chat() {
 			};
 		},
 		[getNextHistory],
+	);
+
+	const _messages = useMemo(
+		() =>
+			messages.map((message, i) => {
+				const _markColor = markColor(message);
+				const key = keyExtractor(message.content, i);
+				return (
+					<Box key={key}>
+						<Message
+							value={message.content}
+							mark={MESSAGE_MARK}
+							markColor={_markColor}
+						/>
+						<Newline />
+					</Box>
+				);
+			}),
+		[messages],
+	);
+
+	const _textInProgress = useMemo(
+		() => <Message value={textInProgress} mark={<Spinner />} />,
+		[textInProgress],
 	);
 
 	const _userPrompt = useMemo(
