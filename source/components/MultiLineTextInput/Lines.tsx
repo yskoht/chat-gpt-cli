@@ -1,6 +1,7 @@
 import {highlight} from 'cli-highlight';
 import {Box} from 'ink';
 import React, {useMemo} from 'react';
+import urlRegexSafe from 'url-regex-safe';
 
 import {isNullable, replaceLineSep, toLines} from '@/utilities/index.js';
 
@@ -45,6 +46,7 @@ const CODE_REGEXP = new RegExp(
 	`${CODE_BLOCK_REGEXP}|${UNFINISHED_CODE_BLOCK_REGEXP}|${CODE_LINE_REGEXP}`,
 	'g',
 );
+const URL_REGEXP = urlRegexSafe({strict: true});
 
 type Groups = {
 	codeBlockAll: string | undefined;
@@ -76,7 +78,7 @@ function replaceValue(
 	);
 }
 
-function highlightCodeBlock(
+function colorizeCodeBlock(
 	value: string,
 	index: number,
 	codeBlockAll: string,
@@ -88,7 +90,7 @@ function highlightCodeBlock(
 	return replaceValue(value, index, codeBlockAll, highlighted);
 }
 
-function highlightCodeLine(
+function colorizeCodeLine(
 	value: string,
 	index: number,
 	codeLineAll: string,
@@ -98,7 +100,7 @@ function highlightCodeLine(
 	return replaceValue(value, index, codeLineAll, highlighted);
 }
 
-function highlighting(value: string): string {
+function highlightCode(value: string): string {
 	const ms = [...value.matchAll(CODE_REGEXP)];
 
 	return ms.reduceRight((acc, m) => {
@@ -120,7 +122,7 @@ function highlighting(value: string): string {
 		} = m.groups as Groups;
 
 		if (codeBlockAll && codeBlock) {
-			return highlightCodeBlock(
+			return colorizeCodeBlock(
 				acc,
 				m.index,
 				codeBlockAll,
@@ -130,7 +132,7 @@ function highlighting(value: string): string {
 		}
 
 		if (unfinishedCodeBlockAll && unfinishedCodeBlock) {
-			return highlightCodeBlock(
+			return colorizeCodeBlock(
 				acc,
 				m.index,
 				unfinishedCodeBlockAll,
@@ -140,10 +142,28 @@ function highlighting(value: string): string {
 		}
 
 		if (codeLineAll && codeLine) {
-			return highlightCodeLine(acc, m.index, codeLineAll, codeLine);
+			return colorizeCodeLine(acc, m.index, codeLineAll, codeLine);
 		}
 
 		return acc;
+	}, value);
+}
+
+function colorizeUrl(value: string, index: number, url: string) {
+	const highlighted = `\x1b[38;2;255;105;180m${url}\x1b[0m`;
+	return replaceValue(value, index, url, highlighted);
+}
+
+function highlightUrl(value: string): string {
+	const ms = [...value.matchAll(URL_REGEXP)];
+
+	return ms.reduceRight((acc, m) => {
+		const [url] = m;
+
+		if (isNullable(m.index)) {
+			return acc;
+		}
+		return colorizeUrl(acc, m.index, url);
 	}, value);
 }
 
@@ -151,7 +171,8 @@ function preprocess(value: string, enableHighlighting: boolean): string {
 	let _value = replaceLineSep(value);
 	_value = replaceTab(_value);
 	if (enableHighlighting) {
-		_value = highlighting(_value);
+		_value = highlightCode(_value);
+		_value = highlightUrl(_value);
 	}
 	return _value;
 }
