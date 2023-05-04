@@ -35,16 +35,26 @@ function isCursorAtTailOfLine(
 	return currentPosition.x === text.length;
 }
 
-const CODE_BLOCK_REGEXP_STR =
-	'(?<codeBlockAll>`{3}(?<language>\\w*)\\r?(?<codeBlock>[\\s\\S]*?)`{3}\\r?)';
-const CODE_LINE_REGEXP_STR = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
-const CODE_REGEXP_STR = `${CODE_BLOCK_REGEXP_STR}|${CODE_LINE_REGEXP_STR}`;
-const CODE_REGEXP = new RegExp(CODE_REGEXP_STR, 'g');
+const CODE_BLOCK_REGEXP =
+	'(?<codeBlockAll>`{3}(?<codeBlockLanguage>\\w*)\\r?(?<codeBlock>[\\s\\S]*?)`{3}\\r?)';
+const UNFINISHED_CODE_BLOCK_REGEXP =
+	'(?<unfinishedCodeBlockAll>`{3}(?<unfinishedLanguage>\\w*)\\r?(?<unfinishedCodeBlock>[\\s\\S]*?)$)';
+const CODE_LINE_REGEXP = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
+
+const CODE_REGEXP = new RegExp(
+	`${CODE_BLOCK_REGEXP}|${UNFINISHED_CODE_BLOCK_REGEXP}|${CODE_LINE_REGEXP}`,
+	'g',
+);
 
 type Groups = {
 	codeBlockAll: string | undefined;
-	language: string | undefined;
+	codeBlockLanguage: string | undefined;
 	codeBlock: string | undefined;
+
+	unfinishedCodeBlockAll: string | undefined;
+	unfinishedCodeBlockLanguage: string | undefined;
+	unfinishedCodeBlock: string | undefined;
+
 	codeLineAll: string | undefined;
 	codeLine: string | undefined;
 };
@@ -53,16 +63,38 @@ function highlighting(value: string): string {
 	const ms = [...value.matchAll(CODE_REGEXP)];
 
 	return ms.reduceRight((acc, m) => {
-		const {codeBlockAll, language, codeBlock, codeLineAll, codeLine} =
-			m.groups as Groups;
+		const {
+			codeBlockAll,
+			codeBlockLanguage,
+			codeBlock,
+
+			unfinishedCodeBlockAll,
+			unfinishedCodeBlockLanguage,
+			unfinishedCodeBlock,
+
+			codeLineAll,
+			codeLine,
+		} = m.groups as Groups;
 
 		if (codeBlockAll && codeBlock && m.index != null) {
-			const option = language ? {language} : {};
+			const option = codeBlockLanguage ? {language: codeBlockLanguage} : {};
 			const highlighted = highlight(codeBlock, option);
 			return (
 				acc.slice(0, m.index) +
 				highlighted +
 				acc.slice(m.index + codeBlockAll.length)
+			);
+		}
+
+		if (unfinishedCodeBlockAll && unfinishedCodeBlock && m.index != null) {
+			const option = unfinishedCodeBlockLanguage
+				? {language: unfinishedCodeBlockLanguage}
+				: {};
+			const highlighted = highlight(unfinishedCodeBlock, option);
+			return (
+				acc.slice(0, m.index) +
+				highlighted +
+				acc.slice(m.index + unfinishedCodeBlockAll.length)
 			);
 		}
 
