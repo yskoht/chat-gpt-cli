@@ -1,4 +1,5 @@
-import {LINE_SEP} from './constants.js';
+import {LINE_SEP} from '@/utilities/index.js';
+
 import {Cursor, Position} from './types.js';
 
 export function toLines(value: string): string[] {

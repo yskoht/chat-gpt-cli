@@ -1,4 +1,5 @@
-import {LINE_SEP} from './constants.js';
+import {LINE_SEP} from '@/utilities/index.js';
+
 import {Cursor, Next, OnHistory} from './types.js';
 import {toPosition, toCursor, toLines} from './utilities.js';
 
