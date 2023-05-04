@@ -109,6 +109,14 @@ export function del(cursor: Cursor, value: string): Next {
 }
 
 export function kill(cursor: Cursor, value: string): Next {
+	if (value[cursor] === LINE_SEP) {
+		const nextValue = value.slice(0, cursor) + value.slice(cursor + 1);
+		return {
+			nextCursor: cursor,
+			nextValue,
+		};
+	}
+
 	const afterCursor = value.slice(cursor);
 	const nextLineSepPos = afterCursor.indexOf(LINE_SEP);
 
