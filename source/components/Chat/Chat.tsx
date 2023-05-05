@@ -32,20 +32,11 @@ function Chat() {
 	const {updateHistory, getPrevHistory, getNextHistory} = useInputHistory();
 	useAutoScroll({messages, textInProgress, userPromptText});
 
-	const assistantMessage = useCallback(
-		(text: string) => ({role: ROLE.assistant, content: text}),
-		[],
-	);
-	const userMessage = useCallback(
-		(text: string) => ({role: ROLE.user, content: text}),
-		[],
-	);
-
 	const streamFinishedCallback = useCallback(() => {
 		const t = finishTextInProgress(textInProgress);
 		setMessages((x) => [...x, assistantMessage(t)]);
 		clearTextInProgress();
-	}, [textInProgress, assistantMessage, setMessages, clearTextInProgress]);
+	}, [textInProgress, setMessages, clearTextInProgress]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 
 	const onChange = useCallback(
@@ -68,7 +59,6 @@ function Chat() {
 	}, [
 		submitChat,
 		userPromptText,
-		userMessage,
 		messages,
 		setMessages,
 		clearUserPromptText,
