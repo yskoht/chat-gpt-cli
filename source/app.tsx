@@ -9,6 +9,20 @@ import ScrollArea from '@/components/ScrollArea/index.js';
 import useDimension from '@/hooks/useDimension.js';
 import useFocusManagement from '@/hooks/useFocusManagement.js';
 
+import {ScrollHandler} from './components/ScrollArea/index.js';
+
+const chatScrollHandler: ScrollHandler = (_input, key, api) => {
+	if (key.shift && key.downArrow) {
+		api.scrollDown(1);
+		return;
+	}
+
+	if (key.shift && key.upArrow) {
+		api.scrollUp(1);
+		return;
+	}
+};
+
 export default function App() {
 	const {width, height} = useDimension();
 	useFocusManagement();
@@ -21,7 +35,7 @@ export default function App() {
 			height={height}
 		>
 			<Box borderStyle="single" width="80%" paddingLeft={1} paddingRight={1}>
-				<ScrollArea>
+				<ScrollArea scrollHandler={chatScrollHandler}>
 					<Chat />
 				</ScrollArea>
 			</Box>

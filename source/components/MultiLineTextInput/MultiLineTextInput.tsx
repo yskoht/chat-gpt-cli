@@ -49,6 +49,10 @@ function MultiLineTextInput({
 		(_input, key) => {
 			const input = replaceLineSep(_input);
 
+			if (keymap.ignore(input, key)) {
+				return;
+			}
+
 			if (shouldSubmit(input, key)) {
 				onSubmit(value);
 				return;
