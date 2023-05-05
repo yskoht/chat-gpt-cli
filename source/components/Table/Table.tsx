@@ -26,7 +26,7 @@ function buildHeader(header: string[], columnWidth: ColumnWidth) {
 				borderBottom={false}
 				borderStyle="single"
 			>
-				<Text underline>{item}</Text>
+				<Text bold>{item}</Text>
 			</Box>
 		);
 	});
