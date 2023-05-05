@@ -4,7 +4,7 @@ import React from 'react';
 import MultiLineTextInput from '@/components/MultiLineTextInput/index.js';
 import Table from '@/components/Table/index.js';
 import {nop} from '@/utilities/index.js';
-import {isNullable} from '@/utilities/index.js';
+import {assertNever, isNullable} from '@/utilities/index.js';
 
 import * as table from './table.js';
 import * as text from './text.js';
@@ -105,7 +105,7 @@ function Markdown({
 			case 'table':
 				return <Table key={key} value={element.value} />;
 			default:
-				throw new Error(`Unknown element type`);
+				assertNever(element);
 		}
 	});
 

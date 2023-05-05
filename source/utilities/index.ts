@@ -14,3 +14,7 @@ export function replaceLineSep(value: string): string {
 export function toLines(value: string): string[] {
 	return value.split(LINE_SEP);
 }
+
+export function assertNever(x: never): never {
+	throw new Error(x);
+}
