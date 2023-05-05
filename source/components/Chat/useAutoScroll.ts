@@ -1,8 +1,8 @@
 import {useMemo, useEffect} from 'react';
 
+import {useScrollArea} from '@/components/ScrollArea/index.js';
 import {toLines} from '@/utilities/index.js';
 
-import useScrollArea from '../ScrollArea/useScrollArea.js';
 import {Message as MessageType} from './types.js';
 
 type Props = {
