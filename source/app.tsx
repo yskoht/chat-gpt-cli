@@ -16,12 +16,7 @@ export default function App() {
 	useFocusManagement();
 
 	return (
-		<Box
-			flexDirection="row"
-			justifyContent="space-between"
-			width={width}
-			height={height}
-		>
+		<Box justifyContent="space-between" width={width} height={height}>
 			<Box width={`${CHAT_WIDTH_PERCENTAGE}%`}>
 				<Chat />
 			</Box>

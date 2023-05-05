@@ -33,7 +33,6 @@ function buildHeader(header: string[], columnWidth: ColumnWidth) {
 
 	return (
 		<Box
-			flexDirection="row"
 			borderTop={false}
 			borderLeft={false}
 			borderRight={false}
@@ -84,7 +83,6 @@ function buildBody(header: string[], data: Data[], columnWidth: ColumnWidth) {
 		return (
 			<Box
 				key={key}
-				flexDirection="row"
 				borderTop={false}
 				borderLeft={false}
 				borderRight={false}

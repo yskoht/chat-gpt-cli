@@ -21,7 +21,7 @@ function Message({
 	enableTabulation,
 }: Props) {
 	return (
-		<Box flexDirection="row">
+		<Box>
 			<Mark mark={mark} markColor={markColor} />
 			<Box marginLeft={1}>
 				<Markdown

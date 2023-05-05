@@ -29,12 +29,7 @@ function OuterBox({children, height, scrollBarVisibility}: Props) {
 	}, [setOuterHeight]);
 
 	return (
-		<Box
-			flexDirection="row"
-			justifyContent="space-between"
-			width="100%"
-			height={height}
-		>
+		<Box justifyContent="space-between" width="100%" height={height}>
 			<Box ref={ref} flexDirection="column" overflow="hidden">
 				{children}
 			</Box>
