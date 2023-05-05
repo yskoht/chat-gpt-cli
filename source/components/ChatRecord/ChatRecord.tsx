@@ -1,4 +1,4 @@
-import {Box, Text, useFocus} from 'ink';
+import {Box, Text} from 'ink';
 import React from 'react';
 
 type Props = {
@@ -6,11 +6,9 @@ type Props = {
 };
 
 function ChatRecord({label}: Props) {
-	const {isFocused} = useFocus();
-
 	return (
-		<Box paddingLeft={1}>
-			<Text color={isFocused ? 'green' : 'white'}>* {label}</Text>
+		<Box>
+			<Text>* {label}</Text>
 		</Box>
 	);
 }

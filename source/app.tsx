@@ -8,6 +8,9 @@ import NewChat from '@/components/NewChat/index.js';
 import useDimension from '@/hooks/useDimension.js';
 import useFocusManagement from '@/hooks/useFocusManagement.js';
 
+const CHAT_WIDTH_PERCENTAGE = 80;
+const CHAT_RECORD_WIDTH_PERCENTAGE = 100 - CHAT_WIDTH_PERCENTAGE;
+
 export default function App() {
 	const {width, height} = useDimension();
 	useFocusManagement();
@@ -19,13 +22,19 @@ export default function App() {
 			width={width}
 			height={height}
 		>
-			<Box width="80%">
+			<Box width={`${CHAT_WIDTH_PERCENTAGE}%`}>
 				<Chat />
 			</Box>
 
-			<Box flexDirection="column" width="20%" borderStyle="single">
+			<Box
+				flexDirection="column"
+				width={`${CHAT_RECORD_WIDTH_PERCENTAGE}%`}
+				borderStyle="single"
+				paddingLeft={1}
+				paddingRight={1}
+			>
 				<NewChat />
-				<Divider paddingLeft={1} paddingRight={1} />
+				<Divider />
 				<Box flexDirection="column">
 					<ChatRecord label="Hello1" />
 					<ChatRecord label="Hello2" />
