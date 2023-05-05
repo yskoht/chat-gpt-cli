@@ -1,3 +1,4 @@
+import {Box} from 'ink';
 import React from 'react';
 
 import MultiLineTextInput from '@/components/MultiLineTextInput/index.js';
@@ -108,7 +109,7 @@ function Markdown({
 		}
 	});
 
-	return <>{elements}</>;
+	return <Box flexDirection="column">{elements}</Box>;
 }
 
 export default Markdown;

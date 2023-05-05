@@ -1,52 +1,33 @@
 import {Box} from 'ink';
 import React, {ReactNode} from 'react';
 
-import MultiLineTextInput, {
-	OnHistory,
-} from '@/components/MultiLineTextInput/index.js';
-import {nop} from '@/utilities/index.js';
+import Markdown from '@/components/Markdown/index.js';
 
 import Mark from './Mark.js';
-
-const DEFAULT_MARK_COLOR = 'gray';
+import {DEFAULT_MESSAGE_MARK_COLOR} from './constants.js';
 
 type Props = {
 	value: string;
 	mark: ReactNode;
 	markColor?: string;
-	onChange?: (value: string) => void;
-	onSubmit?: (value: string) => void;
-	showCursor?: boolean;
-	isActive?: boolean;
-	onHistoryPrev?: OnHistory;
-	onHistoryNext?: OnHistory;
 	enableSyntaxHighlight?: boolean;
+	enableTabulation: boolean;
 };
 function Message({
 	value,
 	mark,
-	markColor = DEFAULT_MARK_COLOR,
-	onChange = nop,
-	onSubmit = nop,
-	showCursor = false,
-	isActive = false,
-	onHistoryPrev,
-	onHistoryNext,
+	markColor = DEFAULT_MESSAGE_MARK_COLOR,
 	enableSyntaxHighlight = true,
+	enableTabulation,
 }: Props) {
 	return (
 		<Box flexDirection="row">
 			<Mark mark={mark} markColor={markColor} />
 			<Box marginLeft={1}>
-				<MultiLineTextInput
+				<Markdown
 					value={value}
-					onChange={onChange}
-					onSubmit={onSubmit}
-					showCursor={showCursor}
-					isActive={isActive}
-					onHistoryPrev={onHistoryPrev}
-					onHistoryNext={onHistoryNext}
 					enableSyntaxHighlight={enableSyntaxHighlight}
+					enableTabulation={enableTabulation}
 				/>
 			</Box>
 		</Box>

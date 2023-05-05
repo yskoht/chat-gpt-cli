@@ -2,11 +2,13 @@ import {Box} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
+import '@/components/Markdown/index.js';
 import {Cursor} from '@/components/MultiLineTextInput/index.js';
 import {isNullable, replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
+import UserPrompt from './UserPrompt.js';
 import {ROLE, MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
 import {Message as MessageType} from './types.js';
 import useAutoScroll from './useAutoScroll.js';
@@ -118,6 +120,7 @@ function Chat() {
 							value={message.content}
 							mark={MESSAGE_MARK}
 							markColor={_markColor}
+							enableTabulation
 						/>
 					</Box>
 				);
@@ -126,13 +129,19 @@ function Chat() {
 	);
 
 	const _textInProgress = useMemo(
-		() => <Message value={textInProgress} mark={<Spinner />} />,
+		() => (
+			<Message
+				value={textInProgress}
+				mark={<Spinner />}
+				enableTabulation={false}
+			/>
+		),
 		[textInProgress],
 	);
 
 	const _userPrompt = useMemo(
 		() => (
-			<Message
+			<UserPrompt
 				value={userPromptText}
 				mark={USER_PROMPT_MARK}
 				onChange={setUserPromptText}
@@ -141,7 +150,6 @@ function Chat() {
 				isActive
 				onHistoryPrev={onHistoryPrev}
 				onHistoryNext={onHistoryNext}
-				enableSyntaxHighlight={false}
 			/>
 		),
 		[userPromptText, setUserPromptText, onSubmit, onHistoryPrev, onHistoryNext],
