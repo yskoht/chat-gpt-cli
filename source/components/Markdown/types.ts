@@ -5,7 +5,7 @@ export type TextElement = {
 	value: string;
 };
 
-export type TableData = Record<string, string | number>;
+export type TableData = Record<string, string>;
 
 export type TableElement = {
 	kind: typeof ELEMENT_KIND.table;

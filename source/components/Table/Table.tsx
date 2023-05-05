@@ -1,15 +1,15 @@
-import {Text, Box} from 'ink';
-import React from 'react';
+import {Text, Box, measureElement} from 'ink';
+import React, {useRef, useEffect, useState, useMemo} from 'react';
 
-type Data = Record<string, string | number>;
-type Props = {
-	value: {
-		header: string[];
-		data: Data[];
-	};
-};
+import {isNullable} from '@/utilities/index.js';
 
-function buildHeader(header: string[]) {
+const PADDING_LEFT = 1;
+const PADDING_RIGHT = 1;
+
+type Data = Record<string, string>;
+type ColumnWidth = Record<string, number>;
+
+function buildHeader(header: string[], columnWidth: ColumnWidth) {
 	const keyExtractor = (item: string, i: number) => `header-${i}-${item}`;
 
 	const items = header.map((item, i) => {
@@ -17,11 +17,9 @@ function buildHeader(header: string[]) {
 		return (
 			<Box
 				key={key}
-				marginRight={1}
-				paddingLeft={1}
-				paddingRight={1}
-				width={20}
-				justifyContent="center"
+				paddingLeft={PADDING_LEFT}
+				paddingRight={PADDING_RIGHT}
+				width={columnWidth[item]}
 				borderTop={false}
 				borderLeft={false}
 				borderRight={false}
@@ -47,7 +45,12 @@ function buildHeader(header: string[]) {
 	);
 }
 
-function buildRow(header: string[], row: Data, rowIndex: number) {
+function buildRow(
+	header: string[],
+	row: Data,
+	rowIndex: number,
+	columnWidth: ColumnWidth,
+) {
 	const keyExtractor = (item: string, i: number) =>
 		`item-${rowIndex}-${i}-${item}`;
 
@@ -56,10 +59,9 @@ function buildRow(header: string[], row: Data, rowIndex: number) {
 		return (
 			<Box
 				key={key}
-				marginRight={1}
-				paddingLeft={1}
-				paddingRight={1}
-				width={20}
+				paddingLeft={PADDING_LEFT}
+				paddingRight={PADDING_RIGHT}
+				width={columnWidth[item]}
 				borderTop={false}
 				borderLeft={false}
 				borderRight={false}
@@ -72,11 +74,11 @@ function buildRow(header: string[], row: Data, rowIndex: number) {
 	});
 }
 
-function buildBody(header: string[], data: Data[]) {
+function buildBody(header: string[], data: Data[], columnWidth: ColumnWidth) {
 	const keyExtractor = (rowIndex: number) => `row-${rowIndex}`;
 
 	const _rows = data.map((row, rowIndex) => {
-		const _row = buildRow(header, row, rowIndex);
+		const _row = buildRow(header, row, rowIndex, columnWidth);
 
 		const key = keyExtractor(rowIndex);
 		return (
@@ -97,12 +99,71 @@ function buildBody(header: string[], data: Data[]) {
 	return <Box flexDirection="column">{_rows}</Box>;
 }
 
-function Table({value: {header, data}}: Props) {
-	const _header = buildHeader(header);
-	const _body = buildBody(header, data);
+function calcColumnWidth(header: string[], data: Data[], width: number) {
+	const val = (v: number | undefined): number => v ?? 0;
+	const PADDING = PADDING_LEFT + PADDING_RIGHT + 1;
+
+	const columnWidthMax = header.reduce((acc, item) => {
+		const _columnWidthMax = data.reduce((a, d) => {
+			return Math.max(a, val(d[item]?.length) + PADDING);
+		}, item.length + PADDING);
+
+		return {...acc, [item]: _columnWidthMax};
+	}, {} as ColumnWidth);
+
+	const columnWidthMaxSum = header.reduce((acc, item) => {
+		return acc + val(columnWidthMax[item]);
+	}, 0);
+
+	const columnWidth = header.reduce((acc, item) => {
+		return {
+			...acc,
+			[item]: (val(columnWidthMax[item]) / columnWidthMaxSum) * width,
+		};
+	}, {});
+
+	return columnWidth;
+}
+
+type Props = {
+	width?: number;
+	minWidth?: number;
+	value: {
+		header: string[];
+		data: Data[];
+	};
+};
+
+function Table({width, minWidth, value: {header, data}}: Props) {
+	const ref = useRef(null);
+	const [columnWidth, setColumnWidth] = useState<ColumnWidth>({});
+
+	useEffect(() => {
+		if (isNullable(ref.current)) {
+			return;
+		}
+		const {width} = measureElement(ref.current);
+		const _columnWidth = calcColumnWidth(header, data, width);
+		setColumnWidth(_columnWidth);
+	}, [header, data]);
+
+	const _header = useMemo(
+		() => buildHeader(header, columnWidth),
+		[header, columnWidth],
+	);
+	const _body = useMemo(
+		() => buildBody(header, data, columnWidth),
+		[header, data, columnWidth],
+	);
 
 	return (
-		<Box flexDirection="column">
+		<Box
+			ref={ref}
+			minWidth={minWidth}
+			width={width}
+			flexDirection="column"
+			justifyContent="center"
+		>
 			{_header}
 			{_body}
 		</Box>
