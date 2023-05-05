@@ -1,4 +1,4 @@
-import {Box} from 'ink';
+import {Box, useFocus} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
@@ -135,6 +135,26 @@ function ChatUserPrompt({
 	return <Box>{_userPrompt}</Box>;
 }
 
+function ChatMessagesContainer(props: ChatMessagesProps) {
+	useFocus();
+	return (
+		<Box borderStyle="single" height="100%">
+			<ScrollArea>
+				<ChatMessages {...props} />
+			</ScrollArea>
+		</Box>
+	);
+}
+
+function ChatUserPromptContainer(props: ChatUserPromptProps) {
+	useFocus();
+	return (
+		<Box borderStyle="single" paddingLeft={1} paddingRight={1}>
+			<ChatUserPrompt {...props} />
+		</Box>
+	);
+}
+
 function Chat() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
@@ -158,33 +178,22 @@ function Chat() {
 	});
 
 	return (
-		<Box
-			flexDirection="column"
-			justifyContent="space-between"
-			paddingLeft={1}
-			paddingRight={1}
-		>
-			<Box borderStyle="single" height="100%">
-				<ScrollArea>
-					<ChatMessages
-						messages={messages}
-						textInProgress={textInProgress}
-						userPromptText={userPromptText}
-						inStreaming={inStreaming}
-					/>
-				</ScrollArea>
-			</Box>
-			<Box borderStyle="single" paddingLeft={1} paddingRight={1}>
-				<ChatUserPrompt
-					messages={messages}
-					setMessages={setMessages}
-					userPromptText={userPromptText}
-					setUserPromptText={setUserPromptText}
-					clearUserPromptText={clearUserPromptText}
-					submitChat={submitChat}
-					inStreaming={inStreaming}
-				/>
-			</Box>
+		<Box flexDirection="column" justifyContent="space-between">
+			<ChatMessagesContainer
+				messages={messages}
+				textInProgress={textInProgress}
+				userPromptText={userPromptText}
+				inStreaming={inStreaming}
+			/>
+			<ChatUserPromptContainer
+				messages={messages}
+				setMessages={setMessages}
+				userPromptText={userPromptText}
+				setUserPromptText={setUserPromptText}
+				clearUserPromptText={clearUserPromptText}
+				submitChat={submitChat}
+				inStreaming={inStreaming}
+			/>
 		</Box>
 	);
 }
