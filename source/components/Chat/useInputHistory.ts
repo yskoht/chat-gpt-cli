@@ -1,5 +1,8 @@
 import {useState, useCallback, useMemo} from 'react';
 
+import {Cursor} from '@/components/MultiLineTextInput/index.js';
+import {isNullable} from '@/utilities/index.js';
+
 const INIT_HISTORY = [''];
 const INIT_INDEX = 0;
 
@@ -9,6 +12,23 @@ function excludeFirstItem<T>(list: T[]): T[] {
 
 function alreadyExistsInHistory(history: string[], text: string): boolean {
 	return history.includes(text);
+}
+
+type GetPrevHistory = () => string | null;
+type GetNextHistory = () => string | null;
+type Operator = GetPrevHistory | GetNextHistory;
+function onHistory(cursor: Cursor, value: string, operator: Operator) {
+	const nextValue = operator();
+	if (isNullable(nextValue)) {
+		return {
+			nextCursor: cursor,
+			nextValue: value,
+		};
+	}
+	return {
+		nextCursor: 0,
+		nextValue,
+	};
 }
 
 function useInputHistory() {
@@ -44,7 +64,7 @@ function useInputHistory() {
 		[history, index],
 	);
 
-	const getNextHistory = useCallback(() => {
+	const getNextHistory = useCallback((): string | null => {
 		const nextIndex = index - 1;
 		if (nextIndex < 0) {
 			return null;
@@ -54,13 +74,29 @@ function useInputHistory() {
 		return history[nextIndex]!;
 	}, [history, index]);
 
+	const onHistoryPrev = useCallback(
+		(cursor: Cursor, value: string) => {
+			const operator: GetPrevHistory = () => getPrevHistory(value);
+			return onHistory(cursor, value, operator);
+		},
+		[getPrevHistory],
+	);
+
+	const onHistoryNext = useCallback(
+		(cursor: Cursor, value: string) => {
+			const operator: GetNextHistory = () => getNextHistory();
+			return onHistory(cursor, value, operator);
+		},
+		[getNextHistory],
+	);
+
 	return useMemo(
 		() => ({
 			updateHistory,
-			getPrevHistory,
-			getNextHistory,
+			onHistoryNext,
+			onHistoryPrev,
 		}),
-		[updateHistory, getPrevHistory, getNextHistory],
+		[updateHistory, onHistoryNext, onHistoryPrev],
 	);
 }
 

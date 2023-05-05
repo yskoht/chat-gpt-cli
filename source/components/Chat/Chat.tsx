@@ -3,8 +3,7 @@ import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
 import '@/components/Markdown/index.js';
-import {Cursor} from '@/components/MultiLineTextInput/index.js';
-import {isNullable, replaceLineSep} from '@/utilities/index.js';
+import {replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
@@ -29,7 +28,7 @@ function Chat() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
-	const {updateHistory, getPrevHistory, getNextHistory} = useInputHistory();
+	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
 	useAutoScroll({messages, textInProgress, userPromptText});
 
 	const streamFinishedCallback = useCallback(() => {
@@ -64,40 +63,6 @@ function Chat() {
 		clearUserPromptText,
 		updateHistory,
 	]);
-
-	const onHistoryPrev = useCallback(
-		(cursor: Cursor, value: string) => {
-			const nextValue = getPrevHistory(value);
-			if (isNullable(nextValue)) {
-				return {
-					nextCursor: cursor,
-					nextValue: value,
-				};
-			}
-			return {
-				nextCursor: 0,
-				nextValue,
-			};
-		},
-		[getPrevHistory],
-	);
-
-	const onHistoryNext = useCallback(
-		(cursor: Cursor, value: string) => {
-			const nextValue = getNextHistory();
-			if (isNullable(nextValue)) {
-				return {
-					nextCursor: cursor,
-					nextValue: value,
-				};
-			}
-			return {
-				nextCursor: 0,
-				nextValue,
-			};
-		},
-		[getNextHistory],
-	);
 
 	const _messages = useMemo(
 		() =>
