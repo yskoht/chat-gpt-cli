@@ -45,10 +45,10 @@ function Chat() {
 		},
 		[setTextInProgress],
 	);
-	const onFinish = useCallback(() => {
-		streamFinished();
-	}, [streamFinished]);
-	const {submitChat, inStreaming} = useChat({onChange, onFinish});
+	const {submitChat, inStreaming} = useChat({
+		onChange,
+		onFinish: streamFinished,
+	});
 
 	const onSubmit = useCallback(async () => {
 		updateHistory(userPromptText);
