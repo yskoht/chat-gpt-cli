@@ -10,9 +10,6 @@ const _UNFINISHED_CODE_BLOCK_REGEXP =
 const _CODE_LINE_REGEXP = '(?<codeLineAll>`(?<codeLine>[^`]+)`)';
 const _CODE_REGEXP = `${_CODE_BLOCK_REGEXP}|${_UNFINISHED_CODE_BLOCK_REGEXP}|${_CODE_LINE_REGEXP}`;
 
-const CODE_REGEXP = new RegExp(_CODE_REGEXP, 'g');
-const URL_REGEXP = urlRegexSafe({strict: true});
-
 type Groups = {
 	codeBlockAll: string | undefined;
 	codeBlock: string | undefined;
@@ -64,7 +61,8 @@ function colorizeUrl(value: string, index: number, url: string) {
 }
 
 export function highlightCode(value: string): string {
-	const ms = [...value.matchAll(CODE_REGEXP)];
+	const codeRegexp = new RegExp(_CODE_REGEXP, 'g');
+	const ms = [...value.matchAll(codeRegexp)];
 
 	return ms.reduceRight((acc, m) => {
 		if (isNullable(m.index)) {
@@ -113,7 +111,8 @@ export function highlightCode(value: string): string {
 }
 
 export function highlightUrl(value: string): string {
-	const ms = [...value.matchAll(URL_REGEXP)];
+	const urlRegexp = urlRegexSafe({strict: true});
+	const ms = [...value.matchAll(urlRegexp)];
 
 	return ms.reduceRight((acc, m) => {
 		if (isNullable(m.index)) {
