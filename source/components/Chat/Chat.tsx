@@ -70,7 +70,7 @@ function ChatMessages({
 	);
 
 	return (
-		<Box flexDirection="column" paddingLeft={1} paddingRight={1}>
+		<Box flexDirection="column">
 			{_messages}
 			{inStreaming && _textInProgress}
 		</Box>
@@ -138,7 +138,7 @@ function ChatUserPrompt({
 function ChatMessagesContainer(props: ChatMessagesProps) {
 	useFocus();
 	return (
-		<Box borderStyle="single" height="100%">
+		<Box borderStyle="single" height="100%" paddingLeft={1} paddingRight={1}>
 			<ScrollArea>
 				<ChatMessages {...props} />
 			</ScrollArea>
