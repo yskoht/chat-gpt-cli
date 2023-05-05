@@ -31,19 +31,18 @@ function Chat() {
 	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
 	useAutoScroll({messages, textInProgress, userPromptText});
 
-	const streamFinishedCallback = useCallback(() => {
-		const t = finishTextInProgress(textInProgress);
-		setMessages((x) => [...x, assistantMessage(t)]);
-		clearTextInProgress();
-	}, [textInProgress, setMessages, clearTextInProgress]);
-	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
-
 	const onChange = useCallback(
 		(content: string) => {
 			setTextInProgress((x) => x + replaceLineSep(content));
 		},
 		[setTextInProgress],
 	);
+	const streamFinishedCallback = useCallback(() => {
+		const t = finishTextInProgress(textInProgress);
+		setMessages((x) => [...x, assistantMessage(t)]);
+		clearTextInProgress();
+	}, [textInProgress, setMessages, clearTextInProgress]);
+	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 	const {submitChat, inStreaming} = useChat({
 		onChange,
 		onFinish: streamFinished,
