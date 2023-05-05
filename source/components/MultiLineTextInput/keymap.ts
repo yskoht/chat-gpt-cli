@@ -39,7 +39,3 @@ export function shouldDelete(input: string, key: Key): boolean {
 export function shouldKill(input: string, key: Key): boolean {
 	return key.ctrl && input === 'k';
 }
-
-export function ignore(_input: string, key: Key): boolean {
-	return (key.shift && key.upArrow) || (key.shift && key.downArrow);
-}

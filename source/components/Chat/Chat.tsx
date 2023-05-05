@@ -3,6 +3,7 @@ import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
 import '@/components/Markdown/index.js';
+import ScrollArea from '@/components/ScrollArea/index.js';
 import {replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
@@ -24,44 +25,19 @@ function keyExtractor(text: string, index: number): string {
 	return `${index}-${text}`;
 }
 
-function Chat() {
-	const [messages, setMessages] = useState<MessageType[]>([]);
-	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
-	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
-	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
+type ChatMessagesProps = {
+	messages: MessageType[];
+	textInProgress: string;
+	userPromptText: string;
+	inStreaming: boolean;
+};
+function ChatMessages({
+	messages,
+	textInProgress,
+	userPromptText,
+	inStreaming,
+}: ChatMessagesProps) {
 	useAutoScroll({messages, textInProgress, userPromptText});
-
-	const onChange = useCallback(
-		(content: string) => {
-			setTextInProgress((x) => x + replaceLineSep(content));
-		},
-		[setTextInProgress],
-	);
-	const streamFinishedCallback = useCallback(() => {
-		const t = finishTextInProgress(textInProgress);
-		setMessages((x) => [...x, assistantMessage(t)]);
-		clearTextInProgress();
-	}, [textInProgress, setMessages, clearTextInProgress]);
-	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
-	const {submitChat, inStreaming} = useChat({
-		onChange,
-		onFinish: streamFinished,
-	});
-
-	const onSubmit = useCallback(async () => {
-		updateHistory(userPromptText);
-		const _messages = [...messages, userMessage(userPromptText)];
-		setMessages(_messages);
-		clearUserPromptText();
-		await submitChat(_messages);
-	}, [
-		submitChat,
-		userPromptText,
-		messages,
-		setMessages,
-		clearUserPromptText,
-		updateHistory,
-	]);
 
 	const _messages = useMemo(
 		() =>
@@ -86,12 +62,55 @@ function Chat() {
 		() => (
 			<Message
 				value={textInProgress}
-				mark={<Spinner />}
+				mark={MESSAGE_MARK}
 				enableTabulation={false}
 			/>
 		),
 		[textInProgress],
 	);
+
+	return (
+		<Box flexDirection="column" paddingLeft={1} paddingRight={1}>
+			{_messages}
+			{inStreaming && _textInProgress}
+		</Box>
+	);
+}
+
+type ChatUserPromptProps = {
+	messages: MessageType[];
+	setMessages: (messages: MessageType[]) => void;
+	userPromptText: string;
+	setUserPromptText: (text: string) => void;
+	clearUserPromptText: () => void;
+	submitChat: (messages: MessageType[]) => Promise<void>;
+	inStreaming: boolean;
+};
+function ChatUserPrompt({
+	messages,
+	setMessages,
+	userPromptText,
+	setUserPromptText,
+	clearUserPromptText,
+	submitChat,
+	inStreaming,
+}: ChatUserPromptProps) {
+	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
+
+	const onSubmit = useCallback(async () => {
+		updateHistory(userPromptText);
+		const _messages = [...messages, userMessage(userPromptText)];
+		setMessages(_messages);
+		clearUserPromptText();
+		await submitChat(_messages);
+	}, [
+		submitChat,
+		userPromptText,
+		messages,
+		setMessages,
+		clearUserPromptText,
+		updateHistory,
+	]);
 
 	const _userPrompt = useMemo(
 		() => (
@@ -109,11 +128,63 @@ function Chat() {
 		[userPromptText, setUserPromptText, onSubmit, onHistoryPrev, onHistoryNext],
 	);
 
+	if (inStreaming) {
+		return <Spinner />;
+	}
+
+	return <Box>{_userPrompt}</Box>;
+}
+
+function Chat() {
+	const [messages, setMessages] = useState<MessageType[]>([]);
+	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
+	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
+
+	const onChange = useCallback(
+		(content: string) => {
+			setTextInProgress((x) => x + replaceLineSep(content));
+		},
+		[setTextInProgress],
+	);
+	const streamFinishedCallback = useCallback(() => {
+		const t = finishTextInProgress(textInProgress);
+		setMessages((x) => [...x, assistantMessage(t)]);
+		clearTextInProgress();
+	}, [textInProgress, setMessages, clearTextInProgress]);
+	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
+	const {submitChat, inStreaming} = useChat({
+		onChange,
+		onFinish: streamFinished,
+	});
+
 	return (
-		<Box flexDirection="column" justifyContent="flex-end">
-			{_messages}
-			{inStreaming && _textInProgress}
-			{!inStreaming && _userPrompt}
+		<Box
+			flexDirection="column"
+			justifyContent="space-between"
+			paddingLeft={1}
+			paddingRight={1}
+		>
+			<Box borderStyle="single" height="100%">
+				<ScrollArea>
+					<ChatMessages
+						messages={messages}
+						textInProgress={textInProgress}
+						userPromptText={userPromptText}
+						inStreaming={inStreaming}
+					/>
+				</ScrollArea>
+			</Box>
+			<Box borderStyle="single" paddingLeft={1} paddingRight={1}>
+				<ChatUserPrompt
+					messages={messages}
+					setMessages={setMessages}
+					userPromptText={userPromptText}
+					setUserPromptText={setUserPromptText}
+					clearUserPromptText={clearUserPromptText}
+					submitChat={submitChat}
+					inStreaming={inStreaming}
+				/>
+			</Box>
 		</Box>
 	);
 }

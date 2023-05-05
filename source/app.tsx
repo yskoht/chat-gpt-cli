@@ -5,23 +5,8 @@ import Chat from '@/components/Chat/index.js';
 import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
-import ScrollArea from '@/components/ScrollArea/index.js';
 import useDimension from '@/hooks/useDimension.js';
 import useFocusManagement from '@/hooks/useFocusManagement.js';
-
-import {ScrollHandler} from './components/ScrollArea/index.js';
-
-const chatScrollHandler: ScrollHandler = (_input, key, api) => {
-	if (key.shift && key.downArrow) {
-		api.scrollDown(1);
-		return;
-	}
-
-	if (key.shift && key.upArrow) {
-		api.scrollUp(1);
-		return;
-	}
-};
 
 export default function App() {
 	const {width, height} = useDimension();
@@ -34,10 +19,8 @@ export default function App() {
 			width={width}
 			height={height}
 		>
-			<Box borderStyle="single" width="80%" paddingLeft={1} paddingRight={1}>
-				<ScrollArea scrollHandler={chatScrollHandler}>
-					<Chat />
-				</ScrollArea>
+			<Box width="80%">
+				<Chat />
 			</Box>
 
 			<Box flexDirection="column" width="20%" borderStyle="single">
