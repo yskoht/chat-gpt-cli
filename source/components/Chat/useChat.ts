@@ -50,6 +50,14 @@ function getContent(message: string) {
 	}
 }
 
+export function assistantMessage(text: string): Message {
+	return {role: ROLE.assistant, content: text};
+}
+
+export function userMessage(text: string): Message {
+	return {role: ROLE.user, content: text};
+}
+
 type Props = {
 	onChange: (content: string) => void;
 	onFinish: () => void;
