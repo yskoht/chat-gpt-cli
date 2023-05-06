@@ -10,9 +10,9 @@ export const FOCUS_ID = {
 type FocusId = keyof typeof FOCUS_ID;
 
 const FOCUS_ORDER: FocusId[] = [
-	FOCUS_ID.menu,
 	FOCUS_ID.chatUserPrompt,
 	FOCUS_ID.chatMessages,
+	FOCUS_ID.menu,
 ];
 
 function isInvalidFocusIndex(index: number): boolean {
