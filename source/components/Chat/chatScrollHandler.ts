@@ -1,12 +1,12 @@
 import {ScrollHandler} from '../ScrollArea/types.js';
 
 export const chatScrollHandler: ScrollHandler = (input, key, api) => {
-	if (key.downArrow || input === 'j') {
+	if (key.downArrow || (key.ctrl && input === 'j')) {
 		api.scrollDown(1);
 		return;
 	}
 
-	if (key.upArrow || input === 'k') {
+	if (key.upArrow || (key.ctrl && input === 'k')) {
 		api.scrollUp(1);
 		return;
 	}
