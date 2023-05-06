@@ -26,7 +26,7 @@ type StoreCore = {
 };
 export type Store = StoreApi<StoreCore>;
 
-const store = createStore<StoreCore>((set) => ({
+const store = createStore<StoreCore>((set, get) => ({
 	outerHeight: 0,
 	innerHeight: 0,
 	positionFromInnerTop: 0,
@@ -62,12 +62,10 @@ const store = createStore<StoreCore>((set) => ({
 			);
 			return {positionFromInnerTop: positionFromInnerTopMax};
 		}),
-	resize: () =>
-		set(({fetchInnerHeight, fetchOuterHeight}) => {
-			fetchInnerHeight();
-			fetchOuterHeight();
-			return {};
-		}),
+	resize: () => {
+		get().fetchInnerHeight();
+		get().fetchOuterHeight();
+	},
 	fetchInnerHeight: nop,
 	fetchOuterHeight: nop,
 	setFetchInnerHeight: (fetchInnerHeight) => set({fetchInnerHeight}),
