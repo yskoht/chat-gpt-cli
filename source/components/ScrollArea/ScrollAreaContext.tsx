@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, {createContext} from 'react';
 
 import store, {Store} from './store.js';
