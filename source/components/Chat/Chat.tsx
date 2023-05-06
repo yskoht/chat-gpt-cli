@@ -3,7 +3,6 @@ import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
 import Divider from '@/components/Divider/index.js';
-import '@/components/Markdown/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
