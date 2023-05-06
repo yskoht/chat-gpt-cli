@@ -1,5 +1,5 @@
 import Logger from 'bunyan';
-import {createStore, StoreApi} from 'zustand/vanilla';
+import {createStore, StoreApi} from 'zustand';
 
 import {createLogger} from '@/libraries/logger.js';
 import {nop} from '@/utilities/index.js';

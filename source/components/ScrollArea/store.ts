@@ -1,4 +1,4 @@
-import {createStore, StoreApi} from 'zustand/vanilla';
+import {createStore, StoreApi} from 'zustand';
 
 import {nop} from '@/utilities/index.js';
 
