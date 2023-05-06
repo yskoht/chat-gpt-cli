@@ -13,7 +13,8 @@
 		"test": "prettier --check . && xo && ava",
 		"lint": "eslint . --ext .ts,.tsx",
 		"typecheck": "tsc --noEmit",
-		"format": "prettier --write --config ./.prettierrc.cjs ."
+		"format": "prettier --write --config ./.prettierrc.cjs .",
+		"log": "bunyan -o short"
 	},
 	"files": [
 		"dist"
