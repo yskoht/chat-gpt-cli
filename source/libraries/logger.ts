@@ -34,6 +34,7 @@ export function createLogger() {
 		streams: [
 			{
 				path: _logFilePath,
+				level: 'debug',
 			},
 		],
 	});
