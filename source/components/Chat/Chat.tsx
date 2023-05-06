@@ -1,11 +1,12 @@
-import {Box, useFocus} from 'ink';
+import {Text, Box, useFocus} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useState, useCallback} from 'react';
 
+import Divider from '@/components/Divider/index.js';
 import '@/components/Markdown/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
 import * as styles from '@/styles/index.js';
-import {replaceLineSep} from '@/utilities/index.js';
+import {SPACE, replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
@@ -31,6 +32,7 @@ type ChatMessagesProps = {
 	textInProgress: string;
 	userPromptText: string;
 	inStreaming: boolean;
+	isFocused: boolean;
 };
 function ChatMessages({
 	messages,
@@ -86,6 +88,7 @@ type ChatUserPromptProps = {
 	clearUserPromptText: () => void;
 	submitChat: (messages: MessageType[]) => Promise<void>;
 	inStreaming: boolean;
+	isFocused: boolean;
 };
 function ChatUserPrompt({
 	messages,
@@ -95,6 +98,7 @@ function ChatUserPrompt({
 	clearUserPromptText,
 	submitChat,
 	inStreaming,
+	isFocused,
 }: ChatUserPromptProps) {
 	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
 
@@ -113,21 +117,29 @@ function ChatUserPrompt({
 		updateHistory,
 	]);
 
-	const _userPrompt = useMemo(
-		() => (
+	const _userPrompt = useMemo(() => {
+		const markColor = styles.getFocusColor(isFocused);
+		return (
 			<UserPrompt
 				value={userPromptText}
 				mark={USER_PROMPT_MARK}
+				markColor={markColor}
 				onChange={setUserPromptText}
 				onSubmit={onSubmit}
 				showCursor
-				isActive
+				isActive={isFocused}
 				onHistoryPrev={onHistoryPrev}
 				onHistoryNext={onHistoryNext}
 			/>
-		),
-		[userPromptText, setUserPromptText, onSubmit, onHistoryPrev, onHistoryNext],
-	);
+		);
+	}, [
+		userPromptText,
+		setUserPromptText,
+		onSubmit,
+		onHistoryPrev,
+		onHistoryNext,
+		isFocused,
+	]);
 
 	if (inStreaming) {
 		return <Spinner />;
@@ -136,37 +148,43 @@ function ChatUserPrompt({
 	return <Box>{_userPrompt}</Box>;
 }
 
-function ChatMessagesContainer(props: ChatMessagesProps) {
+type ChatMessagesContainerProps = Omit<ChatMessagesProps, 'isFocused'>;
+function ChatMessagesContainer(props: ChatMessagesContainerProps) {
 	const {isFocused} = useFocus();
-	const borderColor = styles.getFocusColor(isFocused);
+	const scrollBarVisibility = useMemo(
+		() => (isFocused ? 'visible' : 'auto'),
+		[isFocused],
+	);
+	const scrollBarColor = useMemo(
+		() => styles.getFocusColor(isFocused),
+		[isFocused],
+	);
+
+	const content = useMemo(() => {
+		if (props.messages.length === 0) {
+			// memo: to show the scroll bar when the chat is empty
+			return <Text>{SPACE}</Text>;
+		}
+		return <ChatMessages {...props} isFocused={isFocused} />;
+	}, [props, isFocused]);
+
 	return (
-		<Box
-			borderStyle="single"
-			borderColor={borderColor}
-			height="100%"
-			paddingLeft={1}
-			paddingRight={1}
-		>
-			<ScrollArea>
-				<ChatMessages {...props} />
+		<Box height="100%">
+			<ScrollArea
+				isActive={isFocused}
+				scrollBarVisibility={scrollBarVisibility}
+				scrollBarColor={scrollBarColor}
+			>
+				{content}
 			</ScrollArea>
 		</Box>
 	);
 }
 
-function ChatUserPromptContainer(props: ChatUserPromptProps) {
+type ChatUserPromptContainerProps = Omit<ChatUserPromptProps, 'isFocused'>;
+function ChatUserPromptContainer(props: ChatUserPromptContainerProps) {
 	const {isFocused} = useFocus();
-	const borderColor = styles.getFocusColor(isFocused);
-	return (
-		<Box
-			borderStyle="single"
-			borderColor={borderColor}
-			paddingLeft={1}
-			paddingRight={1}
-		>
-			<ChatUserPrompt {...props} />
-		</Box>
-	);
+	return <ChatUserPrompt {...props} isFocused={isFocused} />;
 }
 
 function Chat() {
@@ -192,13 +210,20 @@ function Chat() {
 	});
 
 	return (
-		<Box flexDirection="column" justifyContent="space-between">
+		<Box
+			flexDirection="column"
+			justifyContent="space-between"
+			borderStyle="single"
+			paddingLeft={1}
+			paddingRight={1}
+		>
 			<ChatMessagesContainer
 				messages={messages}
 				textInProgress={textInProgress}
 				userPromptText={userPromptText}
 				inStreaming={inStreaming}
 			/>
+			<Divider />
 			<ChatUserPromptContainer
 				messages={messages}
 				setMessages={setMessages}
