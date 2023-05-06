@@ -28,6 +28,7 @@ type Props = {
 	paddingBottom?: number;
 	paddingLeft?: number;
 	divider?: string;
+	color?: string;
 };
 function Divider({
 	padding,
@@ -36,6 +37,7 @@ function Divider({
 	paddingBottom,
 	paddingLeft,
 	divider = DIVIDER,
+	color,
 }: Props) {
 	const ref = useRef(null);
 	const window = useDimension();
@@ -80,7 +82,7 @@ function Divider({
 			paddingBottom={_paddingBottom}
 			paddingLeft={_paddingLeft}
 		>
-			<Text>{_divider}</Text>
+			<Text color={color}>{_divider}</Text>
 		</Box>
 	);
 }
