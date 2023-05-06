@@ -19,6 +19,7 @@
 		"dist"
 	],
 	"dependencies": {
+		"bunyan": "^1.8.15",
 		"cli-highlight": "^2.1.11",
 		"ink": "^4.1.0",
 		"ink-spinner": "^5.0.0",
