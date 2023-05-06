@@ -1,6 +1,7 @@
 import {useInput, Key} from 'ink';
 import React, {useState} from 'react';
 
+import useLogger from '@/components/Logger/useLogger.js';
 import {replaceLineSep} from '@/utilities/index.js';
 
 import Lines from './Lines.js';
@@ -8,14 +9,6 @@ import {CURSOR_SHAPE, DEFAULT_CURSOR_COLOR} from './constants.js';
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
 import {Cursor, CursorShape, OnHistory} from './types.js';
-
-const DEBUG = false;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function debug(...args: any[]) {
-	if (DEBUG) {
-		console.log(...args);
-	}
-}
 
 type Props = {
 	value: string;
@@ -44,6 +37,7 @@ function MultiLineTextInput({
 	enableSyntaxHighlight = true,
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
+	const logger = useLogger();
 
 	useInput(
 		(_input, key) => {
@@ -85,7 +79,7 @@ function MultiLineTextInput({
 				return edit.insert(cursor, value, input);
 			})();
 
-			debug({input, key, cursor, value, nextValue, nextCursor});
+			logger.debug({input, key, cursor, value, nextValue, nextCursor});
 
 			onChange(nextValue);
 			setCursor(nextCursor);
