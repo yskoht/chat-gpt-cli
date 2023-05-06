@@ -1,6 +1,6 @@
 import bunyan from 'bunyan';
 
-import {Logger} from './mock.js';
+import {Logger} from './logger.js';
 
 const LOG_FILE_PATH = '.';
 const LOG_FILE_PREFIX = 'chat-gpt-cli';

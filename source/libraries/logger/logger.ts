@@ -53,7 +53,3 @@ export class Logger extends EventEmitter {
 		return false;
 	}
 }
-
-export function createMockLogger(): Logger {
-	return new Logger();
-}

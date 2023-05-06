@@ -2,7 +2,7 @@ import {createStore, StoreApi} from 'zustand';
 
 import {
 	createLogger,
-	createMockLogger,
+	createStubLogger,
 	Logger,
 } from '@/libraries/logger/index.js';
 
@@ -14,7 +14,7 @@ export type Store = StoreApi<StoreCore>;
 const store = (debug: boolean) =>
 	createStore<StoreCore>(() => ({
 		// @ts-ignore
-		logger: debug ? createLogger() : createMockLogger(),
+		logger: debug ? createLogger() : createStubLogger(),
 	}));
 
 export default store;

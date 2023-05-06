@@ -1,2 +1,3 @@
 export {createLogger} from './createLogger.js';
-export {Logger, createMockLogger} from './mock.js';
+export {createStubLogger} from './createStubLogger.js';
+export {Logger} from './logger.js';
