@@ -1,5 +1,7 @@
 import bunyan from 'bunyan';
 
+import {Logger} from './mock.js';
+
 const LOG_FILE_PATH = '.';
 const LOG_FILE_PREFIX = 'chat-gpt-cli';
 const EXT = 'log';
@@ -37,6 +39,6 @@ export function createLogger() {
 				level: 'debug',
 			},
 		],
-	});
+	}) as unknown as Logger; // memo: use as Logger
 	return logger;
 }
