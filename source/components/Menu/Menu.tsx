@@ -4,10 +4,11 @@ import React from 'react';
 import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
+import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 
 function Menu() {
-	const {isFocused} = useFocus({autoFocus: true});
+	const {isFocused} = useFocus({id: FOCUS_ID.menu});
 	const borderColor = styles.getFocusColor(isFocused);
 	return (
 		<Box

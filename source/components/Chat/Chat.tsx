@@ -5,6 +5,7 @@ import React, {useMemo, useState, useCallback} from 'react';
 import Divider from '@/components/Divider/index.js';
 import '@/components/Markdown/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
+import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 import {SPACE, replaceLineSep} from '@/utilities/index.js';
 
@@ -150,7 +151,7 @@ function ChatUserPrompt({
 
 type ChatMessagesContainerProps = Omit<ChatMessagesProps, 'isFocused'>;
 function ChatMessagesContainer(props: ChatMessagesContainerProps) {
-	const {isFocused} = useFocus();
+	const {isFocused} = useFocus({id: FOCUS_ID.chatMessages});
 	const scrollBarVisibility = useMemo(
 		() => (isFocused ? 'visible' : 'auto'),
 		[isFocused],
@@ -183,7 +184,7 @@ function ChatMessagesContainer(props: ChatMessagesContainerProps) {
 
 type ChatUserPromptContainerProps = Omit<ChatUserPromptProps, 'isFocused'>;
 function ChatUserPromptContainer(props: ChatUserPromptContainerProps) {
-	const {isFocused} = useFocus();
+	const {isFocused} = useFocus({id: FOCUS_ID.chatUserPrompt});
 	return <ChatUserPrompt {...props} isFocused={isFocused} />;
 }
 
