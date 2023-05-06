@@ -50,21 +50,28 @@ function Space() {
 	return <Text>{SPACE}</Text>;
 }
 
-function Bar() {
-	return (
-		<Text backgroundColor={SCROLL_BAR_BACKGROUND_COLOR}>{SCROLL_BAR_CHAR}</Text>
+type BarProps = {
+	color: string | undefined;
+};
+function Bar({color}: BarProps) {
+	const _backgroundColor = useMemo(
+		() => color ?? SCROLL_BAR_BACKGROUND_COLOR,
+		[color],
 	);
+	return <Text backgroundColor={_backgroundColor}>{SCROLL_BAR_CHAR}</Text>;
 }
 
 type ScrollBarProps = {
 	innerHeight: number;
 	outerHeight: number;
 	positionFromInnerTop: number;
+	color: string | undefined;
 };
 function ScrollBar({
 	innerHeight,
 	outerHeight,
 	positionFromInnerTop,
+	color,
 }: ScrollBarProps) {
 	const {scrollBarHeight, scrollBarPosition} = useMemo(
 		() => calcScrollBar(outerHeight, innerHeight, positionFromInnerTop),
@@ -81,9 +88,13 @@ function ScrollBar({
 		const positions = new Array(outerHeight).fill(0).map((_, i) => i);
 		return positions.map((position) => {
 			const isBar = _isThisPositionBar(position);
-			return isBar ? <Bar key={position} /> : <Space key={position} />;
+			return isBar ? (
+				<Bar key={position} color={color} />
+			) : (
+				<Space key={position} />
+			);
 		});
-	}, [outerHeight, _isThisPositionBar]);
+	}, [outerHeight, _isThisPositionBar, color]);
 
 	return (
 		<Box flexDirection="column" paddingLeft={1}>
@@ -94,8 +105,9 @@ function ScrollBar({
 
 type ScrollBarContainerProps = {
 	visibility: ScrollBarVisibility;
+	color: string | undefined;
 };
-function ScrollBarContainer({visibility}: ScrollBarContainerProps) {
+function ScrollBarContainer({visibility, color}: ScrollBarContainerProps) {
 	const store = useContext(ScrollAreaContext);
 	const {innerHeight, outerHeight, positionFromInnerTop} = useStore(
 		store,
@@ -121,6 +133,7 @@ function ScrollBarContainer({visibility}: ScrollBarContainerProps) {
 			innerHeight={innerHeight}
 			outerHeight={outerHeight}
 			positionFromInnerTop={positionFromInnerTop}
+			color={color}
 		/>
 	);
 }

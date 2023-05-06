@@ -15,6 +15,7 @@ type Props = {
 	height?: number | string;
 	isActive?: boolean;
 	scrollBarVisibility?: ScrollBarVisibility;
+	scrollBarColor?: string;
 	scrollHandler?: ScrollHandlerType;
 };
 function ScrollArea({
@@ -22,12 +23,17 @@ function ScrollArea({
 	height,
 	isActive = true,
 	scrollBarVisibility = SCROLL_BAR_VISIBILITY.auto,
+	scrollBarColor,
 	scrollHandler,
 }: Props) {
 	return (
 		<ScrollAreaContextProvider>
 			<ScrollHandler isActive={isActive} scrollHandler={scrollHandler} />
-			<OuterBox height={height} scrollBarVisibility={scrollBarVisibility}>
+			<OuterBox
+				height={height}
+				scrollBarVisibility={scrollBarVisibility}
+				scrollBarColor={scrollBarColor}
+			>
 				<InnerBox>{children}</InnerBox>
 			</OuterBox>
 		</ScrollAreaContextProvider>

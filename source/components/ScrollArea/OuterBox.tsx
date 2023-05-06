@@ -12,9 +12,15 @@ type Props = {
 	children: React.ReactNode;
 	height: number | string | undefined;
 	scrollBarVisibility: ScrollBarVisibility;
+	scrollBarColor: string | undefined;
 };
 
-function OuterBox({children, height, scrollBarVisibility}: Props) {
+function OuterBox({
+	children,
+	height,
+	scrollBarVisibility,
+	scrollBarColor,
+}: Props) {
 	const store = useContext(ScrollAreaContext);
 	const {setOuterHeight} = useStore(store, ({setOuterHeight}) => ({
 		setOuterHeight,
@@ -33,7 +39,7 @@ function OuterBox({children, height, scrollBarVisibility}: Props) {
 			<Box ref={ref} flexDirection="column" overflow="hidden">
 				{children}
 			</Box>
-			<ScrollBar visibility={scrollBarVisibility} />
+			<ScrollBar visibility={scrollBarVisibility} color={scrollBarColor} />
 		</Box>
 	);
 }
