@@ -8,11 +8,12 @@ export type ScrollAreaApi = {
 	scrollUp: (offset: number) => void;
 	scrollToTop: () => void;
 	scrollToBottom: () => void;
-	recalculateComponentSize: () => void;
+	resize: () => void;
 };
 export type ScrollHandler = (
 	input: string,
 	key: Key,
 	api: ScrollAreaApi,
 ) => void;
-export type recalculateComponentSize = () => void;
+
+export type FetchSize = () => void;

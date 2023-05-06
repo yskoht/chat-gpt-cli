@@ -18,21 +18,16 @@ type Props = {
 function InnerBox({children}: Props) {
 	const ref = useRef(null);
 	const store = useContext(ScrollAreaContext);
-	const {setInnerHeight, positionFromInnerTop, setRecalculateComponentSize} =
-		useStore(
-			store,
-			({
-				setInnerHeight,
-				positionFromInnerTop,
-				setRecalculateComponentSize,
-			}) => ({
-				setInnerHeight,
-				positionFromInnerTop,
-				setRecalculateComponentSize,
-			}),
-		);
+	const {setInnerHeight, positionFromInnerTop, setFetchInnerHeight} = useStore(
+		store,
+		({setInnerHeight, positionFromInnerTop, setFetchInnerHeight}) => ({
+			setInnerHeight,
+			positionFromInnerTop,
+			setFetchInnerHeight,
+		}),
+	);
 
-	const calculateComponentSize = useCallback(() => {
+	const fetchInnerHeight = useCallback(() => {
 		if (isNullable(ref.current)) {
 			return;
 		}
@@ -42,9 +37,9 @@ function InnerBox({children}: Props) {
 	}, [setInnerHeight]);
 
 	useEffect(() => {
-		calculateComponentSize();
-		setRecalculateComponentSize(calculateComponentSize);
-	}, [calculateComponentSize, setRecalculateComponentSize]);
+		fetchInnerHeight();
+		setFetchInnerHeight(fetchInnerHeight);
+	}, [fetchInnerHeight, setFetchInnerHeight]);
 
 	const marginTop = useMemo(
 		() => -positionFromInnerTop,

@@ -1,5 +1,5 @@
 import {Box, measureElement} from 'ink';
-import React, {useEffect, useContext, useRef} from 'react';
+import React, {useEffect, useCallback, useContext, useRef} from 'react';
 import {useStore} from 'zustand';
 
 import {isNullable} from '@/utilities/index.js';
@@ -21,18 +21,29 @@ function OuterBox({
 	scrollBarVisibility,
 	scrollBarColor,
 }: Props) {
-	const store = useContext(ScrollAreaContext);
-	const {setOuterHeight} = useStore(store, ({setOuterHeight}) => ({
-		setOuterHeight,
-	}));
 	const ref = useRef(null);
+	const store = useContext(ScrollAreaContext);
+	const {setOuterHeight, setFetchOuterHeight} = useStore(
+		store,
+		({setOuterHeight, setFetchOuterHeight}) => ({
+			setOuterHeight,
+			setFetchOuterHeight,
+		}),
+	);
+
+	const fetchOuterHeight = useCallback(() => {
+		if (isNullable(ref.current)) {
+			return;
+		}
+
+		const dimensions = measureElement(ref.current);
+		setOuterHeight(dimensions.height);
+	}, [setOuterHeight]);
 
 	useEffect(() => {
-		if (!isNullable(ref.current)) {
-			const dimensions = measureElement(ref.current);
-			setOuterHeight(dimensions.height);
-		}
-	}, [setOuterHeight]);
+		fetchOuterHeight();
+		setFetchOuterHeight(fetchOuterHeight);
+	}, [fetchOuterHeight, setFetchOuterHeight]);
 
 	return (
 		<Box justifyContent="space-between" width="100%" height={height}>

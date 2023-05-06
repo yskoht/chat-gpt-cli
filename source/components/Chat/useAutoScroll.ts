@@ -1,6 +1,7 @@
 import {useMemo, useEffect} from 'react';
 
 import {useScrollArea} from '@/components/ScrollArea/index.js';
+import useDimension from '@/hooks/useDimension.js';
 import {toLines} from '@/utilities/index.js';
 
 import {Message as MessageType} from './types.js';
@@ -11,7 +12,8 @@ type Props = {
 	userPromptText: string;
 };
 function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
-	const {scrollToBottom, recalculateComponentSize} = useScrollArea();
+	const {width, height} = useDimension();
+	const {scrollToBottom, resize} = useScrollArea();
 	const messagesLength = useMemo(() => {
 		return messages.length;
 	}, [messages]);
@@ -20,14 +22,16 @@ function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 		return toLines(userPromptText).length;
 	}, [userPromptText]);
 
+	useEffect(resize, [resize, width, height]);
+
 	useEffect(() => {
-		recalculateComponentSize();
+		resize();
 		scrollToBottom();
 	}, [
 		messagesLength,
 		textInProgress,
 		userPromptTextLineCount,
-		recalculateComponentSize,
+		resize,
 		scrollToBottom,
 	]);
 }

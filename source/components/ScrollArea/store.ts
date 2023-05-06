@@ -2,7 +2,7 @@ import {createStore, StoreApi} from 'zustand/vanilla';
 
 import {nop} from '@/utilities/index.js';
 
-import {recalculateComponentSize} from './types.js';
+import {FetchSize} from './types.js';
 
 function calcPositionFromInnerTopMax(innerHeight: number, outerHeight: number) {
 	return Math.max(innerHeight - outerHeight, 0);
@@ -18,10 +18,11 @@ type StoreCore = {
 	scrollUp: (n?: number) => void;
 	scrollToTop: () => void;
 	scrollToBottom: () => void;
-	recalculateComponentSize: recalculateComponentSize;
-	setRecalculateComponentSize: (
-		recalculateComponentSize: recalculateComponentSize,
-	) => void;
+	resize: () => void;
+	fetchInnerHeight: () => void;
+	fetchOuterHeight: () => void;
+	setFetchInnerHeight: (fetchInnerHeight: FetchSize) => void;
+	setFetchOuterHeight: (fetchOuterHeight: FetchSize) => void;
 };
 export type Store = StoreApi<StoreCore>;
 
@@ -61,9 +62,16 @@ const store = createStore<StoreCore>((set) => ({
 			);
 			return {positionFromInnerTop: positionFromInnerTopMax};
 		}),
-	recalculateComponentSize: nop,
-	setRecalculateComponentSize: (recalculateComponentSize) =>
-		set({recalculateComponentSize}),
+	resize: () =>
+		set(({fetchInnerHeight, fetchOuterHeight}) => {
+			fetchInnerHeight();
+			fetchOuterHeight();
+			return {};
+		}),
+	fetchInnerHeight: nop,
+	fetchOuterHeight: nop,
+	setFetchInnerHeight: (fetchInnerHeight) => set({fetchInnerHeight}),
+	setFetchOuterHeight: (fetchOuterHeight) => set({fetchOuterHeight}),
 }));
 
 export default store;
