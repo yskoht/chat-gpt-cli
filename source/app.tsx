@@ -17,7 +17,7 @@ export default function App() {
 	useFocusManagement();
 
 	return (
-		<Box justifyContent="space-between" width={width} height={height}>
+		<Box justifyContent="space-between" width={width} height={height - 1}>
 			<Box width={CHAT_WIDTH}>
 				<Chat />
 			</Box>
