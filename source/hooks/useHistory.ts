@@ -2,7 +2,7 @@ import os from 'os';
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 
-import {createFileStorage} from '@/libraries/zustand/createFileStorage.js';
+import {createFileStorage} from '@/libraries/zustand/index.js';
 
 const HOME_DIR = os.homedir();
 const HISTORY_FILE_NAME = '.chat-gpt-cli-history.json';
