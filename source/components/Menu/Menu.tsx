@@ -4,13 +4,17 @@ import React from 'react';
 import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
+import * as styles from '@/styles/index.js';
 
 function Menu() {
-	useFocus();
+	const {isFocused} = useFocus({autoFocus: true});
+	const borderColor = styles.getFocusColor(isFocused);
 	return (
 		<Box
 			flexDirection="column"
 			borderStyle="single"
+			borderColor={borderColor}
+			width="100%"
 			paddingLeft={1}
 			paddingRight={1}
 		>

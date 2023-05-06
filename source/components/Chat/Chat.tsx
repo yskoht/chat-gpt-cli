@@ -4,6 +4,7 @@ import React, {useMemo, useState, useCallback} from 'react';
 
 import '@/components/Markdown/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
+import * as styles from '@/styles/index.js';
 import {replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
@@ -136,9 +137,16 @@ function ChatUserPrompt({
 }
 
 function ChatMessagesContainer(props: ChatMessagesProps) {
-	useFocus();
+	const {isFocused} = useFocus();
+	const borderColor = styles.getFocusColor(isFocused);
 	return (
-		<Box borderStyle="single" height="100%" paddingLeft={1} paddingRight={1}>
+		<Box
+			borderStyle="single"
+			borderColor={borderColor}
+			height="100%"
+			paddingLeft={1}
+			paddingRight={1}
+		>
 			<ScrollArea>
 				<ChatMessages {...props} />
 			</ScrollArea>
@@ -147,9 +155,15 @@ function ChatMessagesContainer(props: ChatMessagesProps) {
 }
 
 function ChatUserPromptContainer(props: ChatUserPromptProps) {
-	useFocus();
+	const {isFocused} = useFocus();
+	const borderColor = styles.getFocusColor(isFocused);
 	return (
-		<Box borderStyle="single" paddingLeft={1} paddingRight={1}>
+		<Box
+			borderStyle="single"
+			borderColor={borderColor}
+			paddingLeft={1}
+			paddingRight={1}
+		>
 			<ChatUserPrompt {...props} />
 		</Box>
 	);
