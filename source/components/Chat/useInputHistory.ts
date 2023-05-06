@@ -1,18 +1,8 @@
 import {useState, useCallback, useMemo} from 'react';
 
 import {Cursor} from '@/components/MultiLineTextInput/index.js';
+import useHistory from '@/hooks/useHistory.js';
 import {isNullable} from '@/utilities/index.js';
-
-const INIT_HISTORY = [''];
-const INIT_INDEX = 0;
-
-function excludeFirstItem<T>(list: T[]): T[] {
-	return list.slice(1);
-}
-
-function alreadyExistsInHistory(history: string[], text: string): boolean {
-	return history.includes(text);
-}
 
 type GetPrevHistory = () => string | null;
 type GetNextHistory = () => string | null;
@@ -31,37 +21,44 @@ function onHistory(cursor: Cursor, value: string, operator: Operator) {
 	};
 }
 
-function useInputHistory() {
-	const [history, setHistory] = useState<string[]>(INIT_HISTORY);
-	const [index, setIndex] = useState<number>(INIT_INDEX);
+function useIndex(initIndex: number) {
+	const [index, setIndex] = useState<number>(initIndex);
+	const resetIndex = useCallback(() => setIndex(initIndex), [initIndex]);
+	return useMemo(
+		() => ({index, setIndex, resetIndex}),
+		[index, setIndex, resetIndex],
+	);
+}
 
-	const resetIndex = useCallback(() => setIndex(INIT_INDEX), []);
+function useInputHistory() {
+	const {history, save, saveTemporarily} = useHistory();
+	const {index, setIndex, resetIndex} = useIndex(0);
 
 	const updateHistory = useCallback(
 		(text: string) => {
-			const _history = excludeFirstItem(history);
-			if (!alreadyExistsInHistory(_history, text)) {
-				setHistory([...INIT_HISTORY, text, ..._history]);
-			}
+			save(text);
 			resetIndex();
 		},
-		[history, resetIndex],
+		[save, resetIndex],
 	);
 
 	const getPrevHistory = useCallback(
 		(text: string): string | null => {
+			console.log({index, text, history});
+			if (index === 0) {
+				console.log('saveTemporarily');
+				saveTemporarily(text);
+			}
+
 			const nextIndex = index + 1;
 			if (nextIndex >= history.length) {
 				return null;
-			}
-			if (index === 0) {
-				setHistory(([, ...xs]) => [text, ...xs]);
 			}
 			setIndex(nextIndex);
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			return history[nextIndex]!;
 		},
-		[history, index],
+		[index, setIndex, history, saveTemporarily],
 	);
 
 	const getNextHistory = useCallback((): string | null => {
@@ -72,7 +69,7 @@ function useInputHistory() {
 		setIndex(nextIndex);
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return history[nextIndex]!;
-	}, [history, index]);
+	}, [index, setIndex, history]);
 
 	const onHistoryPrev = useCallback(
 		(cursor: Cursor, value: string) => {
