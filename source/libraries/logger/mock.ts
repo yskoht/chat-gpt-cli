@@ -6,15 +6,16 @@
 import {EventEmitter} from 'events';
 
 export class Logger extends EventEmitter {
-	addStream() {}
-	addSerializers() {}
 	child() {
 		return new Logger();
 	}
-	reopenFileStreams() {}
 
 	// memo: Do not use these methods
 	/*
+	addStream() {}
+	addSerializers() {}
+	reopenFileStreams() {}
+
 	level() {
 		return 0;
 	}
