@@ -9,8 +9,8 @@ import useFocusManagement from '@/hooks/useFocusManagement.js';
 const CHAT_WIDTH_PERCENTAGE = 80;
 const MENU_WIDTH_PERCENTAGE = 100 - CHAT_WIDTH_PERCENTAGE;
 
-const CHAT_WIDTH = `${CHAT_WIDTH_PERCENTAGE}%`;
-const MENU_WIDTH = `${MENU_WIDTH_PERCENTAGE}%`;
+const CHAT_WIDTH = toWidth(CHAT_WIDTH_PERCENTAGE);
+const MENU_WIDTH = toWidth(MENU_WIDTH_PERCENTAGE);
 
 export default function App() {
 	const {width, height} = useDimension();
@@ -27,4 +27,8 @@ export default function App() {
 			</Box>
 		</Box>
 	);
+}
+
+function toWidth(percentage: number): string {
+	return `${percentage}%`;
 }
