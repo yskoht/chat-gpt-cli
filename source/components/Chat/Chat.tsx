@@ -12,6 +12,7 @@ import {SPACE, replaceLineSep} from '@/utilities/index.js';
 import {markColor} from './Mark.js';
 import Message from './Message.js';
 import UserPrompt from './UserPrompt.js';
+import {chatScrollHandler} from './chatScrollHandler.js';
 import {MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
 import {Message as MessageType} from './types.js';
 import useAutoScroll from './useAutoScroll.js';
@@ -173,6 +174,7 @@ function ChatMessagesContainer(props: ChatMessagesContainerProps) {
 		<Box height="100%">
 			<ScrollArea
 				isActive={isFocused}
+				scrollHandler={chatScrollHandler}
 				scrollBarVisibility={scrollBarVisibility}
 				scrollBarColor={scrollBarColor}
 			>
