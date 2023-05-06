@@ -3,24 +3,31 @@ import {render} from 'ink';
 import meow from 'meow';
 import React from 'react';
 
+import Logger from '@/components/Logger/Logger.js';
+
 import App from './app.js';
 
-meow(
+const cli = meow(
 	`
 	Usage
-	  $ chat-gpt-cli
+	  $ cgc
 
 	Options
-		--name  Your name
-
-	Examples
-	  $ chat-gpt-cli --name=Jane
-	  Hello, Jane
+		--debug  Output debug log
 `,
 	{
 		importMeta: import.meta,
-		flags: {},
+		flags: {
+			debug: {
+				type: 'boolean',
+				default: false,
+			},
+		},
 	},
 );
 
-render(<App />);
+render(
+	<Logger debug={cli.flags.debug}>
+		<App />
+	</Logger>,
+);
