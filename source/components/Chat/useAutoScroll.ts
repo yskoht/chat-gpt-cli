@@ -1,10 +1,9 @@
 import {useMemo, useEffect} from 'react';
 
 import {useScrollArea} from '@/components/ScrollArea/index.js';
+import {Message as MessageType} from '@/hooks/useChatRecord.js';
 import useDimension from '@/hooks/useDimension.js';
 import {toLines} from '@/utilities/index.js';
-
-import {Message as MessageType} from './types.js';
 
 type Props = {
 	messages: MessageType[];

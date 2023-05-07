@@ -1,12 +1,13 @@
 import {Text} from 'ink';
 import React, {ReactNode} from 'react';
 
+import {Message} from '@/hooks/useChatRecord.js';
+
 import {
 	USER_MESSAGE_MARK_COLOR,
 	ASSISTANT_MESSAGE_MARK_COLOR,
 	DEFAULT_MESSAGE_MARK_COLOR,
 } from './constants.js';
-import {Message} from './types.js';
 
 type Props = {
 	mark: ReactNode;

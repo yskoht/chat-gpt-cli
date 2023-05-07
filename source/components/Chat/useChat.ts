@@ -1,9 +1,9 @@
 import {useCallback, useMemo} from 'react';
 
+import {Message, ROLE} from '@/hooks/useChatRecord.js';
 import openai from '@/libraries/openai.js';
 
-import {ROLE} from './constants.js';
-import {Message, Response} from './types.js';
+import {Response} from './types.js';
 import useProgress from './useProgress.js';
 
 const SYSTEM_PROMPT = {
