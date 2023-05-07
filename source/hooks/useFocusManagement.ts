@@ -55,9 +55,6 @@ function useFocusManagement() {
 	}, []);
 
 	useInput((_, key) => {
-		if (key.escape) {
-			process.exit();
-		}
 		if (key.shift && key.tab) {
 			focusPrevious();
 			return;
