@@ -7,9 +7,14 @@ import NewChat from '@/components/NewChat/index.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 
+import useChatRecordList from './useChatRecordList.js';
+
 function Menu() {
 	const {isFocused} = useFocus({id: FOCUS_ID.menu});
 	const borderColor = styles.getFocusColor(isFocused);
+
+	const {list} = useChatRecordList();
+
 	return (
 		<Box
 			flexDirection="column"
@@ -22,10 +27,9 @@ function Menu() {
 			<NewChat />
 			<Divider />
 			<Box flexDirection="column">
-				<ChatRecord label="Hello1" />
-				<ChatRecord label="Hello2" />
-				<ChatRecord label="Hello3" />
-				<ChatRecord label="Hello4" />
+				{list.map(({id, title}) => (
+					<ChatRecord key={id} label={title} />
+				))}
 			</Box>
 		</Box>
 	);
