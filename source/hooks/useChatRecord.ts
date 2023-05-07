@@ -7,7 +7,7 @@ import {createFileStorage, STORAGE_NAME} from '@/libraries/zustand/index.js';
 import {isFunction} from '@/utilities/index.js';
 
 const MODEL = 'gpt-4';
-const NEW_CHAT_TITLE = 'New Chat';
+const INITIAL_CHAT_TITLE = 'New Chat';
 
 const HOME_DIR = os.homedir();
 const CHAT_RECORD_FILE_NAME = '.chat-gpt-cli-chat-record.json';
@@ -40,7 +40,7 @@ function generateId() {
 function generateNewChat(model: string): Chat {
 	return {
 		id: generateId(),
-		title: NEW_CHAT_TITLE,
+		title: INITIAL_CHAT_TITLE,
 		model,
 		createdAt: Date.now(),
 		messages: [],
@@ -63,6 +63,8 @@ type Store = PersistedState & {
 	getChat: (id: string) => Chat;
 	getMessages: (id: string) => Message[];
 	setMessages: (id: string, valueOrSetter: ValueOrSetter) => void;
+	isInitialTitle: (id: string) => boolean;
+	setTitle: (id: string, title: string) => void;
 };
 
 const useChatRecord = create<Store>()(
@@ -97,6 +99,25 @@ const useChatRecord = create<Store>()(
 								[id]: {
 									...chat,
 									messages: value,
+								},
+							},
+						};
+					}),
+				isInitialTitle: (id) =>
+					getStore().getChat(id).title === INITIAL_CHAT_TITLE,
+				setTitle: (id, title) =>
+					setStore(({getChat, isNewChat, chatRecord}) => {
+						const chat = getChat(id);
+						if (isNewChat(id)) {
+							throw new Error(`Cannot set title of new chat: ${id}`);
+						}
+
+						return {
+							chatRecord: {
+								...chatRecord,
+								[id]: {
+									...chat,
+									title,
 								},
 							},
 						};

@@ -70,7 +70,7 @@ export function userMessage(text: string): Message {
 
 type Props = {
 	onChange: (content: string) => void;
-	onFinish: () => void;
+	onFinish?: () => void;
 };
 function useChat({onChange, onFinish}: Props) {
 	const waiting = useProgress();
@@ -87,7 +87,7 @@ function useChat({onChange, onFinish}: Props) {
 					for (const line of lines) {
 						const message = toMessage(line);
 						if (isDone(message)) {
-							onFinish();
+							onFinish && onFinish();
 							waiting.stop();
 							return;
 						}
@@ -114,7 +114,7 @@ function useChat({onChange, onFinish}: Props) {
 				if (content) {
 					onChange(content);
 				}
-				onFinish();
+				onFinish && onFinish();
 				waiting.stop();
 			} catch (error: unknown) {
 				console.error(error);

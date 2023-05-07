@@ -3,9 +3,10 @@ import {useMemo, useCallback} from 'react';
 import useChatRecord, {ValueOrSetter} from '@/hooks/useChatRecord.js';
 
 function useMessages(id: string) {
-	const chatRecord = useChatRecord(({getMessages, setMessages}) => ({
+	const chatRecord = useChatRecord(({getMessages, setMessages, setTitle}) => ({
 		getMessages,
 		setMessages,
+		setTitle,
 	}));
 
 	const messages = useMemo(() => chatRecord.getMessages(id), [chatRecord, id]);
@@ -13,13 +14,18 @@ function useMessages(id: string) {
 		(valueOrSetter: ValueOrSetter) => chatRecord.setMessages(id, valueOrSetter),
 		[chatRecord, id],
 	);
+	const setTitle = useCallback(
+		(title: string) => chatRecord.setTitle(id, title),
+		[chatRecord, id],
+	);
 
 	return useMemo(
 		() => ({
 			messages,
 			setMessages,
+			setTitle,
 		}),
-		[messages, setMessages],
+		[messages, setMessages, setTitle],
 	);
 }
 

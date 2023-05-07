@@ -21,6 +21,7 @@ import useMessages from './useMessages.js';
 import useStreamFinishedCallback from './useStreamFinishedCallback.js';
 import useText from './useText.js';
 import useTextInProgress from './useTextInProgress.js';
+import useTitle from './useTitle.js';
 
 function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd();
@@ -199,6 +200,7 @@ function Chat({id}: Props) {
 	const {textInProgress, setTextInProgress, clearTextInProgress} =
 		useTextInProgress(id);
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
+	const {shouldCreateTitle, generateTitle} = useTitle(id);
 
 	const onChange = useCallback(
 		(content: string) => {
@@ -208,9 +210,20 @@ function Chat({id}: Props) {
 	);
 	const streamFinishedCallback = useCallback(() => {
 		const t = finishTextInProgress(textInProgress);
-		setMessages((x) => [...x, assistantMessage(t)]);
+		const _messages = [...messages, assistantMessage(t)];
+		if (shouldCreateTitle) {
+			generateTitle(_messages);
+		}
+		setMessages(_messages);
 		clearTextInProgress();
-	}, [textInProgress, setMessages, clearTextInProgress]);
+	}, [
+		textInProgress,
+		messages,
+		setMessages,
+		shouldCreateTitle,
+		generateTitle,
+		clearTextInProgress,
+	]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 	const {submitChatStream, inWaiting} = useChat({
 		onChange,
