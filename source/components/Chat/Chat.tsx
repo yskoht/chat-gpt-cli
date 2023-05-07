@@ -1,9 +1,10 @@
 import {Text, Box, useFocus} from 'ink';
 import Spinner from 'ink-spinner';
-import React, {useMemo, useState, useCallback} from 'react';
+import React, {useMemo, useCallback} from 'react';
 
 import Divider from '@/components/Divider/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
+import {Message as MessageType} from '@/hooks/useChatRecord.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 import {SPACE, replaceLineSep} from '@/utilities/index.js';
@@ -13,12 +14,13 @@ import Message from './Message.js';
 import UserPrompt from './UserPrompt.js';
 import {chatScrollHandler} from './chatScrollHandler.js';
 import {MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
-import {Message as MessageType} from './types.js';
 import useAutoScroll from './useAutoScroll.js';
 import useChat, {assistantMessage, userMessage} from './useChat.js';
 import useInputHistory from './useInputHistory.js';
+import useMessages from './useMessages.js';
 import useStreamFinishedCallback from './useStreamFinishedCallback.js';
 import useText from './useText.js';
+import useTextInProgress from './useTextInProgress.js';
 
 function finishTextInProgress(textInProgress: string) {
 	return textInProgress.trimEnd();
@@ -189,9 +191,13 @@ function ChatUserPromptContainer(props: ChatUserPromptContainerProps) {
 	return <ChatUserPrompt {...props} isFocused={isFocused} />;
 }
 
-function Chat() {
-	const [messages, setMessages] = useState<MessageType[]>([]);
-	const [textInProgress, setTextInProgress, clearTextInProgress] = useText();
+type Props = {
+	id: string;
+};
+function Chat({id}: Props) {
+	const {messages, setMessages} = useMessages(id);
+	const {textInProgress, setTextInProgress, clearTextInProgress} =
+		useTextInProgress(id);
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 
 	const onChange = useCallback(
