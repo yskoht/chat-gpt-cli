@@ -20,13 +20,13 @@ type PersistedState = {
 	history: string[];
 };
 
-type StoreCore = PersistedState & {
+type Store = PersistedState & {
 	save: (text: string) => void;
 	saveTemporarily: (text: string) => void;
 };
 
 const INIT_HISTORY = [''];
-const useHistory = create<StoreCore>()(
+const useHistory = create<Store>()(
 	persist(
 		(set) => ({
 			history: INIT_HISTORY,

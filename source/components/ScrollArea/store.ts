@@ -8,7 +8,7 @@ function calcPositionFromInnerTopMax(innerHeight: number, outerHeight: number) {
 	return Math.max(innerHeight - outerHeight, 0);
 }
 
-type StoreCore = {
+type _Store = {
 	outerHeight: number;
 	innerHeight: number;
 	positionFromInnerTop: number;
@@ -24,9 +24,9 @@ type StoreCore = {
 	setFetchInnerHeight: (fetchInnerHeight: FetchSize) => void;
 	setFetchOuterHeight: (fetchOuterHeight: FetchSize) => void;
 };
-export type Store = StoreApi<StoreCore>;
+export type Store = StoreApi<_Store>;
 
-const store = createStore<StoreCore>((set, get) => ({
+const store = createStore<_Store>((set, get) => ({
 	outerHeight: 0,
 	innerHeight: 0,
 	positionFromInnerTop: 0,
