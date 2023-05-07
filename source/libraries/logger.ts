@@ -1,7 +1,5 @@
 import bunyan from 'bunyan';
 
-import {Logger} from './logger.js';
-
 const LOG_FILE_PATH = '.';
 const LOG_FILE_PREFIX = 'chat-gpt-cli';
 const EXT = 'log';
@@ -29,16 +27,27 @@ function logFilePath() {
 	return `${LOG_FILE_PATH}/${_logFileName}`;
 }
 
-export function createLogger() {
+let _logger: bunyan | null = null;
+
+export function initializeLogger(debug: boolean) {
 	const _logFilePath = logFilePath();
-	const logger = bunyan.createLogger({
+
+	const stream = debug
+		? {path: _logFilePath, level: 'debug' as const}
+		: {stream: process.stderr, level: 99};
+
+	_logger = bunyan.createLogger({
 		name: 'chat-gpt-cli',
-		streams: [
-			{
-				path: _logFilePath,
-				level: 'debug',
-			},
-		],
-	}) as unknown as Logger; // memo: use as Logger
-	return logger;
+		streams: [stream],
+	});
 }
+
+function logger() {
+	if (!_logger) {
+		throw new Error('Logger is not initialized');
+	}
+
+	return _logger;
+}
+
+export default logger;

@@ -3,7 +3,7 @@ import {render} from 'ink';
 import meow from 'meow';
 import React from 'react';
 
-import Logger from '@/components/Logger/Logger.js';
+import {initializeLogger} from '@/libraries/logger.js';
 
 import App from './app.js';
 
@@ -26,8 +26,6 @@ const cli = meow(
 	},
 );
 
-render(
-	<Logger debug={cli.flags.debug}>
-		<App />
-	</Logger>,
-);
+initializeLogger(cli.flags.debug);
+
+render(<App />);

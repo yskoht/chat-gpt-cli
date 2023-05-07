@@ -1,7 +1,7 @@
 import {useInput, Key} from 'ink';
 import React, {useState} from 'react';
 
-import useLogger from '@/components/Logger/useLogger.js';
+import logger from '@/libraries/logger.js';
 import {replaceLineSep} from '@/utilities/index.js';
 
 import Lines from './Lines.js';
@@ -37,7 +37,6 @@ function MultiLineTextInput({
 	enableSyntaxHighlight = true,
 }: Props) {
 	const [cursor, setCursor] = useState<Cursor>(0);
-	const logger = useLogger();
 
 	useInput(
 		(_input, key) => {
@@ -79,7 +78,7 @@ function MultiLineTextInput({
 				return edit.insert(cursor, value, input);
 			})();
 
-			logger.debug({input, key, cursor, value, nextValue, nextCursor});
+			logger().debug({input, key, cursor, value, nextValue, nextCursor});
 
 			onChange(nextValue);
 			setCursor(nextCursor);
