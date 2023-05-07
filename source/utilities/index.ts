@@ -18,3 +18,8 @@ export function toLines(value: string): string[] {
 export function assertNever(x: never): never {
 	throw new Error(x);
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isFunction(x: unknown): x is Function {
+	return typeof x === 'function';
+}
