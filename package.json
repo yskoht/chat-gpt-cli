@@ -14,8 +14,9 @@
 		"lint": "eslint . --ext .ts,.tsx",
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write --config ./.prettierrc.cjs .",
-		"log": "bunyan -o short",
-		"log:watch": "tail -f $npm_config_file | npm run log",
+		"_log": "bunyan -o short",
+		"log": "npm run log:watch --file=$(ls chat-gpt-cli-*.log | sort | tail -n 1)",
+		"log:watch": "tail -f $npm_config_file | npm run _log",
 		"log:watch:help": "echo 'npm run log:watch --file=<file>'"
 	},
 	"files": [
