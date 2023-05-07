@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react';
 
 import {Message, ROLE} from '@/hooks/useChatRecord.js';
-import openai from '@/libraries/openai.js';
+import openai, {CreateChatCompletionResponse} from '@/libraries/openai.js';
 
 import {Response} from './types.js';
 import useProgress from './useProgress.js';
@@ -12,14 +12,20 @@ const SYSTEM_PROMPT = {
 } as const satisfies Message;
 
 const MODEL = 'gpt-4';
-async function createChatCompletion(messages: Message[]) {
+type CreateChatCompletionOption = {
+	stream: boolean;
+};
+async function createChatCompletion(
+	messages: Message[],
+	{stream}: CreateChatCompletionOption,
+) {
 	return await openai.createChatCompletion(
 		{
 			model: MODEL,
 			messages: [SYSTEM_PROMPT, ...messages],
-			stream: true,
+			...(stream ? {stream: true} : undefined),
 		},
-		{responseType: 'stream'},
+		{responseType: stream ? 'stream' : undefined},
 	);
 }
 
@@ -39,7 +45,7 @@ function isDone(message: string) {
 	return message === '[DONE]';
 }
 
-function getContent(message: string) {
+function getStreamingContent(message: string): string | undefined {
 	try {
 		const response = JSON.parse(message) as Response;
 		const content = response.choices[0]?.delta?.content;
@@ -48,6 +54,10 @@ function getContent(message: string) {
 		console.error('JSON parse failure', message, error);
 		return undefined;
 	}
+}
+
+function getContent(data: CreateChatCompletionResponse): string | undefined {
+	return data.choices[0]?.message?.content;
 }
 
 export function assistantMessage(text: string): Message {
@@ -63,13 +73,13 @@ type Props = {
 	onFinish: () => void;
 };
 function useChat({onChange, onFinish}: Props) {
-	const streaming = useProgress();
+	const waiting = useProgress();
 
-	const submitChat = useCallback(
+	const submitChatStream = useCallback(
 		async (messages: Message[]) => {
-			streaming.start();
+			waiting.start();
 			try {
-				const res = await createChatCompletion(messages);
+				const res = await createChatCompletion(messages, {stream: true});
 
 				// @ts-ignore
 				res.data.on('data', (data: Buffer) => {
@@ -78,11 +88,11 @@ function useChat({onChange, onFinish}: Props) {
 						const message = toMessage(line);
 						if (isDone(message)) {
 							onFinish();
-							streaming.stop();
+							waiting.stop();
 							return;
 						}
 
-						const content = getContent(message);
+						const content = getStreamingContent(message);
 						if (content) {
 							onChange(content);
 						}
@@ -92,15 +102,34 @@ function useChat({onChange, onFinish}: Props) {
 				console.error(error);
 			}
 		},
-		[onChange, onFinish, streaming],
+		[onChange, onFinish, waiting],
+	);
+
+	const submitChat = useCallback(
+		async (messages: Message[]) => {
+			waiting.start();
+			try {
+				const res = await createChatCompletion(messages, {stream: false});
+				const content = getContent(res.data);
+				if (content) {
+					onChange(content);
+				}
+				onFinish();
+				waiting.stop();
+			} catch (error: unknown) {
+				console.error(error);
+			}
+		},
+		[onChange, onFinish, waiting],
 	);
 
 	return useMemo(
 		() => ({
-			inStreaming: streaming.inProgress,
+			inWaiting: waiting.inProgress,
+			submitChatStream,
 			submitChat,
 		}),
-		[streaming.inProgress, submitChat],
+		[waiting.inProgress, submitChatStream, submitChat],
 	);
 }
 

@@ -34,14 +34,14 @@ type ChatMessagesProps = {
 	messages: MessageType[];
 	textInProgress: string;
 	userPromptText: string;
-	inStreaming: boolean;
+	inWaiting: boolean;
 	isFocused: boolean;
 };
 function ChatMessages({
 	messages,
 	textInProgress,
 	userPromptText,
-	inStreaming,
+	inWaiting,
 }: ChatMessagesProps) {
 	useAutoScroll({messages, textInProgress, userPromptText});
 
@@ -78,7 +78,7 @@ function ChatMessages({
 	return (
 		<Box flexDirection="column">
 			{_messages}
-			{inStreaming && _textInProgress}
+			{inWaiting && _textInProgress}
 		</Box>
 	);
 }
@@ -90,7 +90,7 @@ type ChatUserPromptProps = {
 	setUserPromptText: (text: string) => void;
 	clearUserPromptText: () => void;
 	submitChat: (messages: MessageType[]) => Promise<void>;
-	inStreaming: boolean;
+	inWaiting: boolean;
 	isFocused: boolean;
 };
 function ChatUserPrompt({
@@ -100,7 +100,7 @@ function ChatUserPrompt({
 	setUserPromptText,
 	clearUserPromptText,
 	submitChat,
-	inStreaming,
+	inWaiting,
 	isFocused,
 }: ChatUserPromptProps) {
 	const {updateHistory, onHistoryPrev, onHistoryNext} = useInputHistory();
@@ -144,7 +144,7 @@ function ChatUserPrompt({
 		isFocused,
 	]);
 
-	if (inStreaming) {
+	if (inWaiting) {
 		return <Spinner />;
 	}
 
@@ -212,7 +212,7 @@ function Chat({id}: Props) {
 		clearTextInProgress();
 	}, [textInProgress, setMessages, clearTextInProgress]);
 	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
-	const {submitChat, inStreaming} = useChat({
+	const {submitChatStream, inWaiting} = useChat({
 		onChange,
 		onFinish: streamFinished,
 	});
@@ -229,7 +229,7 @@ function Chat({id}: Props) {
 				messages={messages}
 				textInProgress={textInProgress}
 				userPromptText={userPromptText}
-				inStreaming={inStreaming}
+				inWaiting={inWaiting}
 			/>
 			<Divider />
 			<ChatUserPromptContainer
@@ -238,8 +238,8 @@ function Chat({id}: Props) {
 				userPromptText={userPromptText}
 				setUserPromptText={setUserPromptText}
 				clearUserPromptText={clearUserPromptText}
-				submitChat={submitChat}
-				inStreaming={inStreaming}
+				submitChat={submitChatStream}
+				inWaiting={inWaiting}
 			/>
 		</Box>
 	);

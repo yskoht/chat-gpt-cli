@@ -1,4 +1,6 @@
-import {Configuration, OpenAIApi} from 'openai';
+import {Configuration, OpenAIApi, CreateChatCompletionResponse} from 'openai';
+
+export {CreateChatCompletionResponse};
 
 const OPENAI_API_KEY = process.env['OPENAI_API_KEY'];
 if (!OPENAI_API_KEY) {
