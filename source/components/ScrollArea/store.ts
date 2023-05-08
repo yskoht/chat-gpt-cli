@@ -26,50 +26,51 @@ type _Store = {
 };
 export type Store = StoreApi<_Store>;
 
-const store = createStore<_Store>((set, get) => ({
-	outerHeight: 0,
-	innerHeight: 0,
-	positionFromInnerTop: 0,
-	setOuterHeight: (outerHeight) => set({outerHeight}),
-	setInnerHeight: (innerHeight) => set({innerHeight}),
-	scrollDown: (n = 1) =>
-		set(({innerHeight, outerHeight, positionFromInnerTop}) => {
-			const positionFromInnerTopMax = calcPositionFromInnerTopMax(
-				innerHeight,
-				outerHeight,
-			);
-			const nextPosition = Math.min(
-				positionFromInnerTop + n,
-				positionFromInnerTopMax,
-			);
-			return {
-				positionFromInnerTop: nextPosition,
-			};
-		}),
-	scrollUp: (n = 1) =>
-		set(({positionFromInnerTop}) => {
-			const nextPosition = Math.max(positionFromInnerTop - n, 0);
-			return {
-				positionFromInnerTop: nextPosition,
-			};
-		}),
-	scrollToTop: () => set({positionFromInnerTop: 0}),
-	scrollToBottom: () =>
-		set(({innerHeight, outerHeight}) => {
-			const positionFromInnerTopMax = calcPositionFromInnerTopMax(
-				innerHeight,
-				outerHeight,
-			);
-			return {positionFromInnerTop: positionFromInnerTopMax};
-		}),
-	resize: () => {
-		get().fetchInnerHeight();
-		get().fetchOuterHeight();
-	},
-	fetchInnerHeight: nop,
-	fetchOuterHeight: nop,
-	setFetchInnerHeight: (fetchInnerHeight) => set({fetchInnerHeight}),
-	setFetchOuterHeight: (fetchOuterHeight) => set({fetchOuterHeight}),
-}));
+const store = () =>
+	createStore<_Store>((set, get) => ({
+		outerHeight: 0,
+		innerHeight: 0,
+		positionFromInnerTop: 0,
+		setOuterHeight: (outerHeight) => set({outerHeight}),
+		setInnerHeight: (innerHeight) => set({innerHeight}),
+		scrollDown: (n = 1) =>
+			set(({innerHeight, outerHeight, positionFromInnerTop}) => {
+				const positionFromInnerTopMax = calcPositionFromInnerTopMax(
+					innerHeight,
+					outerHeight,
+				);
+				const nextPosition = Math.min(
+					positionFromInnerTop + n,
+					positionFromInnerTopMax,
+				);
+				return {
+					positionFromInnerTop: nextPosition,
+				};
+			}),
+		scrollUp: (n = 1) =>
+			set(({positionFromInnerTop}) => {
+				const nextPosition = Math.max(positionFromInnerTop - n, 0);
+				return {
+					positionFromInnerTop: nextPosition,
+				};
+			}),
+		scrollToTop: () => set({positionFromInnerTop: 0}),
+		scrollToBottom: () =>
+			set(({innerHeight, outerHeight}) => {
+				const positionFromInnerTopMax = calcPositionFromInnerTopMax(
+					innerHeight,
+					outerHeight,
+				);
+				return {positionFromInnerTop: positionFromInnerTopMax};
+			}),
+		resize: () => {
+			get().fetchInnerHeight();
+			get().fetchOuterHeight();
+		},
+		fetchInnerHeight: nop,
+		fetchOuterHeight: nop,
+		setFetchInnerHeight: (fetchInnerHeight) => set({fetchInnerHeight}),
+		setFetchOuterHeight: (fetchOuterHeight) => set({fetchOuterHeight}),
+	}));
 
 export default store;

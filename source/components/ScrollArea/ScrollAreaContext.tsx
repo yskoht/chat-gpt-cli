@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import React, {createContext, useMemo} from 'react';
 
 import store, {Store} from './store.js';
 
@@ -10,8 +10,9 @@ type Props = {
 };
 
 function ScrollAreaContextProvider({children}: Props) {
+	const _store = useMemo(store, []);
 	return (
-		<ScrollAreaContext.Provider value={store}>
+		<ScrollAreaContext.Provider value={_store}>
 			{children}
 		</ScrollAreaContext.Provider>
 	);
