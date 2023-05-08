@@ -17,7 +17,7 @@ export default function App() {
 	useFocusManagement();
 
 	const {width, height} = useDimension();
-	const {id} = useChatRecord(({id}) => ({id}));
+	const id = useChatRecord(({id}) => id);
 
 	return (
 		<Box justifyContent="space-between" width={width} height={height - 1}>
