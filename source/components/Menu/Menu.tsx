@@ -1,19 +1,17 @@
 import {Box, useFocus} from 'ink';
 import React from 'react';
 
-import ChatRecord from '@/components/ChatRecord/index.js';
 import Divider from '@/components/Divider/index.js';
 import NewChat from '@/components/NewChat/index.js';
+import ScrollArea from '@/components/ScrollArea/ScrollArea.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 
-import useChatRecordList from './useChatRecordList.js';
+import ChatRecordList from './ChatRecordList.js';
 
 function Menu() {
 	const {isFocused} = useFocus({id: FOCUS_ID.menu});
 	const borderColor = styles.getFocusColor(isFocused);
-
-	const {list} = useChatRecordList();
 
 	return (
 		<Box
@@ -24,13 +22,14 @@ function Menu() {
 			paddingLeft={1}
 			paddingRight={1}
 		>
-			<NewChat />
-			<Divider />
-			<Box flexDirection="column">
-				{list.map(({id, title}) => (
-					<ChatRecord key={id} label={title} />
-				))}
+			<Box flexDirection="column" flexShrink={0} flexGrow={0}>
+				<NewChat />
+				<Divider />
 			</Box>
+
+			<ScrollArea isActive={isFocused}>
+				<ChatRecordList />
+			</ScrollArea>
 		</Box>
 	);
 }
