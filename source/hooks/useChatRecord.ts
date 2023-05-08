@@ -59,10 +59,18 @@ export type ValueOrSetter = _ValueOrSetter<Message[]>;
 type Store = PersistedState & {
 	id: string;
 	newChat: Chat;
+	_idList: string[];
+
 	isNewChat: (id: string) => boolean;
+
 	getChat: (id: string) => Chat;
 	getMessages: (id: string) => Message[];
 	setMessages: (id: string, valueOrSetter: ValueOrSetter) => void;
+
+	getIdList: () => string[];
+	moveIdToNext: () => void;
+	moveIdToPrev: () => void;
+
 	isInitialTitle: (id: string) => boolean;
 	setTitle: (id: string, title: string) => void;
 };
@@ -75,7 +83,10 @@ const useChatRecord = create<Store>()(
 				chatRecord: {},
 				id: _newChat.id,
 				newChat: _newChat,
+				_idList: [] as string[],
+
 				isNewChat: (id) => id === getStore().newChat.id,
+
 				getChat: (id) => {
 					const {newChat, isNewChat, chatRecord} = getStore();
 					const chat = isNewChat(id) ? newChat : chatRecord[id];
@@ -86,23 +97,111 @@ const useChatRecord = create<Store>()(
 				},
 				getMessages: (id) => getStore().getChat(id).messages,
 				setMessages: (id, valueOrSetter) =>
-					setStore(({isNewChat, newChat, chatRecord, getChat}) => {
+					setStore(({isNewChat, chatRecord, getChat, _idList}) => {
 						const chat = getChat(id);
 						const value = isFunction(valueOrSetter)
 							? valueOrSetter(chat.messages)
 							: valueOrSetter;
 
-						return {
-							newChat: isNewChat(id) ? generateNewChat(MODEL) : newChat,
-							chatRecord: {
-								...chatRecord,
-								[id]: {
-									...chat,
-									messages: value,
-								},
+						const newChatRecord = {
+							...chatRecord,
+							[id]: {
+								...chat,
+								messages: value,
 							},
 						};
+
+						if (isNewChat(id)) {
+							return {
+								newChat: generateNewChat(MODEL),
+								idList: [id, ..._idList],
+								chatRecord: newChatRecord,
+							};
+						}
+
+						return {
+							chatRecord: newChatRecord,
+						};
 					}),
+
+				getIdList: () => {
+					const {chatRecord, _idList} = getStore();
+					const keys = Object.keys(chatRecord);
+					if (keys.length === _idList.length) {
+						return _idList;
+					}
+
+					const newIdList = keys.sort().reverse();
+					setStore({_idList: newIdList});
+					return newIdList;
+				},
+				// todo: refactoring
+				moveIdToNext: () =>
+					setStore(({id, isNewChat, newChat, getIdList}) => {
+						const idList = getIdList();
+
+						if (isNewChat(id)) {
+							const nextId = idList[0];
+							if (!nextId) {
+								return {};
+							}
+							return {
+								id: nextId,
+							};
+						}
+
+						const index = idList.indexOf(id);
+						if (index === -1) {
+							return {};
+						}
+						const nextIndex = index + 1;
+						if (nextIndex === idList.length) {
+							return {
+								id: newChat.id,
+							};
+						}
+						const nextId = idList[nextIndex];
+						if (!nextId) {
+							return {};
+						}
+						return {
+							id: nextId,
+						};
+					}),
+				// todo: refactoring
+				moveIdToPrev: () =>
+					setStore(({id, isNewChat, newChat, getIdList}) => {
+						const idList = getIdList();
+
+						if (isNewChat(id)) {
+							const prevId = idList[idList.length - 1];
+							if (!prevId) {
+								return {};
+							}
+							return {
+								id: prevId,
+							};
+						}
+
+						const index = idList.indexOf(id);
+						if (index === -1) {
+							return {};
+						}
+						const prevIndex = index - 1;
+						if (prevIndex < 0) {
+							return {
+								id: newChat.id,
+							};
+						}
+						const prevId = idList[prevIndex];
+						if (!prevId) {
+							return {};
+						}
+						return {
+							id: prevId,
+						};
+					}),
+
 				isInitialTitle: (id) =>
 					getStore().getChat(id).title === INITIAL_CHAT_TITLE,
 				setTitle: (id, title) =>

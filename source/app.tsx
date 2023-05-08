@@ -26,7 +26,7 @@ export default function App() {
 			</Box>
 
 			<Box width={MENU_WIDTH}>
-				<Menu />
+				<Menu id={id} />
 			</Box>
 		</Box>
 	);
