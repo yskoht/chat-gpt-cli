@@ -70,6 +70,8 @@ type Store = PersistedState & {
 	getIdList: () => string[];
 	moveIdToNext: () => void;
 	moveIdToPrev: () => void;
+	moveIdToNew: () => void;
+	moveIdToNth: (n: number) => void;
 
 	isInitialTitle: (id: string) => boolean;
 	setTitle: (id: string, title: string) => void;
@@ -201,7 +203,23 @@ const useChatRecord = create<Store>()(
 							id: prevId,
 						};
 					}),
-
+				moveIdToNew: () =>
+					setStore(({newChat}) => {
+						return {
+							id: newChat.id,
+						};
+					}),
+				moveIdToNth: (n: number) =>
+					setStore(({getIdList}) => {
+						const idList = getIdList();
+						const nthId = idList[n - 1];
+						if (!nthId) {
+							return {};
+						}
+						return {
+							id: nthId,
+						};
+					}),
 				isInitialTitle: (id) =>
 					getStore().getChat(id).title === INITIAL_CHAT_TITLE,
 				setTitle: (id, title) =>
