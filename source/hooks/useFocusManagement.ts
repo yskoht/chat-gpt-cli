@@ -1,43 +1,15 @@
 import {useInput, useFocusManager} from 'ink';
-import {useState, useEffect, useMemo, useCallback} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 
 export const FOCUS_ID = {
-	chatMessages: 'chatMessages',
-	chatUserPrompt: 'chatUserPrompt',
+	chat: 'chat',
 	menu: 'menu',
 } as const;
-
 type FocusId = keyof typeof FOCUS_ID;
-
-const FOCUS_ORDER: FocusId[] = [
-	FOCUS_ID.chatUserPrompt,
-	FOCUS_ID.chatMessages,
-	FOCUS_ID.menu,
-];
-
-function isInvalidFocusIndex(index: number): boolean {
-	return index < 0 || index >= FOCUS_ORDER.length;
-}
-
-function nextIndex(index: number): number {
-	return (index + 1) % FOCUS_ORDER.length;
-}
-
-function previousIndex(index: number): number {
-	return (index - 1 + FOCUS_ORDER.length) % FOCUS_ORDER.length;
-}
 
 function useFocusManagement() {
 	const {focus, disableFocus} = useFocusManager();
-	const [currentFocusIndex, setCurrentFocusIndex] = useState<number>(0);
-
-	const currentFocus = useMemo(() => {
-		if (isInvalidFocusIndex(currentFocusIndex)) {
-			throw new Error('Invalid focus index');
-		}
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		return FOCUS_ORDER[currentFocusIndex]!;
-	}, [currentFocusIndex]);
+	const [currentFocus, setCurrentFocus] = useState<FocusId>(FOCUS_ID.chat);
 
 	useEffect(() => {
 		disableFocus();
@@ -47,20 +19,35 @@ function useFocusManagement() {
 		focus(currentFocus);
 	}, [focus, currentFocus]);
 
-	const focusNext = useCallback(() => {
-		setCurrentFocusIndex(nextIndex);
+	const focusOnChat = useCallback(() => {
+		setCurrentFocus(FOCUS_ID.chat);
 	}, []);
-	const focusPrevious = useCallback(() => {
-		setCurrentFocusIndex(previousIndex);
+	const focusOnMenu = useCallback(() => {
+		setCurrentFocus(FOCUS_ID.menu);
 	}, []);
 
 	useInput((_, key) => {
-		if (key.shift && key.tab) {
-			focusPrevious();
+		if (currentFocus === FOCUS_ID.chat) {
+			if (key.escape) {
+				focusOnMenu();
+				return;
+			}
+			if (key.tab) {
+				focusOnMenu();
+				return;
+			}
 			return;
 		}
-		if (key.tab) {
-			focusNext();
+
+		if (currentFocus === FOCUS_ID.menu) {
+			if (key.return) {
+				focusOnChat();
+				return;
+			}
+			if (key.tab) {
+				focusOnChat();
+				return;
+			}
 			return;
 		}
 	});

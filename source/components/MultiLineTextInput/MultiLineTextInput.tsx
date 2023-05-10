@@ -48,6 +48,22 @@ function MultiLineTextInput({
 			}
 
 			const {nextValue, nextCursor} = (() => {
+				if (key.shift && key.downArrow) {
+					return {nextCursor: cursor, nextValue: value};
+				}
+
+				if (key.shift && key.upArrow) {
+					return {nextCursor: cursor, nextValue: value};
+				}
+
+				if (key.ctrl && key.downArrow) {
+					return {nextCursor: cursor, nextValue: value};
+				}
+
+				if (key.ctrl && key.upArrow) {
+					return {nextCursor: cursor, nextValue: value};
+				}
+
 				if (keymap.shouldMoveUp(input, key)) {
 					return edit.moveUp(cursor, value, onHistoryPrev);
 				}

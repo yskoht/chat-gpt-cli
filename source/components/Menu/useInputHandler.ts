@@ -16,6 +16,26 @@ function useInputHandler({isActive}: Props) {
 
 	useInput(
 		(_, key) => {
+			if (key.shift && key.downArrow) {
+				// ignore
+				return;
+			}
+
+			if (key.shift && key.upArrow) {
+				// ignore
+				return;
+			}
+
+			if (key.ctrl && key.downArrow) {
+				// ignore
+				return;
+			}
+
+			if (key.ctrl && key.upArrow) {
+				// ignore
+				return;
+			}
+
 			if (key.downArrow) {
 				moveIdToNext();
 				return;

@@ -1,4 +1,4 @@
-import {Text, Box, useFocus} from 'ink';
+import {Box, useFocus} from 'ink';
 import Spinner from 'ink-spinner';
 import React, {useMemo, useCallback} from 'react';
 
@@ -7,7 +7,7 @@ import ScrollArea from '@/components/ScrollArea/index.js';
 import {Message as MessageType} from '@/hooks/useChatRecord.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
-import {SPACE, replaceLineSep} from '@/utilities/index.js';
+import {replaceLineSep} from '@/utilities/index.js';
 
 import {markColor} from './Mark.js';
 import Message from './Message.js';
@@ -36,7 +36,6 @@ type ChatMessagesProps = {
 	textInProgress: string;
 	userPromptText: string;
 	inWaiting: boolean;
-	isFocused: boolean;
 };
 function ChatMessages({
 	messages,
@@ -152,50 +151,16 @@ function ChatUserPrompt({
 	return <Box>{_userPrompt}</Box>;
 }
 
-type ChatMessagesContainerProps = Omit<ChatMessagesProps, 'isFocused'>;
-function ChatMessagesContainer(props: ChatMessagesContainerProps) {
-	const {isFocused} = useFocus({id: FOCUS_ID.chatMessages});
-	const scrollBarVisibility = useMemo(
-		() => (isFocused ? 'visible' : 'auto'),
-		[isFocused],
-	);
-	const scrollBarColor = useMemo(
-		() => styles.getFocusColor(isFocused),
-		[isFocused],
-	);
-
-	const content = useMemo(() => {
-		if (props.messages.length === 0) {
-			// memo: to show the scroll bar when the chat is empty
-			return <Text>{SPACE}</Text>;
-		}
-		return <ChatMessages {...props} isFocused={isFocused} />;
-	}, [props, isFocused]);
-
-	return (
-		<Box height="100%">
-			<ScrollArea
-				isActive={isFocused}
-				scrollHandler={chatScrollHandler}
-				scrollBarVisibility={scrollBarVisibility}
-				scrollBarColor={scrollBarColor}
-			>
-				{content}
-			</ScrollArea>
-		</Box>
-	);
-}
-
-type ChatUserPromptContainerProps = Omit<ChatUserPromptProps, 'isFocused'>;
-function ChatUserPromptContainer(props: ChatUserPromptContainerProps) {
-	const {isFocused} = useFocus({id: FOCUS_ID.chatUserPrompt});
-	return <ChatUserPrompt {...props} isFocused={isFocused} />;
-}
-
 type Props = {
 	id: string;
 };
 function Chat({id}: Props) {
+	const {isFocused} = useFocus({id: FOCUS_ID.chat});
+	const borderColor = useMemo(
+		() => styles.getFocusColor(isFocused),
+		[isFocused],
+	);
+
 	const {messages, setMessages} = useMessages(id);
 	const {textInProgress, setTextInProgress, clearTextInProgress} =
 		useTextInProgress(id);
@@ -237,15 +202,22 @@ function Chat({id}: Props) {
 			borderStyle="single"
 			paddingLeft={1}
 			paddingRight={1}
+			borderColor={borderColor}
 		>
-			<ChatMessagesContainer
-				messages={messages}
-				textInProgress={textInProgress}
-				userPromptText={userPromptText}
-				inWaiting={inWaiting}
-			/>
+			<Box height="100%">
+				<ScrollArea scrollHandler={chatScrollHandler}>
+					<ChatMessages
+						messages={messages}
+						textInProgress={textInProgress}
+						userPromptText={userPromptText}
+						inWaiting={inWaiting}
+					/>
+				</ScrollArea>
+			</Box>
+
 			<Divider />
-			<ChatUserPromptContainer
+
+			<ChatUserPrompt
 				messages={messages}
 				setMessages={setMessages}
 				userPromptText={userPromptText}
@@ -253,6 +225,7 @@ function Chat({id}: Props) {
 				clearUserPromptText={clearUserPromptText}
 				submitChat={submitChatStream}
 				inWaiting={inWaiting}
+				isFocused={isFocused}
 			/>
 		</Box>
 	);
