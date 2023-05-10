@@ -3,15 +3,16 @@ import {useMemo} from 'react';
 import useChatRecord from '@/hooks/useChatRecord.js';
 
 function useChatRecordList() {
-	const {chatRecord} = useChatRecord(({chatRecord}) => ({
+	const {getIdList, chatRecord} = useChatRecord(({getIdList, chatRecord}) => ({
+		getIdList,
 		chatRecord,
 	}));
 
 	const list = useMemo(() => {
-		const keys = Object.keys(chatRecord).sort().reverse();
+		const keys = getIdList();
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		return keys.map((id) => chatRecord[id]!);
-	}, [chatRecord]);
+	}, [chatRecord, getIdList]);
 
 	return useMemo(
 		() => ({
