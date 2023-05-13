@@ -8,8 +8,8 @@ function getIdIndex(idList: string[], id: string): number {
 	return idList.indexOf(id);
 }
 
-function indexNotFound(id: number): boolean {
-	return id === -1;
+function isIndexFound(id: number): boolean {
+	return id !== -1;
 }
 
 type Range = {
@@ -50,21 +50,22 @@ function useScrollHandler(id: string) {
 
 	const idList = getIdList();
 	const idIndex = useMemo(() => getIdIndex(idList, id), [idList, id]);
-	if (indexNotFound(idIndex)) {
+	const displayRange = useMemo(
+		() => getDisplayedRange(positionFromInnerTop, outerHeight),
+		[positionFromInnerTop, outerHeight],
+	);
+	const isDisplayed = useMemo(
+		() => isIndexFound(idIndex) && isIdIndexDisplayed(idIndex, displayRange),
+		[idIndex, displayRange],
+	);
+
+	if (!isIndexFound(idIndex)) {
 		if (isNewChat(id) && positionFromInnerTop !== 0) {
 			scrollToTop();
 		}
 		return;
 	}
 
-	const displayRange = useMemo(
-		() => getDisplayedRange(positionFromInnerTop, outerHeight),
-		[positionFromInnerTop, outerHeight],
-	);
-	const isDisplayed = useMemo(
-		() => isIdIndexDisplayed(idIndex, displayRange),
-		[idIndex, displayRange],
-	);
 	if (isDisplayed) {
 		return;
 	}
