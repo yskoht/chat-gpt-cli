@@ -9,6 +9,9 @@ export type ScrollAreaApi = {
 	scrollToTop: () => void;
 	scrollToBottom: () => void;
 	resize: () => void;
+	outerHeight: number;
+	innerHeight: number;
+	positionFromInnerTop: number;
 };
 export type ScrollHandler = (
 	input: string,
