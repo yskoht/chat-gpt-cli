@@ -1,11 +1,18 @@
 import {useInput, useFocusManager} from 'ink';
 import {useState, useEffect, useCallback} from 'react';
 
+import logger from '@/libraries/logger.js';
+
 export const FOCUS_ID = {
 	chat: 'chat',
 	menu: 'menu',
 } as const;
 type FocusId = keyof typeof FOCUS_ID;
+
+const COMPONENT_NAME = 'useFocusManagement';
+function log() {
+	return logger().child({component: COMPONENT_NAME});
+}
 
 function useFocusManagement() {
 	const {focus, disableFocus} = useFocusManager();
@@ -16,6 +23,7 @@ function useFocusManagement() {
 	}, [disableFocus]);
 
 	useEffect(() => {
+		log().debug({currentFocus}, 'focus changed');
 		focus(currentFocus);
 	}, [focus, currentFocus]);
 
