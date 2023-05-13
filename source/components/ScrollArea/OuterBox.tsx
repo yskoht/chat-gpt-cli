@@ -37,7 +37,7 @@ function OuterBox({
 		}
 
 		const dimensions = measureElement(ref.current);
-		setOuterHeight(dimensions.height);
+		setOuterHeight(dimensions.height - 1);
 	}, [setOuterHeight]);
 
 	useEffect(() => {
