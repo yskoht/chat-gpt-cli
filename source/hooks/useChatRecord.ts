@@ -3,6 +3,7 @@ import {ulid} from 'ulid';
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 
+import logger from '@/libraries/logger.js';
 import {createFileStorage, STORAGE_NAME} from '@/libraries/zustand/index.js';
 import {isFunction} from '@/utilities/index.js';
 
@@ -12,6 +13,11 @@ const INITIAL_CHAT_TITLE = 'New Chat';
 const HOME_DIR = os.homedir();
 const CHAT_RECORD_FILE_NAME = '.chat-gpt-cli-chat-record.json';
 const CHAT_RECORD_FILE_PATH = `${HOME_DIR}/${CHAT_RECORD_FILE_NAME}`;
+
+const COMPONENT_NAME = 'useChatRecord';
+function log() {
+	return logger().child({component: COMPONENT_NAME});
+}
 
 export const ROLE = {
 	system: 'system',
@@ -93,7 +99,9 @@ const useChatRecord = create<Store>()(
 					const {newChat, isNewChat, chatRecord} = getStore();
 					const chat = isNewChat(id) ? newChat : chatRecord[id];
 					if (!chat) {
-						throw new Error(`Chat record not found: ${id}`);
+						const message = `Chat record not found: ${id}`;
+						log().fatal({id}, message);
+						throw new Error(message);
 					}
 					return chat;
 				},
@@ -114,6 +122,7 @@ const useChatRecord = create<Store>()(
 						};
 
 						if (isNewChat(id)) {
+							log().info({id, value}, 'set new message');
 							return {
 								newChat: generateNewChat(MODEL),
 								idList: [id, ..._idList],
@@ -121,6 +130,7 @@ const useChatRecord = create<Store>()(
 							};
 						}
 
+						log().info({id, value}, 'set message');
 						return {
 							chatRecord: newChatRecord,
 						};
@@ -135,6 +145,7 @@ const useChatRecord = create<Store>()(
 
 					const newIdList = keys.sort().reverse();
 					setStore({_idList: newIdList});
+					log().debug('id list cached');
 					return newIdList;
 				},
 				// todo: refactoring
@@ -166,6 +177,8 @@ const useChatRecord = create<Store>()(
 						if (!nextId) {
 							return {};
 						}
+
+						log().debug({id, nextId}, 'move id to next');
 						return {
 							id: nextId,
 						};
@@ -199,12 +212,15 @@ const useChatRecord = create<Store>()(
 						if (!prevId) {
 							return {};
 						}
+
+						log().debug({id, prevId}, 'move id to prev');
 						return {
 							id: prevId,
 						};
 					}),
 				moveIdToNew: () =>
 					setStore(({newChat}) => {
+						log().debug('move id to new');
 						return {
 							id: newChat.id,
 						};
@@ -216,6 +232,8 @@ const useChatRecord = create<Store>()(
 						if (!nthId) {
 							return {};
 						}
+
+						log().debug({id: nthId}, 'move id to nth');
 						return {
 							id: nthId,
 						};
@@ -226,9 +244,12 @@ const useChatRecord = create<Store>()(
 					setStore(({getChat, isNewChat, chatRecord}) => {
 						const chat = getChat(id);
 						if (isNewChat(id)) {
-							throw new Error(`Cannot set title of new chat: ${id}`);
+							const message = `Cannot set title of new chat: ${id}`;
+							log().fatal({id}, message);
+							throw new Error(message);
 						}
 
+						log().info({id, title}, 'set title');
 						return {
 							chatRecord: {
 								...chatRecord,
