@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 
 import {SELECTED_CHAT_RECORD_COLOR} from './constants.js';
 import useChatRecordList from './useChatRecordList.js';
+import useScrollHandler from './useScrollHandler.js';
 
 type ChatRecordProps = {
 	label: string;
@@ -25,6 +26,7 @@ type Props = {
 	id: string;
 };
 function ChatRecordList({id}: Props) {
+	useScrollHandler(id);
 	const {list} = useChatRecordList();
 
 	const records = useMemo(
