@@ -1,13 +1,13 @@
 import {useInput, Key} from 'ink';
 import React, {useState} from 'react';
 
-import logger from '@/libraries/logger.js';
 import {replaceLineSep} from '@/utilities/index.js';
 
 import Lines from './Lines.js';
 import {CURSOR_SHAPE, DEFAULT_CURSOR_COLOR} from './constants.js';
 import * as edit from './edit.js';
 import * as keymap from './keymap.js';
+import log from './log.js';
 import {Cursor, CursorShape, OnHistory} from './types.js';
 
 type Props = {
@@ -94,7 +94,7 @@ function MultiLineTextInput({
 				return edit.insert(cursor, value, input);
 			})();
 
-			logger().debug({input, key, cursor, value, nextValue, nextCursor});
+			log().debug({input, key, cursor, value, nextValue, nextCursor}, 'input');
 
 			onChange(nextValue);
 			setCursor(nextCursor);

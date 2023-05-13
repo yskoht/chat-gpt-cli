@@ -4,3 +4,5 @@ export const CURSOR_SHAPE = {
 } as const;
 
 export const DEFAULT_CURSOR_COLOR = 'gray';
+
+export const COMPONENT_NAME = 'MultiLineTextInput';
