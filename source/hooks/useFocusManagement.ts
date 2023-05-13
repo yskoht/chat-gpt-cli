@@ -27,11 +27,12 @@ function useFocusManagement() {
 	}, []);
 
 	useInput((_, key) => {
+		if (key.escape) {
+			// todo
+			process.exit(0);
+		}
+
 		if (currentFocus === FOCUS_ID.chat) {
-			if (key.escape) {
-				focusOnMenu();
-				return;
-			}
 			if (key.tab) {
 				focusOnMenu();
 				return;
