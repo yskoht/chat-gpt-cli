@@ -64,8 +64,9 @@ const store = () =>
 				return {positionFromInnerTop: positionFromInnerTopMax};
 			}),
 		resize: () => {
-			get().fetchInnerHeight();
-			get().fetchOuterHeight();
+			const {fetchInnerHeight, fetchOuterHeight} = get();
+			fetchInnerHeight();
+			fetchOuterHeight();
 		},
 		fetchInnerHeight: nop,
 		fetchOuterHeight: nop,
