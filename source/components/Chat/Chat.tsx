@@ -78,7 +78,7 @@ function ChatMessages({
 	return (
 		<Box flexDirection="column">
 			{_messages}
-			{inWaiting && _textInProgress}
+			{inWaiting && textInProgress && _textInProgress}
 		</Box>
 	);
 }
