@@ -13,7 +13,7 @@ function NewChat({id}: Props) {
 		isNewChat,
 	}));
 
-	const isSelected = useMemo(() => isNewChat(id), [isNewChat, id]);
+	const isSelected = isNewChat(id);
 	const color = useMemo(
 		() => (isSelected ? SELECTED_CHAT_RECORD_COLOR : undefined),
 		[isSelected],
