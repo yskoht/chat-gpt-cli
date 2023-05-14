@@ -4,6 +4,8 @@ import React, {useRef, useEffect, useState, useMemo} from 'react';
 import useDimension from '@/hooks/useDimension.js';
 import {isNullable} from '@/utilities/index.js';
 
+import log from './log.js';
+
 const DIVIDER = '─';
 
 function calcPadding(
@@ -72,6 +74,7 @@ function Divider({
 
 		const {width} = measureElement(ref.current);
 		setWidth(width);
+		log().debug({width}, 'divider width changed');
 	}, [window]);
 
 	return (
