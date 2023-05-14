@@ -3,6 +3,7 @@ import {useCallback, useMemo} from 'react';
 import {Message, ROLE} from '@/hooks/useChatRecord.js';
 import openai, {CreateChatCompletionResponse} from '@/libraries/openai.js';
 
+import log from './log.js';
 import {Response} from './types.js';
 import useProgress from './useProgress.js';
 
@@ -79,27 +80,32 @@ function useChat({onChange, onFinish}: Props) {
 		async (messages: Message[]) => {
 			waiting.start();
 			try {
+				log().info({messages}, 'submit chat stream');
 				const res = await createChatCompletion(messages, {stream: true});
 
 				// @ts-ignore
 				res.data.on('data', (data: Buffer) => {
 					const lines = toLines(data);
+					log().debug({lines}, 'stream data received');
+
 					for (const line of lines) {
 						const message = toMessage(line);
 						if (isDone(message)) {
 							onFinish && onFinish();
 							waiting.stop();
+							log().info({lines}, 'stream finished');
 							return;
 						}
 
 						const content = getStreamingContent(message);
+						log().debug({content}, 'stream content');
 						if (content) {
 							onChange(content);
 						}
 					}
 				});
-			} catch (error: unknown) {
-				console.error(error);
+			} catch (err: unknown) {
+				log().error({err}, 'submit chat stream failed');
 			}
 		},
 		[onChange, onFinish, waiting],
@@ -109,15 +115,18 @@ function useChat({onChange, onFinish}: Props) {
 		async (messages: Message[]) => {
 			waiting.start();
 			try {
+				log().info({messages}, 'submit chat');
 				const res = await createChatCompletion(messages, {stream: false});
 				const content = getContent(res.data);
+				log().info({content}, 'content');
 				if (content) {
 					onChange(content);
 				}
 				onFinish && onFinish();
 				waiting.stop();
-			} catch (error: unknown) {
-				console.error(error);
+				log().info('finished');
+			} catch (err: unknown) {
+				log().error({err}, 'submit chat failed');
 			}
 		},
 		[onChange, onFinish, waiting],

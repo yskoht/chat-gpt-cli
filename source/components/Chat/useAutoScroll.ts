@@ -5,6 +5,8 @@ import {Message as MessageType} from '@/hooks/useChatRecord.js';
 import useDimension from '@/hooks/useDimension.js';
 import {toLines} from '@/utilities/index.js';
 
+import log from './log.js';
+
 type Props = {
 	messages: MessageType[];
 	textInProgress: string;
@@ -24,6 +26,7 @@ function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 	useEffect(() => {
 		resize();
 		scrollToBottom();
+		log().debug('auto scroll');
 	}, [
 		messagesLength,
 		textInProgress,
