@@ -51,8 +51,8 @@ function getStreamingContent(message: string): string | undefined {
 		const response = JSON.parse(message) as Response;
 		const content = response.choices[0]?.delta?.content;
 		return content;
-	} catch (error: unknown) {
-		console.error('JSON parse failure', message, error);
+	} catch (err: unknown) {
+		log().error({message, err}, 'JSON parse failure');
 		return undefined;
 	}
 }

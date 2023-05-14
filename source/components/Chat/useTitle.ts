@@ -3,6 +3,7 @@ import {useCallback, useMemo} from 'react';
 
 import useChatRecord, {Message} from '@/hooks/useChatRecord.js';
 
+import log from './log.js';
 import useChat, {userMessage} from './useChat.js';
 
 const UNTITLED = 'Untitled';
@@ -10,7 +11,7 @@ const UNTITLED = 'Untitled';
 function createPrompt(messages: Message[]): Message[] {
 	const m = messages.find((message) => message.role === 'user')?.content;
 	if (!m) {
-		console.error('No user message found');
+		log().error('No user message found');
 	}
 
 	const prompt = `
