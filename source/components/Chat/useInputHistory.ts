@@ -44,9 +44,7 @@ function useInputHistory() {
 
 	const getPrevHistory = useCallback(
 		(text: string): string | null => {
-			console.log({index, text, history});
 			if (index === 0) {
-				console.log('saveTemporarily');
 				saveTemporarily(text);
 			}
 
