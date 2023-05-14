@@ -11,6 +11,7 @@ import {useStore} from 'zustand';
 import {isNullable} from '@/utilities/index.js';
 
 import {ScrollAreaContext} from './ScrollAreaContext.js';
+import log from './log.js';
 
 type Props = {
 	children: React.ReactNode;
@@ -34,6 +35,7 @@ function InnerBox({children}: Props) {
 
 		const dimensions = measureElement(ref.current);
 		setInnerHeight(dimensions.height);
+		log().debug({dimensions}, 'InnerBox dimensions');
 	}, [setInnerHeight]);
 
 	useEffect(() => {

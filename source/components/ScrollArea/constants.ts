@@ -3,3 +3,5 @@ export const SCROLL_BAR_VISIBILITY = {
 	hidden: 'hidden',
 	auto: 'auto',
 } as const;
+
+export const COMPONENT_NAME = 'ScrollArea';

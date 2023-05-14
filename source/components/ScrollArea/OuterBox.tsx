@@ -6,6 +6,7 @@ import {isNullable} from '@/utilities/index.js';
 
 import {ScrollAreaContext} from './ScrollAreaContext.js';
 import ScrollBar from './ScrollBar.js';
+import log from './log.js';
 import {ScrollBarVisibility} from './types.js';
 
 type Props = {
@@ -38,6 +39,7 @@ function OuterBox({
 
 		const dimensions = measureElement(ref.current);
 		setOuterHeight(dimensions.height - 1);
+		log().debug({dimensions}, 'OuterBox dimensions');
 	}, [setOuterHeight]);
 
 	useEffect(() => {
