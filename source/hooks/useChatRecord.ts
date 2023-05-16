@@ -122,7 +122,7 @@ const useChatRecord = create<Store>()(
 						};
 
 						if (isNewChat(id)) {
-							log().info({id, value}, 'set new message');
+							log().info({id, value}, 'create new message');
 							return {
 								newChat: generateNewChat(MODEL),
 								idList: [id, ..._idList],
@@ -130,7 +130,7 @@ const useChatRecord = create<Store>()(
 							};
 						}
 
-						log().info({id, value}, 'set message');
+						log().info({id, value}, 'add message');
 						return {
 							chatRecord: newChatRecord,
 						};
