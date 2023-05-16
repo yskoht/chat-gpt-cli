@@ -11,7 +11,7 @@ const UNTITLED = 'Untitled';
 function createPrompt(messages: Message[]): Message[] {
 	const m = messages.find((message) => message.role === 'user')?.content;
 	if (!m) {
-		log().error('No user message found');
+		log().error({messages}, 'No user message found');
 	}
 
 	const prompt = `
