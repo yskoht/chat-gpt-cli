@@ -39,22 +39,17 @@ function useTitle(id: string) {
 		setTitle,
 	}));
 
-	const shouldCreateTitle = useMemo(
+	const shouldCreateTitle = useCallback(
 		() => chatRecord.isInitialTitle(id),
-		[chatRecord, id],
-	);
-
-	const setTitle = useCallback(
-		(title: string) => chatRecord.setTitle(id, title),
-		[chatRecord, id],
+		[id, chatRecord],
 	);
 
 	const onChange = useCallback(
 		(content: string) => {
 			const title = createTitle(content);
-			setTitle(title);
+			chatRecord.setTitle(id, title);
 		},
-		[setTitle],
+		[id, chatRecord],
 	);
 
 	const {submitChat} = useChat({
@@ -63,12 +58,12 @@ function useTitle(id: string) {
 
 	const generateTitle = useCallback(
 		(messages: Message[]) => {
-			setTitle('Creating title...');
+			chatRecord.setTitle(id, 'Creating title...');
 			const prompt = createPrompt(messages);
 			// memo: not using await
 			submitChat(prompt);
 		},
-		[setTitle, submitChat],
+		[id, chatRecord, submitChat],
 	);
 
 	return useMemo(

@@ -5,6 +5,7 @@ import React, {useMemo, useCallback} from 'react';
 import Divider from '@/components/Divider/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
 import {Message as MessageType} from '@/hooks/useChatRecord.js';
+import useChatRecord from '@/hooks/useChatRecord.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 import {replaceLineSep} from '@/utilities/index.js';
@@ -17,8 +18,6 @@ import {MESSAGE_MARK, USER_PROMPT_MARK} from './constants.js';
 import useAutoScroll from './useAutoScroll.js';
 import useChat, {assistantMessage, userMessage} from './useChat.js';
 import useInputHistory from './useInputHistory.js';
-import useMessages from './useMessages.js';
-import useStreamFinishedCallback from './useStreamFinishedCallback.js';
 import useText from './useText.js';
 import useTextInProgress from './useTextInProgress.js';
 import useTitle from './useTitle.js';
@@ -161,39 +160,55 @@ function Chat({id}: Props) {
 		[isFocused],
 	);
 
-	const {messages, setMessages} = useMessages(id);
-	const {textInProgress, setTextInProgress, clearTextInProgress} =
-		useTextInProgress(id);
+	const {getMessages, setMessages} = useChatRecord(
+		({getMessages, setMessages}) => ({
+			getMessages,
+			setMessages,
+		}),
+	);
+
+	const {getTextInProgress, setTextInProgress, clearTextInProgress} =
+		useTextInProgress();
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 	const {shouldCreateTitle, generateTitle} = useTitle(id);
 
 	const onChange = useCallback(
 		(content: string) => {
-			setTextInProgress((x) => x + replaceLineSep(content));
+			setTextInProgress(id, (x) => x + replaceLineSep(content));
 		},
-		[setTextInProgress],
+		[setTextInProgress, id],
 	);
-	const streamFinishedCallback = useCallback(() => {
+	const onFinish = useCallback(() => {
+		const messages = getMessages(id);
+		const textInProgress = getTextInProgress(id);
+
 		const t = finishTextInProgress(textInProgress);
 		const _messages = [...messages, assistantMessage(t)];
-		if (shouldCreateTitle) {
+		if (shouldCreateTitle()) {
 			generateTitle(_messages);
 		}
-		setMessages(_messages);
-		clearTextInProgress();
+		setMessages(id, _messages);
+		clearTextInProgress(id);
 	}, [
-		textInProgress,
-		messages,
+		id,
+		getTextInProgress,
+		getMessages,
 		setMessages,
 		shouldCreateTitle,
 		generateTitle,
 		clearTextInProgress,
 	]);
-	const {streamFinished} = useStreamFinishedCallback(streamFinishedCallback);
 	const {submitChatStream, inWaiting} = useChat({
 		onChange,
-		onFinish: streamFinished,
+		onFinish,
 	});
+
+	const messages = getMessages(id);
+	const textInProgress = getTextInProgress(id);
+	const _setMessages = useCallback(
+		(messages: MessageType[]) => setMessages(id, messages),
+		[id, setMessages],
+	);
 
 	return (
 		<Box
@@ -219,7 +234,7 @@ function Chat({id}: Props) {
 
 			<ChatUserPrompt
 				messages={messages}
-				setMessages={setMessages}
+				setMessages={_setMessages}
 				userPromptText={userPromptText}
 				setUserPromptText={setUserPromptText}
 				clearUserPromptText={clearUserPromptText}

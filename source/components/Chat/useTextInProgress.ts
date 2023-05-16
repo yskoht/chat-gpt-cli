@@ -31,28 +31,29 @@ const useStore = create<Store>()((setStore, getStore) => ({
 		}),
 }));
 
-function useTextInProgress(id: string) {
+function useTextInProgress() {
 	const store = useStore(({get, set}) => ({get, set}));
 
-	const textInProgress = useMemo(() => store.get(id), [store, id]);
+	const getTextInProgress = useCallback((id: string) => store.get(id), [store]);
 
 	const setTextInProgress = useCallback(
-		(valueOrSetter: ValueOrSetter<string>) => store.set(id, valueOrSetter),
-		[store, id],
+		(id: string, valueOrSetter: ValueOrSetter<string>) =>
+			store.set(id, valueOrSetter),
+		[store],
 	);
 
 	const clearTextInProgress = useCallback(
-		() => store.set(id, () => ''),
-		[store, id],
+		(id: string) => store.set(id, () => ''),
+		[store],
 	);
 
 	return useMemo(
 		() => ({
-			textInProgress,
+			getTextInProgress,
 			setTextInProgress,
 			clearTextInProgress,
 		}),
-		[textInProgress, setTextInProgress, clearTextInProgress],
+		[getTextInProgress, setTextInProgress, clearTextInProgress],
 	);
 }
 
