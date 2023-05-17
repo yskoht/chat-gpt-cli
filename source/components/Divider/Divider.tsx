@@ -1,5 +1,5 @@
 import {Text, Box, measureElement} from 'ink';
-import React, {useRef, useEffect, useState, useMemo} from 'react';
+import React, {useRef, useEffect, useState, useMemo, useCallback} from 'react';
 
 import useDimension from '@/hooks/useDimension.js';
 import {isNullable} from '@/utilities/index.js';
@@ -67,15 +67,18 @@ function Divider({
 		return divider.repeat(w);
 	}, [divider, width, _paddingLeft, _paddingRight]);
 
-	useEffect(() => {
+	const resize = useCallback(() => {
 		if (isNullable(ref.current)) {
 			return;
 		}
-
 		const {width} = measureElement(ref.current);
 		setWidth(width);
 		log().debug({width}, 'divider width changed');
-	}, [window]);
+	}, []);
+
+	useEffect(() => {
+		process.nextTick(resize);
+	}, [window, resize]);
 
 	return (
 		<Box

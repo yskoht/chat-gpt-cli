@@ -48,7 +48,7 @@ function useScrollHandler(id: string) {
 	} = useScrollArea();
 
 	const {width, height} = useDimension();
-	useEffect(resize, [resize, width, height]);
+	useEffect(() => process.nextTick(resize), [resize, width, height]);
 
 	const idList = getIdList();
 	const idIndex = useMemo(() => getIdIndex(idList, id), [idList, id]);

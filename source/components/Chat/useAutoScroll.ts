@@ -21,7 +21,7 @@ function useAutoScroll({messages, textInProgress, userPromptText}: Props) {
 		[userPromptText],
 	);
 
-	useEffect(resize, [resize, width, height]);
+	useEffect(() => process.nextTick(resize), [resize, width, height]);
 
 	useEffect(() => {
 		resize();
