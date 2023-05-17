@@ -27,7 +27,7 @@ function useDimension() {
 				height: stdout.rows,
 			};
 			setDimension(dim);
-			log().info({dimension: dim}, 'resized');
+			log().debug({dimension: dim}, 'resized');
 		};
 
 		stdout.on('resize', handler);
