@@ -13,7 +13,7 @@
 		"build": "tsc && tsc-alias",
 		"build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
 		"test": "prettier --check . && xo && ava",
-		"lint": "eslint . --ext .ts,.tsx",
+		"lint": "eslint source --ext .ts,.tsx",
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write --config ./.prettierrc.cjs .",
 		"_log": "bunyan -o short -l info",
