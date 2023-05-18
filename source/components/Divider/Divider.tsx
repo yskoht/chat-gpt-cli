@@ -93,4 +93,4 @@ function Divider({
 	);
 }
 
-export default Divider;
+export default React.memo(Divider);

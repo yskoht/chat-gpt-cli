@@ -17,7 +17,7 @@ function Mark({mark, markColor}: Props) {
 	return <Text color={markColor}>{mark}</Text>;
 }
 
-export default Mark;
+export default React.memo(Mark);
 
 export function markColor(message: Message) {
 	switch (message.role) {

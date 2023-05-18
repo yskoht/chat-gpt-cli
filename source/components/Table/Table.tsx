@@ -168,4 +168,4 @@ function Table({width, minWidth, value: {header, data}}: Props) {
 	);
 }
 
-export default Table;
+export default React.memo(Table);

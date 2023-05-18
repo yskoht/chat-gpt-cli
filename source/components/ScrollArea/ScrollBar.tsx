@@ -46,20 +46,22 @@ function calcScrollBar(
 	};
 }
 
-function Space() {
+function _Space() {
 	return <Text>{SPACE}</Text>;
 }
+const Space = React.memo(_Space);
 
 type BarProps = {
 	color: string | undefined;
 };
-function Bar({color}: BarProps) {
+function _Bar({color}: BarProps) {
 	const _backgroundColor = useMemo(
 		() => color ?? SCROLL_BAR_BACKGROUND_COLOR,
 		[color],
 	);
 	return <Text backgroundColor={_backgroundColor}>{SCROLL_BAR_CHAR}</Text>;
 }
+const Bar = React.memo(_Bar);
 
 type ScrollBarProps = {
 	innerHeight: number;
@@ -67,7 +69,7 @@ type ScrollBarProps = {
 	positionFromInnerTop: number;
 	color: string | undefined;
 };
-function ScrollBar({
+function _ScrollBar({
 	innerHeight,
 	outerHeight,
 	positionFromInnerTop,
@@ -102,6 +104,7 @@ function ScrollBar({
 		</Box>
 	);
 }
+const ScrollBar = React.memo(_ScrollBar);
 
 type ScrollBarContainerProps = {
 	visibility: ScrollBarVisibility;
@@ -138,4 +141,4 @@ function ScrollBarContainer({visibility, color}: ScrollBarContainerProps) {
 	);
 }
 
-export default ScrollBarContainer;
+export default React.memo(ScrollBarContainer);

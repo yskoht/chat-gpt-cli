@@ -49,4 +49,4 @@ function UserPrompt({
 	);
 }
 
-export default UserPrompt;
+export default React.memo(UserPrompt);

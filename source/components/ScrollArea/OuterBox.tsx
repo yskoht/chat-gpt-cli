@@ -57,4 +57,4 @@ function OuterBox({
 	);
 }
 
-export default OuterBox;
+export default React.memo(OuterBox);

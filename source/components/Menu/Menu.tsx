@@ -40,4 +40,4 @@ function Menu({id}: Props) {
 	);
 }
 
-export default Menu;
+export default React.memo(Menu);

@@ -6,4 +6,4 @@ function StatusBar() {
 	return <Text> </Text>;
 }
 
-export default StatusBar;
+export default React.memo(StatusBar);

@@ -44,7 +44,7 @@ function Line({
 	);
 }
 
-export default Line;
+export default React.memo(Line);
 
 type CursorMarkProps = {
 	cursorColor: string | undefined;

@@ -40,4 +40,4 @@ function ScrollArea({
 	);
 }
 
-export default ScrollArea;
+export default React.memo(ScrollArea);

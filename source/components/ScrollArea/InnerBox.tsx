@@ -55,4 +55,4 @@ function InnerBox({children}: Props) {
 	);
 }
 
-export default InnerBox;
+export default React.memo(InnerBox);

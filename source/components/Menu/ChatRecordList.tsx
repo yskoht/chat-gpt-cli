@@ -9,7 +9,7 @@ type ChatRecordProps = {
 	label: string;
 	isSelected: boolean;
 };
-function ChatRecord({label, isSelected}: ChatRecordProps) {
+function _ChatRecord({label, isSelected}: ChatRecordProps) {
 	const color = useMemo(
 		() => (isSelected ? SELECTED_CHAT_RECORD_COLOR : undefined),
 		[isSelected],
@@ -21,6 +21,7 @@ function ChatRecord({label, isSelected}: ChatRecordProps) {
 		</Text>
 	);
 }
+const ChatRecord = React.memo(_ChatRecord);
 
 type Props = {
 	id: string;
@@ -40,4 +41,4 @@ function ChatRecordList({id}: Props) {
 	return <Box flexDirection="column">{records}</Box>;
 }
 
-export default ChatRecordList;
+export default React.memo(ChatRecordList);

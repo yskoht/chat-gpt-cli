@@ -112,4 +112,4 @@ function Markdown({
 	return <Box flexDirection="column">{elements}</Box>;
 }
 
-export default Markdown;
+export default React.memo(Markdown);

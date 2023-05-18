@@ -105,4 +105,4 @@ function Lines({
 	return <Box flexDirection="column">{lines}</Box>;
 }
 
-export default Lines;
+export default React.memo(Lines);

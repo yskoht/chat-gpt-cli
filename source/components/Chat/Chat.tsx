@@ -36,7 +36,7 @@ type ChatMessagesProps = {
 	userPromptText: string;
 	inWaiting: boolean;
 };
-function ChatMessages({
+function _ChatMessages({
 	messages,
 	textInProgress,
 	userPromptText,
@@ -81,6 +81,7 @@ function ChatMessages({
 		</Box>
 	);
 }
+const ChatMessages = React.memo(_ChatMessages);
 
 type ChatUserPromptProps = {
 	messages: MessageType[];
@@ -92,7 +93,7 @@ type ChatUserPromptProps = {
 	inWaiting: boolean;
 	isFocused: boolean;
 };
-function ChatUserPrompt({
+function _ChatUserPrompt({
 	messages,
 	setMessages,
 	userPromptText,
@@ -149,6 +150,7 @@ function ChatUserPrompt({
 
 	return <Box>{_userPrompt}</Box>;
 }
+const ChatUserPrompt = React.memo(_ChatUserPrompt);
 
 type Props = {
 	id: string;
@@ -246,4 +248,4 @@ function Chat({id}: Props) {
 	);
 }
 
-export default Chat;
+export default React.memo(Chat);

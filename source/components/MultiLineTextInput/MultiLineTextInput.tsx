@@ -114,4 +114,4 @@ function MultiLineTextInput({
 	);
 }
 
-export default MultiLineTextInput;
+export default React.memo(MultiLineTextInput);

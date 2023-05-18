@@ -26,4 +26,4 @@ function NewChat({id}: Props) {
 	);
 }
 
-export default NewChat;
+export default React.memo(NewChat);
