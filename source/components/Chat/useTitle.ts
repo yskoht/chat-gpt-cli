@@ -16,7 +16,8 @@ function createPrompt(messages: Message[]): Message[] {
 
 	const prompt = `
 		Below is the prompt entered into ChatGPT.
-		Please create an appropriate title that represents this prompt with 10 ~ 20 characters.
+		Please create an appropriate title that represents this prompt with 20 ~ 30 characters.
+		Output only the title, no quotes, etc.
 
 		${m}
 	`;
@@ -25,12 +26,12 @@ function createPrompt(messages: Message[]): Message[] {
 }
 
 function createTitle(content: string) {
-	const t =
+	return (
 		content
 			.split('\n')
 			.map((line) => line.trim())
-			.filter(Boolean)[0] || UNTITLED;
-	return t.replace(/^('|")|('|")$/g, '');
+			.filter(Boolean)[0] || UNTITLED
+	);
 }
 
 function useTitle(id: string) {
