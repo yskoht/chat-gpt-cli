@@ -1,4 +1,4 @@
-import {Key} from 'ink';
+import {Key} from '@/hooks/useKeypress.js';
 
 import {SCROLL_BAR_VISIBILITY} from './constants.js';
 
@@ -15,7 +15,7 @@ export type ScrollAreaApi = {
 };
 export type ScrollHandler = (
 	input: string,
-	key: Key,
+	key: Key | undefined,
 	api: ScrollAreaApi,
 ) => void;
 

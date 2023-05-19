@@ -33,7 +33,7 @@ function Menu({id}: Props) {
 				<Divider />
 			</Box>
 
-			<ScrollArea isActive={isFocused} height="100%">
+			<ScrollArea isActive={false} height="100%">
 				<ChatRecordList id={id} />
 			</ScrollArea>
 		</Box>
