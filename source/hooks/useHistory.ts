@@ -1,12 +1,11 @@
-import os from 'os';
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 
+import {configPath} from '@/libraries/config.js';
 import {createFileStorage, STORAGE_NAME} from '@/libraries/zustand/index.js';
 
-const HOME_DIR = os.homedir();
-const HISTORY_FILE_NAME = '.chat-gpt-cli-history.json';
-const HISTORY_FILE_PATH = `${HOME_DIR}/${HISTORY_FILE_NAME}`;
+const HISTORY_FILE_NAME = 'history.json';
+const HISTORY_FILE_PATH = configPath(HISTORY_FILE_NAME);
 
 function excludeFirstItem<T>(list: T[]): T[] {
 	return list.slice(1);

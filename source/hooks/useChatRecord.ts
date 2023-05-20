@@ -1,8 +1,8 @@
-import os from 'os';
 import {ulid} from 'ulid';
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 
+import {configPath} from '@/libraries/config.js';
 import logger from '@/libraries/logger.js';
 import {createFileStorage, STORAGE_NAME} from '@/libraries/zustand/index.js';
 import {isFunction} from '@/utilities/index.js';
@@ -10,9 +10,8 @@ import {isFunction} from '@/utilities/index.js';
 const MODEL = 'gpt-4';
 const INITIAL_CHAT_TITLE = 'New Chat';
 
-const HOME_DIR = os.homedir();
-const CHAT_RECORD_FILE_NAME = '.chat-gpt-cli-chat-record.json';
-const CHAT_RECORD_FILE_PATH = `${HOME_DIR}/${CHAT_RECORD_FILE_NAME}`;
+const CHAT_RECORD_FILE_NAME = 'chat-record.json';
+const CHAT_RECORD_FILE_PATH = configPath(CHAT_RECORD_FILE_NAME);
 
 const COMPONENT_NAME = 'useChatRecord';
 function log() {
