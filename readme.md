@@ -8,7 +8,7 @@
 - [Usage](#usage)
 - [License](#license)
 
-## Installation
+## Install
 
 1. Install ChatGPT CLI globally using npm:
 
