@@ -1,6 +1,6 @@
 {
 	"name": "@yskoht/chat-gpt-cli",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"license": "MIT",
 	"bin": {
 		"cgc": "dist/cli.js"
