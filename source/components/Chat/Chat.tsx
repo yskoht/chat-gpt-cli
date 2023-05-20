@@ -6,6 +6,7 @@ import Divider from '@/components/Divider/index.js';
 import ScrollArea from '@/components/ScrollArea/index.js';
 import {Message as MessageType} from '@/hooks/useChatRecord.js';
 import useChatRecord from '@/hooks/useChatRecord.js';
+import useConfig from '@/hooks/useConfig.js';
 import {FOCUS_ID} from '@/hooks/useFocusManagement.js';
 import * as styles from '@/styles/index.js';
 import {replaceLineSep} from '@/utilities/index.js';
@@ -174,6 +175,9 @@ function Chat({id}: Props) {
 	const [userPromptText, setUserPromptText, clearUserPromptText] = useText();
 	const {shouldCreateTitle, generateTitle} = useTitle(id);
 
+	const config = useConfig();
+	const model = config.get('chatModel');
+
 	const onChange = useCallback(
 		(content: string) => {
 			setTextInProgress(id, (x) => x + replaceLineSep(content));
@@ -201,6 +205,7 @@ function Chat({id}: Props) {
 		clearTextInProgress,
 	]);
 	const {submitChatStream, inWaiting} = useChat({
+		model,
 		onChange,
 		onFinish,
 	});

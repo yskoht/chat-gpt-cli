@@ -1,6 +1,7 @@
 import {useCallback, useMemo} from 'react';
 
 import {Message, ROLE} from '@/hooks/useChatRecord.js';
+import {Model} from '@/hooks/useConfig.js';
 import openai, {CreateChatCompletionResponse} from '@/libraries/openai.js';
 
 import log from './log.js';
@@ -12,17 +13,17 @@ const SYSTEM_PROMPT = {
 	content: 'You are a helpful assistant.',
 } as const satisfies Message;
 
-const MODEL = 'gpt-4';
 type CreateChatCompletionOption = {
 	stream: boolean;
+	model: Model;
 };
 async function createChatCompletion(
 	messages: Message[],
-	{stream}: CreateChatCompletionOption,
+	{stream, model}: CreateChatCompletionOption,
 ) {
 	return await openai.createChatCompletion(
 		{
-			model: MODEL,
+			model,
 			messages: [SYSTEM_PROMPT, ...messages],
 			...(stream ? {stream: true} : undefined),
 		},
@@ -70,10 +71,11 @@ export function userMessage(text: string): Message {
 }
 
 type Props = {
+	model: Model;
 	onChange: (content: string) => void;
 	onFinish?: () => void;
 };
-function useChat({onChange, onFinish}: Props) {
+function useChat({model, onChange, onFinish}: Props) {
 	const waiting = useProgress();
 
 	const submitChatStream = useCallback(
@@ -81,7 +83,7 @@ function useChat({onChange, onFinish}: Props) {
 			waiting.start();
 			try {
 				log().info({messages}, 'submit chat stream');
-				const res = await createChatCompletion(messages, {stream: true});
+				const res = await createChatCompletion(messages, {stream: true, model});
 
 				// @ts-ignore
 				res.data.on('data', (data: Buffer) => {
@@ -108,7 +110,7 @@ function useChat({onChange, onFinish}: Props) {
 				log().error({err}, 'submit chat stream failed');
 			}
 		},
-		[onChange, onFinish, waiting],
+		[model, onChange, onFinish, waiting],
 	);
 
 	const submitChat = useCallback(
@@ -116,7 +118,10 @@ function useChat({onChange, onFinish}: Props) {
 			waiting.start();
 			try {
 				log().info({messages}, 'submit chat');
-				const res = await createChatCompletion(messages, {stream: false});
+				const res = await createChatCompletion(messages, {
+					stream: false,
+					model,
+				});
 				const content = getContent(res.data);
 				log().info({content}, 'content');
 				if (content) {
@@ -129,7 +134,7 @@ function useChat({onChange, onFinish}: Props) {
 				log().error({err}, 'submit chat failed');
 			}
 		},
-		[onChange, onFinish, waiting],
+		[model, onChange, onFinish, waiting],
 	);
 
 	return useMemo(

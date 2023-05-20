@@ -2,6 +2,7 @@
 import {useCallback, useMemo} from 'react';
 
 import useChatRecord, {Message} from '@/hooks/useChatRecord.js';
+import useConfig from '@/hooks/useConfig.js';
 
 import log from './log.js';
 import useChat, {userMessage} from './useChat.js';
@@ -45,6 +46,9 @@ function useTitle(id: string) {
 		[id, chatRecord],
 	);
 
+	const config = useConfig();
+	const model = config.get('titleModel');
+
 	const onChange = useCallback(
 		(content: string) => {
 			const title = createTitle(content);
@@ -54,6 +58,7 @@ function useTitle(id: string) {
 	);
 
 	const {submitChat} = useChat({
+		model,
 		onChange,
 	});
 
