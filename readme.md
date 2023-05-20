@@ -1,10 +1,11 @@
 # ChatGPT CLI
 
+![](https://github.com/yskoht/chat-gpt-cli/assets/34795067/db15043a-a322-45be-9747-87af7ae243f7)
+
 ## Table of Contents
 
 - [Install](#install)
 - [Usage](#usage)
-- [Configuration](#configuration)
 - [License](#license)
 
 ## Installation
@@ -26,8 +27,6 @@ export OPENAI_API_KEY="your-api-key-here"
 ```
 $ cgc
 ```
-
-## Configuration
 
 ## License
 
