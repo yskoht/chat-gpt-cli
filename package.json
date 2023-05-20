@@ -11,6 +11,7 @@
 	},
 	"description": "Command line tool for ChatGPT",
 	"author": "yskoht <ysk.oht@gmail.com> (https://github.com/yskoht)",
+	"homepage": "https://github.com/yskoht/chat-gpt-cli#readme",
 	"scripts": {
 		"build": "tsc && tsc-alias",
 		"build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
