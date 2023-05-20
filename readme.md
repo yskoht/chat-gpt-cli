@@ -13,7 +13,7 @@
 1. Install ChatGPT CLI globally using npm:
 
 ```bash
-$ npm install --global chat-gpt-cli
+$ npm install -g @yskoht/chat-gpt-cli
 ```
 
 2. Set up your OpenAI API credentials as environment variables:
